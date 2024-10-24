@@ -5,13 +5,14 @@ import { cleanDB, dataSource, initTestData } from "./dataSource/dataSource";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
 7;
 import { buildSchema } from "type-graphql";
+import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 
 const port = 4000;
 
 async function startServerApollo() {
 	try {
 		const schema = await buildSchema({
-			resolvers: [ProjectQueries],
+			resolvers: [ProjectQueries, ProjectMutations],
 		});
 		const server = new ApolloServer({
 			schema,
