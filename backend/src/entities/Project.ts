@@ -21,11 +21,11 @@ export class Project extends BaseEntity {
 	description?: string;
 
 	@Column({ nullable: true })
-	@Field((type) => Date)
+	@Field({ nullable: true })
 	startDate?: Date;
 
 	@Column({ nullable: true })
-	@Field((type) => Date)
+	@Field({ nullable: true })
 	endDate?: Date;
 
 	constructor(
