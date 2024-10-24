@@ -1,44 +1,25 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { dataSource } from "./dataSource/dataSource";
+import { cleanDB, dataSource, initTestData } from "./dataSource/dataSource";
+import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
+7;
+import { buildSchema } from "type-graphql";
 
 const port = 4000;
-const typeDefs = `#graphql
-
-  type Projects {
-    title: String
-
-  }
-
-  type Query {
-    projects: [Projects]
-  }
-`;
-
-const projects = [
-	{
-		title: "Projet1",
-	},
-	{
-		title: "Projet2",
-	},
-];
-
-const resolvers = {
-	Query: {
-		projects: () => projects,
-	},
-};
 
 async function startServerApollo() {
 	try {
+		const schema = await buildSchema({
+			resolvers: [ProjectQueries],
+		});
 		const server = new ApolloServer({
-			typeDefs,
-			resolvers,
+			schema,
 		});
 
-		// await dataSource.initialize();
+		await dataSource.initialize();
+		// cleanDB();
+		// initTestData();
 
 		const { url } = await startStandaloneServer(server, {
 			listen: { port },

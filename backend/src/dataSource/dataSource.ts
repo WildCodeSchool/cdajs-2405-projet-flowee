@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import { Project } from "../entities/Project";
+import dotenv from "dotenv";
+dotenv.config();
 
 const dbHost: string = process.env.DB_HOST || "";
 const dbPort: number = Number.parseInt(process.env.DB_PORT || "", 10);
@@ -23,33 +25,37 @@ export async function cleanDB() {
 	await dataSource.manager.clear(Project);
 }
 
-export async function initTestData(
+export async function CreateTestData(
 	name: string,
+	author: string,
 	description: string,
 	startDate: Date,
 	endDate: Date,
 ) {
-	const project1 = new Project(
-		"Project One",
+	const project = new Project(name, description, author, startDate, endDate);
+	await dataSource.manager.save(project);
+}
+
+export async function initTestData() {
+	await CreateTestData(
+		"Projet1",
+		"Cyrielle",
 		"Ceci est mon premier projet",
 		new Date("2024-10-23"),
 		new Date("2025-10-23"),
 	);
-
-	const project2 = new Project(
-		"Project Two",
-		"Un super projet",
+	await CreateTestData(
+		"Projet2",
+		"Alex",
+		"Ceci est mon deuxième projet",
 		new Date("2024-10-23"),
 		new Date("2025-10-23"),
 	);
-
-	const project3 = new Project(
-		"Project Three",
-		"Encore meilleur",
+	await CreateTestData(
+		"Projet3",
+		"Luis",
+		"Ceci est mon 3ème projet",
 		new Date("2024-10-23"),
 		new Date("2025-10-23"),
 	);
-	await dataSource.manager.save(project1);
-	await dataSource.manager.save(project2);
-	await dataSource.manager.save(project3);
 }
