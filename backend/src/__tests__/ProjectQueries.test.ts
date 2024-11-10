@@ -1,7 +1,7 @@
 import { Project } from "../entities/Project";
 import { faker } from "@faker-js/faker";
 import { ProjectQueries } from "../graphql-resolvers/ProjectQueries";
-import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
+
 import { MockTypeORM } from "mock-typeorm";
 
 describe("Project Graphql queries", () => {
@@ -15,29 +15,29 @@ describe("Project Graphql queries", () => {
 				faker.commerce.productName(),
 				faker.person.fullName(),
 				faker.lorem.sentence(),
-				faker.date.past(),
-				faker.date.future(),
+				faker.date.past().toString(),
+				faker.date.future().toString(),
 			),
 			new Project(
 				faker.commerce.productName(),
 				faker.person.fullName(),
 				faker.lorem.sentence(),
-				faker.date.past(),
-				faker.date.future(),
+				faker.date.past().toString(),
+				faker.date.future().toString(),
 			),
 			new Project(
 				faker.commerce.productName(),
 				faker.person.fullName(),
 				faker.lorem.sentence(),
-				faker.date.past(),
-				faker.date.future(),
+				faker.date.past().toString(),
+				faker.date.future().toString(),
 			),
 			new Project(
 				faker.commerce.productName(),
 				faker.person.fullName(),
 				faker.lorem.sentence(),
-				faker.date.past(),
-				faker.date.future(),
+				faker.date.past().toString(),
+				faker.date.future().toString(),
 			),
 		];
 	});

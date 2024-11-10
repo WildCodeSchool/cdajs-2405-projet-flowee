@@ -1,3 +1,4 @@
+import { log } from "console"
 import { dataSource} from "../dataSource/dataSource"
 import { Project } from "../entities/Project"
 import { Mutation, Arg, InputType, Field, Resolver  } from "type-graphql"
@@ -30,10 +31,17 @@ import { Mutation, Arg, InputType, Field, Resolver  } from "type-graphql"
 @Resolver(Project) 
 export class ProjectMutations {
 
+
   @Mutation((_)=> Project)
-  async createProject(@Arg("name") name:string ,@Arg("author") author:string , @Arg("description") description:string) : Promise<Project> {
+  async createProject(@Arg("name") name: string,
+  @Arg("author", { nullable: true }) author: string,
+  @Arg("description", { nullable: true }) description: string,
+  @Arg("startDate", { nullable: true }) startDate?: string  ,
+  @Arg("endDate", { nullable: true }) endDate?:string  ) : Promise<Project> {
+    
+
     try {
-      const newProject= new Project(name, author, description) ; 
+      const newProject= new Project(name, author, description, startDate, endDate) ; 
       await newProject.save(); 
       console.info(newProject); 
   
