@@ -34,11 +34,17 @@ export class Task extends BaseEntity {
   @Field({ nullable: true })
   endDate?: Date;
 
+  // @Column()
+  // @Field()
+  // deliverableId: number;
+
   constructor(
     name: string,
+    // deliverableId: number,
     description: string | undefined = undefined,
     startDate?: Date,
     endDate?: Date,
+
     status?: TaskStatus
   ) {
     super();
@@ -47,6 +53,7 @@ export class Task extends BaseEntity {
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
+    // this.deliverableId = deliverableId;
     this.status = status;
   }
 }
