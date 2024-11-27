@@ -1,8 +1,14 @@
 import { ObjectType, Field, ID } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from "typeorm";
 
 @ObjectType()
-@Entity()
+@Entity("compagny")
 export class Compagny extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
@@ -20,7 +26,7 @@ export class Compagny extends BaseEntity {
   @Field()
   contactInfo: string;
 
-  @CreateDateColumn()
+  @Column()
   @Field()
   createdAt?: Date;
 

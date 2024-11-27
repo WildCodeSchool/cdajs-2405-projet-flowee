@@ -36,27 +36,27 @@ export class Task extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  startDate?: Date;
+  startDate?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  endDate?: Date;
-
-  // @Column()
-  // @Field()
-  // deliverableId: number;
+  endDate?: string;
 
   //relations
-  @ManyToOne(() => Deliverable, (deliverable) => deliverable.tasks)
+  @ManyToOne(
+    () => Deliverable,
+    (deliverable) => deliverable.tasks,
+    { eager: true },
+  )
+  @Field((type) => Deliverable)
   deliverable!: Deliverable;
+
   constructor(
     name: string,
-    // deliverableId: number,
     description: string,
-    startDate?: Date,
-    endDate?: Date,
-
-    status?: Status
+    startDate?: string,
+    endDate?: string,
+    status?: Status,
   ) {
     super();
 
@@ -64,7 +64,6 @@ export class Task extends BaseEntity {
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
-    // this.deliverableId = deliverableId;
     this.status = status;
   }
 }

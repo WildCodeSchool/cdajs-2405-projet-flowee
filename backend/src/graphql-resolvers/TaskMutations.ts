@@ -1,4 +1,5 @@
 import { dataSource } from "../dataSource/dataSource";
+import { Deliverable } from "../entities/Deliverable";
 import { Task, Status } from "../entities/Task";
 import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
 
@@ -9,8 +10,8 @@ export class TaskMutations {
     @Arg("name") name: string,
     @Arg("description", { nullable: true }) description: string,
     @Arg("status", { nullable: true }) status: Status = Status.NOT_STARTED,
-    @Arg("startDate", { nullable: true }) startDate?: Date,
-    @Arg("endDate", { nullable: true }) endDate?: Date
+    @Arg("startDate", { nullable: true }) startDate?: string,
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     try {
       const newTask = new Task(name, description, startDate, endDate, status);
@@ -28,7 +29,7 @@ export class TaskMutations {
   async updateTask(
     @Arg("id") id: number,
     @Arg("name") name: string,
-    @Arg("description") description: string
+    @Arg("description") description: string,
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });

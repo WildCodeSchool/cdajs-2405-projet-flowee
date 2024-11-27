@@ -6,13 +6,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Status, Task } from "./Task";
+import { Task } from "./Task";
+import type { Status } from "./Task";
 
 @ObjectType()
 @Entity()
 export class Deliverable extends BaseEntity {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field((_) => ID)
   id?: number;
 
   @Column()
@@ -41,8 +42,12 @@ export class Deliverable extends BaseEntity {
   reviewTimes?: number;
 
   //relations
-  @OneToMany(() => Task, (tasks) => tasks.deliverable)
-  tasks: Task[] = [];
+  @OneToMany(
+    () => Task,
+    (task) => task.deliverable,
+  )
+  @Field((type) => [Task])
+  tasks?: Promise<Task[]>;
 
   constructor(
     name: string,
@@ -50,7 +55,7 @@ export class Deliverable extends BaseEntity {
     deliveryDate?: Date,
     status?: Status,
     createdAt?: Date,
-    reviewTimes?: number
+    reviewTimes?: number,
   ) {
     super();
 
