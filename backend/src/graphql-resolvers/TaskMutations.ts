@@ -1,5 +1,5 @@
 import { dataSource } from "../dataSource/dataSource";
-import { Task, TaskStatus } from "../entities/Task";
+import { Task, Status } from "../entities/Task";
 import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
 
 @Resolver(Task)

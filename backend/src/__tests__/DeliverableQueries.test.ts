@@ -66,4 +66,15 @@ describe("Deliverable Graphql queries", () => {
       expect(allDeliverables).toMatchObject(deliverables);
     });
   });
+
+  describe("query a deliverable by id from TypeORM", () => {
+    it("should return a deliverable by id", async () => {
+      const deliverable: Deliverable = deliverables[0];
+      mockTypeOrm().onMock(Deliverable).toReturn(deliverable, "findOne");
+
+      const retrievedDeliverable: Deliverable | null =
+        await deliverableQueries.getDeliverable(deliverable.id!);
+      expect(retrievedDeliverable).toMatchObject(deliverable);
+    });
+  });
 });

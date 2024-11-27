@@ -1,5 +1,5 @@
 import { Task, Status } from "../entities/Task";
-import { de, faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import { TaskMutations } from "../graphql-resolvers/TaskMutations";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 
