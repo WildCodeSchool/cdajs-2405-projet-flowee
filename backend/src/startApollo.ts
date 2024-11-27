@@ -8,13 +8,22 @@ import { buildSchema } from "type-graphql";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
 import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
+import { TaskQueries } from "./graphql-resolvers/TaskQueries";
+import { TaskMutations } from "./graphql-resolvers/TaskMutations";
 
 const port = 4000;
 
 async function startServerApollo() {
 	try {
 		const schema = await buildSchema({
-			resolvers: [ProjectQueries, ProjectMutations, CompagnyQueries, CompagnyMutations],
+			resolvers: [
+				ProjectQueries,
+				ProjectMutations,
+				CompagnyQueries,
+				CompagnyMutations,
+				TaskQueries,
+				TaskMutations,
+			],
 		});
 		const server = new ApolloServer({
 			schema,
