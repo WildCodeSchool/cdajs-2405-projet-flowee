@@ -16,6 +16,7 @@ export class TaskMutations {
 
       return newTask;
     } catch (error) {
+      console.info(error);
       throw new Error("Invalid information");
     }
   }
