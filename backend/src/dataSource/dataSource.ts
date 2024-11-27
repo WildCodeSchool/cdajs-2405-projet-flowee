@@ -33,6 +33,7 @@ export async function CreateTestData(
 	endDate: string,
 ) {
 	const project = new Project(name, description, author, startDate, endDate);
+	console.log("j'ai créé de la data dand datasource", project);
 	await dataSource.manager.save(project);
 }
 

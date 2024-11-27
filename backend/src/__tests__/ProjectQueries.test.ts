@@ -1,8 +1,7 @@
 import { Project } from "../entities/Project";
 import { faker } from "@faker-js/faker";
 import { ProjectQueries } from "../graphql-resolvers/ProjectQueries";
-
-import { MockTypeORM } from "mock-typeorm";
+import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 
 describe("Project Graphql queries", () => {
 	let projectQueries: ProjectQueries;
@@ -44,8 +43,7 @@ describe("Project Graphql queries", () => {
 
 	describe("query all projects from TypeORM", () => {
 		it("returns projects from TypeORM", async () => {
-			const typeORM = new MockTypeORM();
-			typeORM.onMock(Project).toReturn(projects, "find");
+			mockTypeOrm().onMock(Project).toReturn(projects, "find");
 			const retrievedProjects: Project[] =
 				await projectQueries.getAllProjects();
 			expect(retrievedProjects.length).toBe(projects.length);

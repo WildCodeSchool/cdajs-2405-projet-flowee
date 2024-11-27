@@ -1,4 +1,3 @@
-import { log } from "console"
 import { dataSource} from "../dataSource/dataSource"
 import { Project } from "../entities/Project"
 import { Mutation, Arg, InputType, Field, Resolver  } from "type-graphql"
@@ -41,15 +40,13 @@ export class ProjectMutations {
     
 
     try {
-      const newProject= new Project(name, author, description, startDate, endDate) ; 
-      await newProject.save(); 
-      console.info(newProject); 
-  
+      const newProject= new Project(name, author, description, startDate,endDate) ; 
+      await dataSource.manager.save(newProject); 
       return newProject;
     } catch (error) {
+      console.info(error)
       throw new Error("Invalid information")
     }
-   
 
   }
 }

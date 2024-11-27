@@ -1,7 +1,7 @@
 import { Project } from "../entities/Project";
 import { faker } from "@faker-js/faker";
 import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
-import { MockTypeORM } from "mock-typeorm";
+import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 
 describe("Project creation", () => {
 	let projectMutations: ProjectMutations;
@@ -14,15 +14,14 @@ describe("Project creation", () => {
 			faker.commerce.productName(),
 			faker.person.fullName(),
 			faker.lorem.sentence(),
-			project.startDate?.toString(),
-			project.startDate?.toString(),
+			faker.date.past().toString(),
+			faker.date.future().toString(),
 		);
 	});
 
 	describe("create project", () => {
 		it("should create a project ", async () => {
-			const typeORM = new MockTypeORM();
-			typeORM.onMock(Project).toReturn(project, "save");
+			mockTypeOrm().onMock(Project).toReturn(project, "save");
 			console.info("project", project);
 			const createdProject: Project = await projectMutations.createProject(
 				project.name,
@@ -31,7 +30,7 @@ describe("Project creation", () => {
 				project.startDate,
 				project.endDate,
 			);
-			console.info(createdProject);
+			console.info("dans les tests, projet recupéré", createdProject);
 			expect(createdProject).toMatchObject({
 				name: project.name,
 				author: project.author,
