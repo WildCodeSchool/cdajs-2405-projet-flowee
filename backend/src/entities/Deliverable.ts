@@ -1,6 +1,12 @@
 import { ObjectType, Field, ID } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Status } from "./Task";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Status, Task } from "./Task";
 
 @ObjectType()
 @Entity()
@@ -33,6 +39,10 @@ export class Deliverable extends BaseEntity {
   @Column({ nullable: true })
   @Field({ nullable: true })
   reviewTimes?: number;
+
+  //relations
+  @OneToMany(() => Task, (tasks) => tasks.deliverable)
+  tasks: Task[] = [];
 
   constructor(
     name: string,

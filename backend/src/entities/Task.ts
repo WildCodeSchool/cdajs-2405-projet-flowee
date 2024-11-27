@@ -1,5 +1,12 @@
 import { ObjectType, Field, ID } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Deliverable } from "./Deliverable";
 
 export enum Status {
   PENDING = "PENDING",
@@ -38,6 +45,9 @@ export class Task extends BaseEntity {
   // @Field()
   // deliverableId: number;
 
+  //relations
+  @ManyToOne(() => Deliverable, (deliverable) => deliverable.tasks)
+  deliverable!: Deliverable;
   constructor(
     name: string,
     // deliverableId: number,
