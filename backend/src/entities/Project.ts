@@ -18,22 +18,22 @@ export class Project extends BaseEntity {
 
 	@Column({ nullable: true })
 	@Field({ nullable: true })
-	description?: string;
+	description: string;
 
 	@Column({ nullable: true })
 	@Field({ nullable: true })
-	startDate?: Date;
+	startDate?: string;
 
 	@Column({ nullable: true })
 	@Field({ nullable: true })
-	endDate?: Date;
+	endDate?: string;
 
 	constructor(
 		name: string,
 		author: string,
-		description: string | undefined = undefined,
-		startDate?: Date,
-		endDate?: Date,
+		description: string,
+		startDate?: string,
+		endDate?: string,
 	) {
 		super();
 

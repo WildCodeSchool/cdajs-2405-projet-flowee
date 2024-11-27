@@ -29,10 +29,11 @@ export async function CreateTestData(
 	name: string,
 	author: string,
 	description: string,
-	startDate: Date,
-	endDate: Date,
+	startDate: string,
+	endDate: string,
 ) {
 	const project = new Project(name, description, author, startDate, endDate);
+	console.log("j'ai créé de la data dand datasource", project);
 	await dataSource.manager.save(project);
 }
 
@@ -41,21 +42,21 @@ export async function initTestData() {
 		"Projet1",
 		"Cyrielle",
 		"Ceci est mon premier projet",
-		new Date("2024-10-23"),
-		new Date("2025-10-23"),
+		"2024-10-23",
+		"2025-10-23",
 	);
 	await CreateTestData(
 		"Projet2",
 		"Alex",
 		"Ceci est mon deuxième projet",
-		new Date("2024-10-23"),
-		new Date("2025-10-23"),
+		"2024-10-23",
+		"2025-10-23",
 	);
 	await CreateTestData(
 		"Projet3",
 		"Luis",
 		"Ceci est mon 3ème projet",
-		new Date("2024-10-23"),
-		new Date("2025-10-23"),
+		"2024-10-23",
+		"2025-10-23",
 	);
 }

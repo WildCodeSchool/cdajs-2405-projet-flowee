@@ -21,6 +21,7 @@ async function startServerApollo() {
 		});
 
 		await dataSource.initialize();
+		console.log("Data Source has been initialized!");
 		// cleanDB();
 		// initTestData();
 
