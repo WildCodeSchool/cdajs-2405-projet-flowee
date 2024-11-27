@@ -1,15 +1,10 @@
 import { ObjectType, Field, ID } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
-export enum Status {
-  PENDING = "PENDING",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-}
+import { Status } from "./Task";
 
 @ObjectType()
 @Entity()
-export class Task extends BaseEntity {
+export class Deliverable extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field((type) => ID)
   id?: number;
@@ -18,42 +13,42 @@ export class Task extends BaseEntity {
   @Field()
   name: string;
 
+  //J'ai mis perimeter au lieu de description pour que ça soit plus parlant
   @Column({ nullable: true })
   @Field({ nullable: true })
-  description?: string;
+  perimeter?: string;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  deliveryDate?: Date;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
   status?: Status;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  startDate?: Date;
+  @Column()
+  @Field()
+  createdAt?: Date;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  endDate?: Date;
-
-  // @Column()
-  // @Field()
-  // deliverableId: number;
+  reviewTimes?: number;
 
   constructor(
     name: string,
-    // deliverableId: number,
-    description: string | undefined = undefined,
-    startDate?: Date,
-    endDate?: Date,
-
-    status?: Status
+    perimeter?: string,
+    deliveryDate?: Date,
+    status?: Status,
+    createdAt?: Date,
+    reviewTimes?: number
   ) {
     super();
 
     this.name = name;
-    this.description = description;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    // this.deliverableId = deliverableId;
+    this.perimeter = perimeter;
+    this.deliveryDate = deliveryDate;
     this.status = status;
+    this.createdAt = createdAt;
+    this.reviewTimes = reviewTimes;
   }
 }

@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from "../entities/Task";
+import { Task, Status } from "../entities/Task";
 import { de, faker } from "@faker-js/faker";
 import { TaskMutations } from "../graphql-resolvers/TaskMutations";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
@@ -16,9 +16,9 @@ describe("Task creation", () => {
       faker.date.past(),
       faker.date.future(),
       faker.helpers.arrayElement([
-        TaskStatus.PENDING,
-        TaskStatus.IN_PROGRESS,
-        TaskStatus.COMPLETED,
+        Status.PENDING,
+        Status.IN_PROGRESS,
+        Status.COMPLETED,
       ])
     );
   });
@@ -55,9 +55,9 @@ describe("Task update", () => {
       faker.date.past(),
       faker.date.future(),
       faker.helpers.arrayElement([
-        TaskStatus.PENDING,
-        TaskStatus.IN_PROGRESS,
-        TaskStatus.COMPLETED,
+        Status.PENDING,
+        Status.IN_PROGRESS,
+        Status.COMPLETED,
       ])
     );
     task.id = faker.number.int();
@@ -98,9 +98,9 @@ describe("Task deletion", () => {
       faker.date.past(),
       faker.date.future(),
       faker.helpers.arrayElement([
-        TaskStatus.PENDING,
-        TaskStatus.IN_PROGRESS,
-        TaskStatus.COMPLETED,
+        Status.PENDING,
+        Status.IN_PROGRESS,
+        Status.COMPLETED,
       ])
     );
     task.id = faker.number.int();
