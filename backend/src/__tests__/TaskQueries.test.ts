@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from "../entities/Task";
+import { Task, Status } from "../entities/Task";
 import { faker } from "@faker-js/faker";
 import { TaskQueries } from "../graphql-resolvers/TaskQueries";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
@@ -16,9 +16,9 @@ describe("Task Graphql queries", () => {
         faker.date.past(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          TaskStatus.PENDING,
-          TaskStatus.IN_PROGRESS,
-          TaskStatus.COMPLETED,
+          Status.PENDING,
+          Status.IN_PROGRESS,
+          Status.COMPLETED,
         ])
       ),
       new Task(
@@ -27,9 +27,9 @@ describe("Task Graphql queries", () => {
         faker.date.past(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          TaskStatus.PENDING,
-          TaskStatus.IN_PROGRESS,
-          TaskStatus.COMPLETED,
+          Status.PENDING,
+          Status.IN_PROGRESS,
+          Status.COMPLETED,
         ])
       ),
       new Task(
@@ -38,9 +38,9 @@ describe("Task Graphql queries", () => {
         faker.date.past(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          TaskStatus.PENDING,
-          TaskStatus.IN_PROGRESS,
-          TaskStatus.COMPLETED,
+          Status.PENDING,
+          Status.IN_PROGRESS,
+          Status.COMPLETED,
         ])
       ),
       new Task(
@@ -49,9 +49,9 @@ describe("Task Graphql queries", () => {
         faker.date.past(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          TaskStatus.PENDING,
-          TaskStatus.IN_PROGRESS,
-          TaskStatus.COMPLETED,
+          Status.PENDING,
+          Status.IN_PROGRESS,
+          Status.COMPLETED,
         ])
       ),
     ];
