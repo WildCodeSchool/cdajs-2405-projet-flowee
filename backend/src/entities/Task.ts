@@ -1,8 +1,16 @@
 import { ObjectType, Field, ID } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Deliverable } from "./Deliverable";
 
-export enum TaskStatus {
-  PENDING = "PENDING",
+export enum Status {
+  NOT_STARTED = "NOT_STARTED",
+  BLOCKED = "BLOCKED",
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
 }
@@ -20,11 +28,11 @@ export class Task extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  description?: string;
+  description!: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  status?: TaskStatus;
+  status?: Status;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -34,12 +42,21 @@ export class Task extends BaseEntity {
   @Field({ nullable: true })
   endDate?: Date;
 
+  // @Column()
+  // @Field()
+  // deliverableId: number;
+
+  //relations
+  @ManyToOne(() => Deliverable, (deliverable) => deliverable.tasks)
+  deliverable!: Deliverable;
   constructor(
     name: string,
-    description: string | undefined = undefined,
+    // deliverableId: number,
+    description: string,
     startDate?: Date,
     endDate?: Date,
-    status?: TaskStatus
+
+    status?: Status
   ) {
     super();
 
@@ -47,6 +64,7 @@ export class Task extends BaseEntity {
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
+    // this.deliverableId = deliverableId;
     this.status = status;
   }
 }
