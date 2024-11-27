@@ -7,10 +7,13 @@ export class TaskMutations {
   @Mutation((_) => Task)
   async createTask(
     @Arg("name") name: string,
-    @Arg("description") description: string
+    @Arg("description", { nullable: true }) description: string,
+    @Arg("status", { nullable: true }) status: Status = Status.NOT_STARTED,
+    @Arg("startDate", { nullable: true }) startDate?: Date,
+    @Arg("endDate", { nullable: true }) endDate?: Date
   ): Promise<Task> {
     try {
-      const newTask = new Task(name, description);
+      const newTask = new Task(name, description, startDate, endDate, status);
 
       await dataSource.manager.save(newTask);
 

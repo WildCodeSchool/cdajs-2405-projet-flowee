@@ -16,7 +16,8 @@ describe("Task creation", () => {
       faker.date.past(),
       faker.date.future(),
       faker.helpers.arrayElement([
-        Status.PENDING,
+        Status.NOT_STARTED,
+        Status.BLOCKED,
         Status.IN_PROGRESS,
         Status.COMPLETED,
       ])
@@ -30,13 +31,17 @@ describe("Task creation", () => {
 
       const createdTask: Task = await taskMutations.createTask(
         task.name,
-        task.description || ""
+        task.description,
+        task.status,
+        task.startDate,
+        task.endDate
       );
 
       console.info("dans les tests, tache recupérée", createdTask);
       expect(createdTask).toMatchObject({
         name: task.name,
         description: task.description,
+        status: task.status,
       });
     });
   });
@@ -55,7 +60,8 @@ describe("Task update", () => {
       faker.date.past(),
       faker.date.future(),
       faker.helpers.arrayElement([
-        Status.PENDING,
+        Status.NOT_STARTED,
+        Status.BLOCKED,
         Status.IN_PROGRESS,
         Status.COMPLETED,
       ])
@@ -71,7 +77,7 @@ describe("Task update", () => {
       const updatedTask: Task = await taskMutations.updateTask(
         task.id!,
         task.name,
-        task.description || ""
+        task.description
       );
 
       expect(updatedTask).toMatchObject({
@@ -98,7 +104,8 @@ describe("Task deletion", () => {
       faker.date.past(),
       faker.date.future(),
       faker.helpers.arrayElement([
-        Status.PENDING,
+        Status.NOT_STARTED,
+        Status.BLOCKED,
         Status.IN_PROGRESS,
         Status.COMPLETED,
       ])

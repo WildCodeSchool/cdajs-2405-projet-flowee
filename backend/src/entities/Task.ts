@@ -9,7 +9,8 @@ import {
 import { Deliverable } from "./Deliverable";
 
 export enum Status {
-  PENDING = "PENDING",
+  NOT_STARTED = "NOT_STARTED",
+  BLOCKED = "BLOCKED",
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
 }
@@ -27,7 +28,7 @@ export class Task extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  description?: string;
+  description!: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -51,7 +52,7 @@ export class Task extends BaseEntity {
   constructor(
     name: string,
     // deliverableId: number,
-    description: string | undefined = undefined,
+    description: string,
     startDate?: Date,
     endDate?: Date,
 

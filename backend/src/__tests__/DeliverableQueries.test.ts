@@ -16,7 +16,8 @@ describe("Deliverable Graphql queries", () => {
         faker.commerce.productDescription(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          Status.PENDING,
+          Status.NOT_STARTED,
+          Status.BLOCKED,
           Status.IN_PROGRESS,
           Status.COMPLETED,
         ]),
@@ -27,7 +28,8 @@ describe("Deliverable Graphql queries", () => {
         faker.commerce.productDescription(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          Status.PENDING,
+          Status.NOT_STARTED,
+          Status.BLOCKED,
           Status.IN_PROGRESS,
           Status.COMPLETED,
         ]),
@@ -38,7 +40,8 @@ describe("Deliverable Graphql queries", () => {
         faker.commerce.productDescription(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          Status.PENDING,
+          Status.NOT_STARTED,
+          Status.BLOCKED,
           Status.IN_PROGRESS,
           Status.COMPLETED,
         ]),
@@ -49,7 +52,8 @@ describe("Deliverable Graphql queries", () => {
         faker.commerce.productDescription(),
         faker.date.future(),
         faker.helpers.arrayElement([
-          Status.PENDING,
+          Status.NOT_STARTED,
+          Status.BLOCKED,
           Status.IN_PROGRESS,
           Status.COMPLETED,
         ]),
