@@ -7,13 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Deliverable } from "./Deliverable";
-
-export enum Status {
-  NOT_STARTED = "NOT_STARTED",
-  BLOCKED = "BLOCKED",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-}
+import type { Status } from "../enums/Status";
 
 @ObjectType()
 @Entity()
@@ -36,27 +30,27 @@ export class Task extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  startDate?: Date;
+  startDate?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  endDate?: Date;
-
-  // @Column()
-  // @Field()
-  // deliverableId: number;
+  endDate?: string;
 
   //relations
-  @ManyToOne(() => Deliverable, (deliverable) => deliverable.tasks)
-  deliverable!: Deliverable;
+  @ManyToOne(
+    () => Deliverable,
+    (deliverable) => deliverable.tasks,
+    { nullable: true, onDelete: "SET NULL" },
+  )
+  @Field((type) => Deliverable, { nullable: true })
+  deliverable?: Deliverable;
+
   constructor(
     name: string,
-    // deliverableId: number,
     description: string,
-    startDate?: Date,
-    endDate?: Date,
-
-    status?: Status
+    startDate?: string,
+    endDate?: string,
+    status?: Status,
   ) {
     super();
 
@@ -64,7 +58,6 @@ export class Task extends BaseEntity {
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
-    // this.deliverableId = deliverableId;
     this.status = status;
   }
 }

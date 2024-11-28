@@ -10,38 +10,42 @@ import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
 import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
 import { TaskQueries } from "./graphql-resolvers/TaskQueries";
 import { TaskMutations } from "./graphql-resolvers/TaskMutations";
+import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
+import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 
 const port = 4000;
 
 async function startServerApollo() {
-	try {
-		const schema = await buildSchema({
-			resolvers: [
-				ProjectQueries,
-				ProjectMutations,
-				CompagnyQueries,
-				CompagnyMutations,
-				TaskQueries,
-				TaskMutations,
-			],
-		});
-		const server = new ApolloServer({
-			schema,
-		});
+  try {
+    const schema = await buildSchema({
+      resolvers: [
+        ProjectQueries,
+        ProjectMutations,
+        CompagnyQueries,
+        CompagnyMutations,
+        TaskQueries,
+        TaskMutations,
+        DeliverableQueries,
+        DeliverableMutations,
+      ],
+    });
+    const server = new ApolloServer({
+      schema,
+    });
 
-		await dataSource.initialize();
-		console.log("Data Source has been initialized!");
-		// cleanDB();
-		// initTestData();
+    await dataSource.initialize();
+    console.log("Data Source has been initialized!");
+    // cleanDB();
+    // initTestData();
 
-		const { url } = await startStandaloneServer(server, {
-			listen: { port },
-		});
+    const { url } = await startStandaloneServer(server, {
+      listen: { port },
+    });
 
-		console.log(`🚀  Server ready at: ${url}`);
-	} catch (error) {
-		console.error("Error starting server:", error);
-	}
+    console.log(`🚀  Server ready at: ${url}`);
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
 }
 
 startServerApollo();
