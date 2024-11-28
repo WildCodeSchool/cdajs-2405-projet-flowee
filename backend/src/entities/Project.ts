@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import type { Status } from "../enums/Status";
 import { Client } from "./Client";
+import { CompanyUser } from "./CompanyUser";
 
 @ObjectType()
 @Entity()
@@ -48,6 +49,14 @@ export class Project extends BaseEntity {
   )
   @Field((type) => Client, { nullable: true })
   client?: Client;
+
+  @ManyToOne(
+    () => CompanyUser,
+    (companyUser) => companyUser.projects,
+    { nullable: true, onDelete: "SET NULL" },
+  )
+  @Field((type) => CompanyUser, { nullable: true })
+  companyUser?: CompanyUser;
 
   constructor(
     name: string,
