@@ -5,7 +5,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToMany,
 } from "typeorm";
+import { CompanyUser } from "./CompanyUser";
 
 @ObjectType()
 @Entity("compagny")
@@ -18,17 +20,24 @@ export class Compagny extends BaseEntity {
   @Field()
   name: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   address: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   contactInfo: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   createdAt?: Date;
+
+  @OneToMany(
+    () => CompanyUser,
+    (companyUser) => companyUser.company,
+  )
+  @Field((type) => [CompanyUser])
+  companyUsers?: CompanyUser[];
 
   constructor(name: string, address: string, contactInfo: string) {
     super();
