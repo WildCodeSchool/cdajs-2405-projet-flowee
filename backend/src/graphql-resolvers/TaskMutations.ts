@@ -1,6 +1,7 @@
 import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
-import { Task, Status } from "../entities/Task";
+import { Task } from "../entities/Task";
+import { Status } from "../enums/Status";
 import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
 
 @Resolver(Task)
@@ -12,9 +13,19 @@ export class TaskMutations {
     @Arg("status", { nullable: true }) status: Status = Status.NOT_STARTED,
     @Arg("startDate", { nullable: true }) startDate?: string,
     @Arg("endDate", { nullable: true }) endDate?: string,
-  ): Promise<Task> {
+  ): Promise<Task | undefined> {
     try {
       const newTask = new Task(name, description, startDate, endDate, status);
+
+      // if (deliverableInput) {
+      //   const deliverable = await dataSource.manager.findOne(Deliverable, {
+      //     where: { id: deliverableInput.id },
+      //   });
+
+      // if (!deliverable) {
+      //   throw new Error("Deliverable not found");
+      // }
+      // newTask.deliverable = deliverable;
 
       await dataSource.manager.save(newTask);
 

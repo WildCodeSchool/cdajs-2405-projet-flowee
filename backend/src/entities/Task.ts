@@ -7,13 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Deliverable } from "./Deliverable";
-
-export enum Status {
-  NOT_STARTED = "NOT_STARTED",
-  BLOCKED = "BLOCKED",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-}
+import type { Status } from "../enums/Status";
 
 @ObjectType()
 @Entity()
@@ -46,10 +40,10 @@ export class Task extends BaseEntity {
   @ManyToOne(
     () => Deliverable,
     (deliverable) => deliverable.tasks,
-    { eager: true },
+    { nullable: true, onDelete: "SET NULL" },
   )
-  @Field((type) => Deliverable)
-  deliverable!: Deliverable;
+  @Field((type) => Deliverable, { nullable: true })
+  deliverable?: Deliverable;
 
   constructor(
     name: string,

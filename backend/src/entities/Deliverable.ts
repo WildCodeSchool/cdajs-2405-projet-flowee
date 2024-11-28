@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Task } from "./Task";
-import type { Status } from "./Task";
+import type { Status } from "../enums/Status";
 
 @ObjectType()
 @Entity()
@@ -27,15 +27,15 @@ export class Deliverable extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  deliveryDate?: Date;
+  deliveryDate?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
   status?: Status;
 
-  @Column()
-  @Field()
-  createdAt?: Date;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  createdAt?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -47,14 +47,14 @@ export class Deliverable extends BaseEntity {
     (task) => task.deliverable,
   )
   @Field((type) => [Task])
-  tasks?: Promise<Task[]>;
+  tasks?: Task[];
 
   constructor(
     name: string,
     perimeter?: string,
-    deliveryDate?: Date,
+    deliveryDate?: string,
     status?: Status,
-    createdAt?: Date,
+    createdAt?: string,
     reviewTimes?: number,
   ) {
     super();

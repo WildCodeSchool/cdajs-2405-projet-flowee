@@ -1,5 +1,6 @@
 import { dataSource } from "../dataSource/dataSource";
-import { Status, Task } from "../entities/Task";
+import { Task } from "../entities/Task";
+import type { Status } from "../enums/Status";
 import { Deliverable } from "../entities/Deliverable";
 import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
 
@@ -9,10 +10,10 @@ export class DeliverableMutations {
   async createDeliverable(
     @Arg("name") name: string,
     @Arg("perimeter", { nullable: true }) perimeter?: string,
-    @Arg("deliveryDate", { nullable: true }) deliveryDate?: Date,
+    @Arg("deliveryDate", { nullable: true }) deliveryDate?: string,
     @Arg("status", { nullable: true }) status?: Status,
-    @Arg("createdAt", { nullable: true }) createdAt?: Date,
-    @Arg("reviewTimes", { nullable: true }) reviewTimes?: number
+    @Arg("createdAt", { nullable: true }) createdAt?: string,
+    @Arg("reviewTimes", { nullable: true }) reviewTimes?: number,
   ): Promise<Deliverable> {
     try {
       const newDeliverable = new Deliverable(
@@ -21,7 +22,7 @@ export class DeliverableMutations {
         deliveryDate,
         status,
         createdAt,
-        reviewTimes
+        reviewTimes,
       );
       await dataSource.manager.save(newDeliverable);
       return newDeliverable;
@@ -36,7 +37,7 @@ export class DeliverableMutations {
   async updateDeliverable(
     @Arg("id") id: number,
     @Arg("name") name: string,
-    @Arg("perimeter") perimeter: string
+    @Arg("perimeter") perimeter: string,
   ): Promise<Deliverable> {
     try {
       const deliverable = await dataSource.manager.findOne(Deliverable, {
