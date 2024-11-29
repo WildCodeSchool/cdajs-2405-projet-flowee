@@ -2,7 +2,7 @@ import logo from "/images/logo.svg";
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-10">
+    <div className=" min-h-screen flex flex-col  items-center justify-center gap-10">
       <img src={logo} alt="logo flowee" />
       <h1 className="text-lg text-center">
         Velit consequatur sapiente. Iusto ut necessitatibus voluptas iusto.{" "}
