@@ -1,16 +1,35 @@
 {
-  "dependencies": {
-    "ts-node-dev": "^2.0.0"
-  },
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \\\"Error: no test specified\\\" && exit 1",
-    "start": "ts-node-dev --respawn ./src/index.ts"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": ""
+	"dependencies": {
+		"@apollo/server": "^4.11.0",
+		"class-validator": "^0.14.1",
+		"graphql": "^16.9.0",
+		"pg": "^8.13.0",
+		"reflect-metadata": "^0.2.2",
+		"ts-node-dev": "^2.0.0",
+		"type-graphql": "^2.0.0-rc.2",
+		"typeorm": "^0.3.20"
+	},
+	"name": "backend",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "jest ",
+		"testWatch": "jest --watchAll",
+		"start": "ts-node-dev --respawn ./src/index.ts"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@faker-js/faker": "^9.2.0",
+		"@types/faker": "^6.6.11",
+		"@types/jest": "^29.5.14",
+		"@types/node": "^22.7.9",
+		"@types/sinon": "^17.0.3",
+		"jest": "^29.7.0",
+		"mock-typeorm": "^1.0.1",
+		"sinon": "^19.0.2",
+		"ts-jest": "^29.2.5",
+		"typescript": "^5.6.3"
+	}
 }
