@@ -20,7 +20,7 @@ describe("Task creation", () => {
         Status.BLOCKED,
         Status.IN_PROGRESS,
         Status.COMPLETED,
-      ])
+      ]),
     );
   });
 
@@ -34,7 +34,7 @@ describe("Task creation", () => {
         task.description,
         task.status,
         task.startDate,
-        task.endDate
+        task.endDate,
       );
 
       console.info("dans les tests, tache recupérée", createdTask);
@@ -64,7 +64,7 @@ describe("Task update", () => {
         Status.BLOCKED,
         Status.IN_PROGRESS,
         Status.COMPLETED,
-      ])
+      ]),
     );
     task.id = faker.number.int();
   });
@@ -77,7 +77,7 @@ describe("Task update", () => {
       const updatedTask: Task = await taskMutations.updateTask(
         task.id!,
         task.name,
-        task.description
+        task.description,
       );
 
       expect(updatedTask).toMatchObject({
@@ -108,7 +108,7 @@ describe("Task deletion", () => {
         Status.BLOCKED,
         Status.IN_PROGRESS,
         Status.COMPLETED,
-      ])
+      ]),
     );
     task.id = faker.number.int();
   });
