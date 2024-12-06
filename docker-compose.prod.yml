@@ -1,43 +1,37 @@
 services:
   frontend:
-      # build: ./frontend
-      image: cyriellethomas/flowee-deploy-frontend
-      expose:
-        - 5173
-      command: sh -c "npm run build"
-      volumes:
-        - web-client-build:/app/build
-      environment:
-        - NODE_ENV=production  
+    # build: ./frontend
+    image: cyriellethomas/flowee-deploy-client
+    platform: linux/x86_64
+    expose:
+      - 5173
+    command: sh -c "npm run build"
+    volumes:
+      - web-client-build:/app/build
+    environment:
+      - NODE_ENV=production  
 
-  server:
-      image: cyriellethomas/flowee-deploy-server
-      command: sh -c "npm run build && npm run prod"
-      platform: linux/x86_64
-      expose:
-        - 4000
-       environment:
-        - NODE_ENV=production
-        - SERVER_PORT=4000
-        - DB_HOST: ${DB_HOST}
-        - DB_PORT: ${DB_PORT}
-        - DB_NAME: ${DB_NAME}
-        - DB_USER: ${DB_USER}
-        - DB_PASSWORD: ${DB_PASSWORD}
-      depends_on:
-        - db
+  backend:
+    image: cyriellethomas/flowee-deploy-server
+    platform: linux/x86_64
+    command: sh -c "npm run build && npm run prod"
+    expose:
+      - 4000
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=4000
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
 
   db:
     image: postgres:16
     restart: unless-stopped
-    # set shared memory limit when using docker-compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -54,8 +48,8 @@ services:
   nginx:
     image: nginx:1.21.3
     depends_on:
-      - server
-      - client
+      - backend
+      - frontend
     restart: always
     ports:
       - ${GATEWAY_PORT:-8010}:80
