@@ -15,7 +15,9 @@
   "scripts": {
     "test": "jest ",
     "testWatch": "jest --watchAll",
-    "start": "ts-node-dev --respawn ./src/index.ts"
+    "start": "ts-node-dev --respawn ./src/index.ts",
+    "build": "tsc",
+    "prod": "node build/index.js"
   },
   "author": "",
   "license": "ISC",
