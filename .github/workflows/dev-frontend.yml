@@ -1,0 +1,34 @@
+name: compile and push client image
+
+on : push 
+
+jobs:
+  post-merge:
+    # This workflow contains a single job called "build"
+    build:
+      # The type of runner that the job will run on
+      if: github.ref == 'refs/heads/dev'
+      runs-on: ubuntu-latest
+      # Steps represent a sequence of tasks that will be executed as part of the job
+      steps:
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        - name: Check out code
+          uses: actions/checkout@v2
+        # Login with Docker
+        - name: Login to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            # Generate some credentials from Dockerhub and store them into the repo secrets
+            username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        # Prepare buildx for docker
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
+
+        - name: Build and push
+          uses: docker/build-push-action@v4
+          with:
+            push: true
+            context: ./client
+            file: ./client/Dockerfile
+            tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CLIENT_IMAGE_NAME }}:latest
