@@ -1,4 +1,4 @@
-export default function ProjectsIcon({ className }: { className?: string }) {
+export default function PlusIcon({ className }: { className?: string }) {
   return (
     <svg
       width="15"
