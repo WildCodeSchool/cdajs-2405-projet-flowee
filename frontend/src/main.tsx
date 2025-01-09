@@ -1,14 +1,17 @@
+import React from "react";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./App.tsx";
+import App from "./App";
 import "./index.css";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import Home from "./Pages/Home.tsx";
-import Login from "./Pages/Login.tsx";
-import Signup from "./Pages/Signup.tsx";
-import Dashboard from "./Pages/Dashboard.tsx";
-import Projects from "./Pages/Projects.tsx";
-import Clients from "./Pages/Clients.tsx";
-import Settings from "./Pages/Settings.tsx";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
+import Dashboard from "./Pages/Dashboard";
+import Projects from "./Pages/Projects";
+import Clients from "./Pages/Clients";
+import Settings from "./Pages/Settings";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
@@ -32,7 +35,6 @@ const router = createBrowserRouter([
         element: <Signup />,
       },
       {
-        //est ce qu'on fait une route dynamique ici ou plutot dans la logique de sign in ?
         path: "/dashboard",
         element: <Dashboard />,
       },
@@ -52,6 +54,16 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default function Router() {
-  return <RouterProvider router={router} />;
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <ApolloProvider client={client}>
+        <RouterProvider router={router} />
+      </ApolloProvider>
+    </StrictMode>
+  );
+} else {
+  console.error("Root element not found");
 }
