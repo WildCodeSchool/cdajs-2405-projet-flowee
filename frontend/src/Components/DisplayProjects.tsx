@@ -25,7 +25,7 @@ const DisplayProjects = () => {
           key={project.id}
           className="bg-cover bg-center text-black p-4 rounded shadow-lg"
           style={{
-            backgroundImage: `url(${project.image || "default-image.jpg"})`,
+            // backgroundImage: `url(${project.image || "default-image.jpg"})`,
           }}
         >
           <h3 className="text-xl font-bold">{project.name}</h3>

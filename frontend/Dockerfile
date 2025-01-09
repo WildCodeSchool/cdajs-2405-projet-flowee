@@ -1,12 +1,7 @@
 FROM node:18-bookworm
 
+
 RUN mkdir /app
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-CMD npm run dev  
+CMD rm -rf node_modules package-lock.json && npm install && npm run dev
