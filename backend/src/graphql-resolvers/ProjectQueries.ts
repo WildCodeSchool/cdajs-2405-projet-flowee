@@ -4,9 +4,9 @@ import { dataSource } from "../dataSource/dataSource";
 
 @Resolver(Project)
 export class ProjectQueries {
-	@Query((type) => [Project])
-	async getAllProjects(): Promise<Project[]> {
-		const projects: Project[] = await dataSource.manager.find(Project);
-		return projects;
-	}
+  @Query((type) => [Project])
+  async getAllProjects(): Promise<Project[]> {
+    const projects: Project[] = await dataSource.manager.find(Project);
+    return projects;
+  }
 }
