@@ -1,3 +1,13 @@
 node_modules
 data/
 data/base/
+data/postmaster.pid
+data/postmaster.pid
+data/postmaster.pid
+data/base/1/pg_internal.init
+data/base/16384/pg_internal.init
+data/base/5/pg_internal.init
+data/global/pg_control
+data/global/pg_internal.init
+data/pg_wal/000000010000000000000001
+
