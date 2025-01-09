@@ -42,6 +42,12 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
   adminer:
     image: adminer
     restart: always
