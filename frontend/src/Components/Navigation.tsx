@@ -7,7 +7,7 @@ import SettingsIcon from "./Icons/SettingsIcon";
 
 export default function Navigation() {
   return (
-    <nav className="fixed bottom-0 left-0 z-50 w-full bg-white border-t border-gray-200  dark:border-gray-600">
+    <nav className="fixed bottom-0 left-0 z-50 w-full bg-white shadow-t-md">
       <ul className="flex justify-around items-center h-16">
         <li>
           <NavLink
