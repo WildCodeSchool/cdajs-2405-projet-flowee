@@ -27,7 +27,7 @@ export default function Navigation() {
         </li>
         <li>
           <NavLink
-            to="/projects"
+            to="/" //need to change this when the logic is done
             className="flex flex-col items-center text-gray-500 dark:text-gray-400"
           >
             <div className="flex items-center justify-center w-12 h-12 bg-orangebase rounded-full hover:bg-orangelight dark:hover:bg-orangelight">
