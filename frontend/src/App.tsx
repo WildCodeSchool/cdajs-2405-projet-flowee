@@ -1,11 +1,10 @@
-import logo from "/images/logo.svg";
 import DisplayProjects from "./Components/DisplayProjects.js";
 
 export default function App() {
   return (
     <>
       <div className=" min-h-screen flex flex-col  items-center justify-center gap-10">
-        <img src={logo} alt="logo flowee" />
+        <img src="/images/logo.svg" alt="logo flowee" />
         <h1 className="text-lg text-center">
           Velit consequatur sapiente. Iusto ut necessitatibus voluptas iusto.{" "}
         </h1>
