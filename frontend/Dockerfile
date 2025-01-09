@@ -1,11 +1,11 @@
 FROM node:18-bookworm
 
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir /frontend
+WORKDIR /frontend
 
 COPY package*.json ./
 
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
