@@ -1,4 +1,4 @@
-import Navigation from "../Components/Navigation";
+import Navigation from "../components/Navigation";
 
 export default function Projects() {
   return (
