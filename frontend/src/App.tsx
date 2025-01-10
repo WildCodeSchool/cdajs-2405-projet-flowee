@@ -1,5 +1,5 @@
 import logo from "/images/logo.svg";
-import DisplayProjects from "./Components/DisplayProjects.js";
+import DisplayProjects from "./Components/DisplayProjects";
 
 export default function App() {
   return (
