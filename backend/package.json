@@ -24,7 +24,6 @@
   "description": "",
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
-    "@types/faker": "^6.6.11",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.7.9",
     "@types/sinon": "^17.0.3",

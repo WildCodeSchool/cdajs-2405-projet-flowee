@@ -1,6 +1,7 @@
 node_modules
 data/
 data/base/
+<<<<<<< HEAD
 data/postmaster.pid
 data/postmaster.pid
 data/postmaster.pid
@@ -11,3 +12,7 @@ data/global/pg_control
 data/global/pg_internal.init
 data/pg_wal/000000010000000000000001
 
+=======
+
+.env
+>>>>>>> 7d97fe656b7769ab1a7a1dc0236310e710fcd63d
