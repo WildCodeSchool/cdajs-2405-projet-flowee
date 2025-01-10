@@ -1,12 +1,21 @@
 services:
-
-  server:
+  frontend:
+      build: ./frontend
+      command: sh -c "npm run dev"
+      restart: unless-stopped
+      ports:
+        - 5173:5173
+      # volumes:
+      #   - ./frontend:/app
+      #   #- /app/node_modules
+      
+  backend:
       build: ./backend
       restart: unless-stopped
       ports:
         - 4000:4000
-      volumes:
-        - ./backend:/app
+      # volumes:
+      #   - ./backend:/app
       environment:
         DB_HOST: ${DB_HOST}
         DB_PORT: ${DB_PORT}
@@ -33,6 +42,12 @@ services:
       - 5432:5432
     volumes:
       - ./data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   adminer:
     image: adminer
