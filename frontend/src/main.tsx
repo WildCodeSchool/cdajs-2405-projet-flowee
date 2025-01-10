@@ -1,17 +1,16 @@
-import React from "react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import Home from "./Pages/Home";
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
-import Dashboard from "./Pages/Dashboard";
-import Projects from "./Pages/Projects";
-import Clients from "./Pages/Clients";
-import Settings from "./Pages/Settings";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import Projects from "./pages/Projects";
+import Clients from "./pages/Clients";
+import Settings from "./pages/Settings";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
@@ -62,7 +61,7 @@ if (rootElement) {
       <ApolloProvider client={client}>
         <RouterProvider router={router} />
       </ApolloProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
   console.error("Root element not found");
