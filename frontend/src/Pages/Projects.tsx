@@ -1,5 +1,5 @@
 import Navigation from "../components/Navigation";
-
+import DisplayProjects from "../components/DisplayProjects";
 export default function Projects() {
   return (
     <div className="flex flex-col md:flex-row">
@@ -8,7 +8,7 @@ export default function Projects() {
       </div>
       <div className="flex-1 p-4 md:ml-4">
         <h1>Welcome to the Projects Page</h1>
-        {/* Add your page content here */}
+        <DisplayProjects />
       </div>
     </div>
   );
