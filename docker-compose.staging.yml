@@ -1,10 +1,10 @@
 services:
   frontend:
-    build: ./frontend
-    # image: cyriellethomas/flowee-deploy-client:staging-latest
+    # build: ./frontend
+    image: cyriellethomas/flowee-deploy-client:staging-latest
     platform: linux/x86_64
-    expose:
-      - 5173
+    ports:
+    - "5173:5173"
     command: sh -c "npm run build && npm run preview"
     restart: unless-stopped
     volumes:
@@ -13,13 +13,13 @@ services:
       - NODE_ENV=production  
     # restart: always
   backend:
-    build: ./backend
-    # image: cyriellethomas/flowee-deploy-server:staging-latest
+    # build: ./backend
+    image: cyriellethomas/flowee-deploy-server:staging-latest
     platform: linux/x86_64
     # command: sh -c "npm run prod"  
     restart: unless-stopped
-    expose:
-      - 4000
+    ports:
+    - "4000:4000"
     environment:
       - NODE_ENV=production
       - SERVER_PORT=4000
@@ -36,12 +36,14 @@ services:
     image: postgres:16
     restart: unless-stopped
     shm_size: 128mb
+    volumes:
+      - ./data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    expose:
-      - 5432
+    ports:  
+      - 5432:5432 #Port exposed to access Adminer also locally
 
   adminer:
     image: adminer
