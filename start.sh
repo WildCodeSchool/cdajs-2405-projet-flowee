@@ -1,1 +1,10 @@
-DB_HOST=db DB_PORT=5432 DB_NAME=flowee DB_PASSWORD=passworduser DB_USER=flowee_user  POSTGRES_USER=postgres POSTGRES_PASSWORD=passwordadminer  POSTGRES_DB=flowee docker compose -f docker-compose.dev.yml up --build -d --force-recreate
+docker compose --env-file .env -f docker-compose.dev.yml up --build -d --force-recreate
+
+
+docker compose --env-file .env -f docker-compose.prod.yml up --build -d --force-recreate
+
+docker compose --env-file .env -f docker-compose.staging.yml up --build -d --force-recreate
+
+docker compose -f docker-compose.prod.yml down && \ docker compose -f docker-compose.prod.yml pull && \
+
+docker compose -f docker-compose.staging.yml down && \ docker compose -f docker-compose.staging.yml pull && \
