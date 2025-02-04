@@ -11,7 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
-import Error404visitor from "./components/Error404";
+import Error404visitor from "./pages/Error404";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
