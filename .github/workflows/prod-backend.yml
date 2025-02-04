@@ -2,11 +2,11 @@ name: compile and push server image
 
 on:
   push:
+    branches:
+      - main #Push from staging after a merge from staging to main 
 
 jobs:
-  post-merge:
-    # The job for compiling and pushing the server image
-    if: github.ref == 'refs/heads/dev'
+  build-prod:
     runs-on: ubuntu-latest
     steps:
       # Check out the repository code

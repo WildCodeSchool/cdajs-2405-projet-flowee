@@ -1,0 +1,61 @@
+services:
+  frontend:
+    # build: ./frontend
+    image: cyriellethomas/flowee-deploy-client:staging-latest
+    platform: linux/x86_64
+    ports:
+    - "5173:5173"
+    command: sh -c "npm run build && npm run preview"
+    restart: unless-stopped
+    volumes:
+      - web-client-build:/app/dist
+    environment:
+      - NODE_ENV=production
+   
+    # restart: always
+  backend:
+    # build: ./backend
+    image: cyriellethomas/flowee-deploy-server:staging-latest
+    platform: linux/x86_64
+    # command: sh -c "npm run prod"  
+    restart: unless-stopped
+    ports:
+    - "4000:4000"
+    depends_on:
+      - db
+    env_file : 
+    - .env   
+ 
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    shm_size: 128mb
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    env_file : 
+    - .env  
+    ports:  
+      - 5432:5432 #Port exposed to access Adminer also locally
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  
+  nginx:
+    image: nginx:1.21.3
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+    ports:
+      - ${GATEWAY_PORT_STAGING:-8004}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - web-client-build:/web-client-build
+      - ./logs:/var/log/nginx
+
+volumes:
+  web-client-build:
