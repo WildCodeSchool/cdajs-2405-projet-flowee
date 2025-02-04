@@ -1,4 +1,3 @@
-import React from "react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -12,6 +11,8 @@ import Dashboard from "./Pages/Dashboard";
 import Projects from "./Pages/Projects";
 import Clients from "./Pages/Clients";
 import Settings from "./Pages/Settings";
+import Error404 from "./Pages/Error404";
+import Error404visitor from "./Pages/Error404";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+        errorElement: <Error404visitor />,
       },
       {
         path: "login",
@@ -52,6 +54,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "*", element: <Error404 /> },
 ]);
 
 const rootElement = document.getElementById("root");
