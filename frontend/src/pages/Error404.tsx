@@ -14,7 +14,7 @@ const Error404visitor = () => {
         />
         <NavLink
           className="bg-midorange rounded-lg px-12 py-2 text-white text-base"
-          to="/"
+          to="/home"
         >
           Go back
         </NavLink>
