@@ -9,8 +9,10 @@ module.exports = {
         orangebase: "#D98D44",
         orangelight: "#E3AB76",
         verylightorange: "#E9BB8E",
+        orangeBg: "#FAF1E7",
         bluebase: "#4A65BE",
         bluelight: "#ABB7E1",
+        verylightblue: "#EDF0FB",
       },
       boxShadow: {
         "t-md":

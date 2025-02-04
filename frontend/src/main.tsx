@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
+import Error404visitor from "./components/Error404";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+        errorElement: <Error404visitor />,
       },
       {
         path: "login",
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
         path: "/settings",
         element: <Settings />,
       },
+      {
+        path: "*",
+        element: <Error404visitor />,
+      },
     ],
   },
 ]);
@@ -61,7 +67,7 @@ if (rootElement) {
       <ApolloProvider client={client}>
         <RouterProvider router={router} />
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");
