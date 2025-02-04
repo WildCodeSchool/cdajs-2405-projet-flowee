@@ -1,6 +1,6 @@
 import { Query, Resolver } from "type-graphql";
-import { Compagny } from "../entities/Compagny";
 import { dataSource } from "../dataSource/dataSource";
+import { Compagny } from "../entities/Compagny";
 
 @Resolver(Compagny)
 export class CompagnyQueries {
