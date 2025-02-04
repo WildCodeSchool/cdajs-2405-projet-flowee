@@ -12,6 +12,7 @@ import Dashboard from "./Pages/Dashboard";
 import Projects from "./Pages/Projects";
 import Clients from "./Pages/Clients";
 import Settings from "./Pages/Settings";
+import Error404visitor from "./Components/Error404";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000",
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+        errorElement: <Error404visitor />,
       },
       {
         path: "login",
@@ -49,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <Settings />,
+      },
+      {
+        path: "*",
+        element: <Error404visitor />,
       },
     ],
   },
