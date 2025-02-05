@@ -1,4 +1,8 @@
 import { useQuery } from "@apollo/client";
+import { NavLink } from "react-router-dom";
+import { Card } from "./Cards";
+import { CardType, CardVariant } from "./Cards";
+import ArrowIcon from "./Icons/Arrow";
 import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
 
 type Project = {
@@ -11,7 +15,12 @@ type Project = {
   author: string;
 };
 
-const DisplayProjects = () => {
+interface DisplayProjectsProps {
+  variant: CardVariant;
+  type: CardType;
+}
+
+const DisplayProjects = ({ variant, type }: DisplayProjectsProps) => {
   const { loading, error, data } = useQuery(GET_ALL_PROJECTS_QUERY);
 
   if (loading) return <p>Loading...</p>;
@@ -19,23 +28,17 @@ const DisplayProjects = () => {
 
   console.log(data);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {data.getAllProjects.map((project: Project) => (
-        <div
-          key={project.id}
-          className="bg-cover bg-center text-black p-4 rounded shadow-lg"
-          style={{
-            // backgroundImage: `url(${project.image || "default-image.jpg"})`,
-          }}
-        >
+    <div className="flex flex-row gap-4 h-full">
+      {data.getAllProjects.slice(0, 3).map((project: Project) => (
+        <Card key={project.id} type={type} variant={variant}>
           <h3 className="text-xl font-bold">{project.name}</h3>
-          <p className="mt-2">{project.description}</p>
-          <p className="mt-2">
-            {project.startDate} - {project.endDate}
-          </p>
-          <p className="mt-2">Status: {project.status}</p>
-          <p className="mt-2">Author: {project.author}</p>
-        </div>
+          <aside className="flex justify-between items-center">
+            <p className="mt-2">{project.endDate}</p>
+            <NavLink to={"project"} className="bg-orangebase p-2 rounded-full">
+              <ArrowIcon />
+            </NavLink>
+          </aside>
+        </Card>
       ))}
     </div>
   );
