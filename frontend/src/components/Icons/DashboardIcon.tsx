@@ -1,5 +1,6 @@
 export default function DashboardIcon({ className }: { className?: string }) {
   return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg
       width="17"
       height="17"

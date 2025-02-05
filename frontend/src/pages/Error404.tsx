@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import Error404Illustration from "../components/IIllustrations/Error404";
+import Error404Illustration from "../components/illustrations/Error404";
 
 // Error page for visitors
 
