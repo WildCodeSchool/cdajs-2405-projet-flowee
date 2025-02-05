@@ -4,19 +4,17 @@ interface CardBackgroundProps {
   className?: string;
 }
 
-export default function CardBackground({
-  stripes,
+export const CardBackground: React.FC<CardBackgroundProps> = ({
   bg,
+  stripes,
   className,
-}: CardBackgroundProps) {
+}) => {
   return (
     <svg
-      width="330"
-      height="157"
       viewBox="0 0 330 157"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      fill="none"
     >
       <g id="bg">
         <path
@@ -38,4 +36,4 @@ export default function CardBackground({
       </g>
     </svg>
   );
-}
+};
