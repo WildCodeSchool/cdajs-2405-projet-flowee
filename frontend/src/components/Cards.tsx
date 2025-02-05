@@ -1,6 +1,6 @@
 // import { NavLink } from "react-router-dom";
 import { ReactNode } from "react";
-import CardBackground from "./illustrations/cardBackground";
+import { CardBackground } from "./illustrations/cardBackground";
 
 //Variants
 type CompanyVariant = "projects" | "deliverables" | "tasks";
@@ -63,15 +63,15 @@ export const Card = ({ children, type, variant }: CardProps) => {
   }
 
   return (
-    <div className="relative w-[330px] h-[157px] overflow-hidden rounded-xl">
+    <div className="relative w-[350px] h-[180px] m-5 rounded-xl">
       {/* Background SVG */}
       <CardBackground
         bg={bg}
         stripes={stripes}
-        className="absolute w-full h-full"
+        className="absolute h-[180px] w-[350px] inset-0  z-0"
       />
 
-      <div className="relative z-10 p-5 flex flex-col justify-between h-full">
+      <div className="relative z-10 p-5 flex flex-col justify-between h-full font-quicksand">
         {children}
       </div>
     </div>

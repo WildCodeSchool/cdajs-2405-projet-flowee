@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { NavLink } from "react-router-dom";
 import { Card } from "./Cards";
 import { CardType, CardVariant } from "./Cards";
-import ArrowIcon from "./icons/Arrow";
+import ArrowIcon from "./Icons/Arrow";
 import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
 
 type Project = {
