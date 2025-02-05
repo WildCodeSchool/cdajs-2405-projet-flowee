@@ -1,6 +1,7 @@
 export default function LogoIcon({ className }: { className?: string }) {
   return (
     <svg
+      className={className}
       width="208"
       height="48"
       viewBox="0 0 208 48"

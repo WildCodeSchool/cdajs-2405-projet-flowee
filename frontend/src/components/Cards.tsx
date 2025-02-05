@@ -6,10 +6,10 @@ import CardBackground from "./illustrations/cardBackground";
 type CompanyVariant = "projects" | "deliverables" | "tasks";
 type ClientVariant = "projects" | "deliverables" | "toReview";
 
-type CardVariant = CompanyVariant | ClientVariant;
+export type CardVariant = CompanyVariant | ClientVariant;
 
 // Types of cards
-type CardType = "company" | "client";
+export type CardType = "company" | "client";
 
 // Props for the card component
 interface CardProps {
