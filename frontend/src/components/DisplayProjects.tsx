@@ -18,18 +18,34 @@ type Project = {
 interface DisplayProjectsProps {
   variant: CardVariant;
   type: CardType;
+  searchFilter: string;
 }
 
-const DisplayProjects = ({ variant, type }: DisplayProjectsProps) => {
+const DisplayProjects = ({
+  variant,
+  type,
+  searchFilter,
+}: DisplayProjectsProps) => {
   const { loading, error, data } = useQuery(GET_ALL_PROJECTS_QUERY);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
 
-  console.log(data);
+  //Filter names of projects
+  const getFilteredProjects = () => {
+    console.log(data.getAllProjects);
+    if (searchFilter) {
+      return data.getAllProjects.filter((project: Project) => {
+        return project.name.toLowerCase().includes(searchFilter.toLowerCase());
+      });
+    }
+    return data.getAllProjects;
+  };
+  const projects = getFilteredProjects();
+
   return (
     <div className="flex flex-row gap-4 h-full">
-      {data.getAllProjects.slice(0, 3).map((project: Project) => (
+      {projects.slice(0, 4).map((project: Project) => (
         <Card key={project.id} type={type} variant={variant}>
           <h3 className="text-xl font-bold">{project.name}</h3>
           <aside className="flex justify-between items-center">
