@@ -1,5 +1,6 @@
 export default function ClientsIcon({ className }: { className?: string }) {
   return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg
       width="25"
       height="17"
