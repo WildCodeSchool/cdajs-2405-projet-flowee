@@ -19,7 +19,9 @@ module.exports = {
           "0 -4px 6px -1px rgba(0, 0, 0, 0.05), 0 -2px 4px -1px rgba(0, 0, 0, 0.03)",
       },
       spacing: {},
-      fontFamily: {},
+      fontFamily: {
+        quicksand: ["Quicksand", "sans-serif"],
+      },
     },
     plugins: [],
   },
