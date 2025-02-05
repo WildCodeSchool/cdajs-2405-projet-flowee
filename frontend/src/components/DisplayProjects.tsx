@@ -28,7 +28,7 @@ const DisplayProjects = ({ variant, type }: DisplayProjectsProps) => {
 
   console.log(data);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:h=full">
+    <div className="flex flex-row gap-4 h-full">
       {data.getAllProjects.slice(0, 3).map((project: Project) => (
         <Card key={project.id} type={type} variant={variant}>
           <h3 className="text-xl font-bold">{project.name}</h3>
