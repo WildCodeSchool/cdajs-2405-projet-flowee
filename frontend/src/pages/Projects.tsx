@@ -8,7 +8,7 @@ export default function Projects() {
       </div>
       <div className="flex-1 p-4 md:ml-4">
         <h1>Welcome to the Projects Page</h1>
-        <DisplayProjects />
+        <DisplayProjects type="company" variant="projects" />
       </div>
     </div>
   );
