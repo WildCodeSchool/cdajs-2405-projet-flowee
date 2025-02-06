@@ -2,5 +2,6 @@ export enum Status {
   NOT_STARTED = "NOT_STARTED",
   BLOCKED = "BLOCKED",
   IN_PROGRESS = "IN_PROGRESS",
+  MODIFY = "MODIFY",
   COMPLETED = "COMPLETED",
 }

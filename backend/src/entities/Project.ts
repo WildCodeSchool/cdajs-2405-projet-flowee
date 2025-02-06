@@ -14,7 +14,7 @@ import { CompanyUser } from "./CompanyUser";
 @Entity()
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field(() => ID)
   id?: number;
 
   @Column()
@@ -47,7 +47,7 @@ export class Project extends BaseEntity {
     (client) => client.projects,
     { nullable: true, onDelete: "SET NULL" },
   )
-  @Field((type) => Client, { nullable: true })
+  @Field(() => Client, { nullable: true })
   client?: Client;
 
   @ManyToOne(
@@ -55,7 +55,7 @@ export class Project extends BaseEntity {
     (companyUser) => companyUser.projects,
     { nullable: true, onDelete: "SET NULL" },
   )
-  @Field((type) => CompanyUser, { nullable: true })
+  @Field(() => CompanyUser, { nullable: true })
   companyUser?: CompanyUser;
 
   constructor(
