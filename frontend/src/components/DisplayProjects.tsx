@@ -23,12 +23,14 @@ interface DisplayProjectsProps {
   variant: CardVariant;
   type: CardType;
   searchFilter: string;
+  limit?: number;
 }
 
 const DisplayProjects = ({
   variant,
   type,
   searchFilter,
+  limit,
 }: DisplayProjectsProps) => {
   const { loading, error, data } = useQuery(GET_ALL_PROJECTS_QUERY);
 
@@ -57,7 +59,7 @@ const DisplayProjects = ({
 
   return (
     <div className="flex flex-row gap-4 h-full">
-      {projects.slice(0, 4).map((project: Project) => (
+      {projects.slice(0, limit || projects.length).map((project: Project) => (
         <Card key={project.id} type={type} variant={variant}>
           <h3 className="text-xl font-bold">{project.name}</h3>
           <aside className="flex justify-between items-center">

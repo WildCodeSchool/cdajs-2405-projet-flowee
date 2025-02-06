@@ -17,6 +17,7 @@ export default function Dashboard() {
           type="company"
           variant="projects"
           searchFilter={searchFilter}
+          limit={5}
         />
       </div>
     </div>
