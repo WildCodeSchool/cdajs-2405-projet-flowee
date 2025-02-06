@@ -2,7 +2,6 @@ import { useState } from "react";
 import DisplayProjects from "../components/DisplayProjects";
 import Navigation from "../components/Navigation";
 import SearchBar from "../components/Search";
-// import SearchBar from "../components/Searchbar";
 
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");
