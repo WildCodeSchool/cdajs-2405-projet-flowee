@@ -23,8 +23,8 @@ const Section: React.FC<SectionProps> = ({
   showMore = false,
   className,
 }) => (
-  <section className={`flex flex-col gap-4 md:gap-2 ${className || ""}`}>
-    <article className="flex justify-between items-center">
+  <section className={`flex flex-col gap-4 md:gap-4 ${className || ""}`}>
+    <article className="flex justify-between items-center ">
       <h2 className="text-2xl font-bold">{title}</h2>
       {showMore && <NavLink to={variant}>Voir plus</NavLink>}
     </article>
@@ -59,17 +59,17 @@ export default function Dashboard() {
         />
         <Section
           title="Deliverables"
-          type="deliverable"
+          type="project" //will have to change this to deliverable
           variant="deliverables"
           searchFilter={searchFilter}
-          className="hidden md:block"
+          className="hidden md:flex"
         />
         <Section
           title="Tasks"
-          type="task"
+          type="project" //will have to change this to task
           variant="tasks"
           searchFilter={searchFilter}
-          className="hidden md:block"
+          className="hidden md:flex"
         />
       </main>
     </div>
