@@ -3,67 +3,60 @@ import { NavLink } from "react-router-dom";
 import { Card } from "./Cards";
 import { CardType, CardVariant } from "./Cards";
 import ArrowIcon from "./Icons/Arrow";
-import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
 
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-  author: string;
-  client: {
-    firstname: string;
-    lastname: string;
-  };
-};
-
-interface DisplayProjectsProps {
+interface DisplayCardsProps {
+  query: any;
   variant: CardVariant;
   type: CardType;
   searchFilter: string;
   limit?: number;
+  cardType: "project" | "deliverable" | "task";
 }
 
 const DisplayCards = ({
+  query,
   variant,
   type,
   searchFilter,
   limit,
-}: DisplayProjectsProps) => {
-  const { loading, error, data } = useQuery(GET_ALL_PROJECTS_QUERY);
+  cardType,
+}: DisplayCardsProps) => {
+  const { loading, error, data } = useQuery(query);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
 
   //Filter names of projects
-  const getFilteredProjects = () => {
+  const getFilteredCards = () => {
     if (searchFilter) {
-      return data.getAllProjects.filter((project: Project) => {
-        const projectName = project.name.toLowerCase();
-        const clientFirstName = project.client?.firstname?.toLowerCase() || "";
-        const clientLastName = project.client?.lastname?.toLowerCase() || "";
+      return [
+        `getAll${cardType.charAt(0).toUpperCase() + cardType.slice(1)}s`,
+      ].filter((card: any) => {
+        const cardName = card.name.toLowerCase();
+        const clientFirstName = card.client?.firstname?.toLowerCase() || "";
+        const clientLastName = card.client?.lastname?.toLowerCase() || "";
         const search = searchFilter.toLowerCase();
 
         return (
-          projectName.includes(search) ||
+          cardName.includes(search) ||
           clientFirstName.includes(search) ||
           clientLastName.includes(search)
         );
       });
     }
-    return data.getAllProjects;
+    return data[
+      `getAll${cardType.charAt(0).toUpperCase() + cardType.slice(1)}s`
+    ];
   };
-  const projects = getFilteredProjects();
+  const cards = getFilteredCards();
 
   return (
-    <div className="flex flex-row gap-4 h-full">
-      {projects.slice(0, limit || projects.length).map((project: Project) => (
-        <Card key={project.id} type={type} variant={variant}>
-          <h3 className="text-xl font-bold">{project.name}</h3>
+    <div className="flex flex-col md:flex-row gap-4  w-full">
+      {cards.slice(0, limit || cards.length).map((card: any) => (
+        <Card key={card.id} type={type} variant={variant}>
+          <h3 className="text-xl font-bold">{card.name}</h3>
           <aside className="flex justify-between items-center">
-            <p className="mt-2">{project.endDate}</p>
+            <p className="mt-2">{card.endDate}</p>
             <NavLink to={"project"} className="bg-orangebase p-2 rounded-full">
               <ArrowIcon />
             </NavLink>
