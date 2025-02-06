@@ -26,7 +26,7 @@ interface DisplayProjectsProps {
   limit?: number;
 }
 
-const DisplayProjects = ({
+const DisplayCards = ({
   variant,
   type,
   searchFilter,
@@ -74,4 +74,4 @@ const DisplayProjects = ({
   );
 };
 
-export default DisplayProjects;
+export default DisplayCards;
