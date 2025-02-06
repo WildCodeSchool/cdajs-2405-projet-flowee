@@ -63,12 +63,12 @@ export const Card = ({ children, type, variant }: CardProps) => {
   }
 
   return (
-    <div className="relative w-full md:w-[350px] h-[180px]  rounded-xl">
+    <div className="relative h-[180px]  w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden">
       {/* Background SVG */}
       <CardBackground
         bg={bg}
         stripes={stripes}
-        className="absolute h-[180px] w-full md:w-[350px] inset-0  z-0"
+        className="absolute h-full w-full inset-0  z-0"
       />
 
       <div className="relative z-10 p-5 flex flex-col justify-between h-full font-quicksand">
