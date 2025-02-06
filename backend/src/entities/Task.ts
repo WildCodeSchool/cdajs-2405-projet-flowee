@@ -13,7 +13,7 @@ import type { Status } from "../enums/Status";
 @Entity()
 export class Task extends BaseEntity {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field(() => ID)
   id?: number;
 
   @Column()
@@ -42,7 +42,7 @@ export class Task extends BaseEntity {
     (deliverable) => deliverable.tasks,
     { nullable: true, onDelete: "SET NULL" },
   )
-  @Field((type) => Deliverable, { nullable: true })
+  @Field(() => Deliverable, { nullable: true })
   deliverable?: Deliverable;
 
   constructor(

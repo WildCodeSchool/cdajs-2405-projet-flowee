@@ -4,7 +4,7 @@ import { dataSource } from "../dataSource/dataSource";
 
 @Resolver(Client)
 export class ClientQueries {
-  @Query((type) => [Client])
+  @Query(() => [Client])
   async getAllClients(): Promise<Client[]> {
     const Clients: Client[] = await dataSource.manager.find(Client);
     return Clients;

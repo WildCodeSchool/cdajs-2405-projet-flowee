@@ -1,5 +1,4 @@
 import Navigation from "../components/Navigation";
-import DisplayProjects from "../components/DisplayProjects";
 export default function Projects() {
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden">

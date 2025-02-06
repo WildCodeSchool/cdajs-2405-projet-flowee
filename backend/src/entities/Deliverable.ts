@@ -46,7 +46,7 @@ export class Deliverable extends BaseEntity {
     () => Task,
     (task) => task.deliverable,
   )
-  @Field((type) => [Task])
+  @Field(() => [Task])
   tasks?: Task[];
 
   constructor(
