@@ -12,6 +12,7 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
     setSearch(e.target.value);
   };
 
+  // Send data to parent component
   const sendData = () => {
     setSearchFilter(search);
   };
