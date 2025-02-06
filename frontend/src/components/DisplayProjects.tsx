@@ -13,6 +13,10 @@ type Project = {
   endDate: string;
   status: string;
   author: string;
+  client: {
+    firstname: string;
+    lastname: string;
+  };
 };
 
 interface DisplayProjectsProps {
@@ -33,10 +37,18 @@ const DisplayProjects = ({
 
   //Filter names of projects
   const getFilteredProjects = () => {
-    console.log(data.getAllProjects);
     if (searchFilter) {
       return data.getAllProjects.filter((project: Project) => {
-        return project.name.toLowerCase().includes(searchFilter.toLowerCase());
+        const projectName = project.name.toLowerCase();
+        const clientFirstName = project.client?.firstname?.toLowerCase() || "";
+        const clientLastName = project.client?.lastname?.toLowerCase() || "";
+        const search = searchFilter.toLowerCase();
+
+        return (
+          projectName.includes(search) ||
+          clientFirstName.includes(search) ||
+          clientLastName.includes(search)
+        );
       });
     }
     return data.getAllProjects;
