@@ -63,7 +63,7 @@ export const Card = ({ children, type, variant }: CardProps) => {
   }
 
   return (
-    <div className="relative w-[350px] h-[180px] m-5 rounded-xl">
+    <div className="relative w-[350px] h-[180px]  rounded-xl">
       {/* Background SVG */}
       <CardBackground
         bg={bg}

@@ -1,10 +1,8 @@
-import { dataSource} from "../dataSource/dataSource"
-import { Project } from "../entities/Project"
-import { Mutation, Arg, InputType, Field, Resolver  } from "type-graphql"
+import { dataSource } from "../dataSource/dataSource";
+import { Project } from "../entities/Project";
+import { Mutation, Arg, Resolver } from "type-graphql";
 
-
-
-// @InputType() 
+// @InputType()
 // export class ProjectInput {
 
 // 	@Field()
@@ -13,40 +11,40 @@ import { Mutation, Arg, InputType, Field, Resolver  } from "type-graphql"
 // 	@Field({ nullable: true })
 // 	author?: string;
 
-
 // 	@Field({ nullable: true })
 // 	description?: string;
 
-
 // 	@Field((type) => Date)
 // 	startDate?: Date;
-
 
 // 	@Field((type) => Date)
 // 	endDate?: Date;
 
 // }
 
-@Resolver(Project) 
+@Resolver(Project)
 export class ProjectMutations {
-
-
-  @Mutation((_)=> Project)
-  async createProject(@Arg("name") name: string,
-  @Arg("author", { nullable: true }) author: string,
-  @Arg("description", { nullable: true }) description: string,
-  @Arg("startDate", { nullable: true }) startDate?: string  ,
-  @Arg("endDate", { nullable: true }) endDate?:string  ) : Promise<Project> {
-    
-
+  @Mutation((_) => Project)
+  async createProject(
+    @Arg("name") name: string,
+    @Arg("author", { nullable: true }) author: string,
+    @Arg("description", { nullable: true }) description: string,
+    @Arg("startDate", { nullable: true }) startDate?: string,
+    @Arg("endDate", { nullable: true }) endDate?: string
+  ): Promise<Project> {
     try {
-      const newProject= new Project(name, author, description, startDate,endDate) ; 
-      await dataSource.manager.save(newProject); 
+      const newProject = new Project(
+        name,
+        author,
+        description,
+        startDate,
+        endDate
+      );
+      await dataSource.manager.save(newProject);
       return newProject;
     } catch (error) {
-      console.info(error)
-      throw new Error("Invalid information")
+      console.info(error);
+      throw new Error("Invalid information");
     }
-
   }
 }
