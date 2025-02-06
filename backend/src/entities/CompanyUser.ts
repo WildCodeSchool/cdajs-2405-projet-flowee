@@ -32,7 +32,7 @@ export class CompanyUser extends BaseEntity {
     () => Project,
     (project) => project.client,
   )
-  @Field((type) => [Project])
+  @Field(() => [Project])
   projects?: Project[];
 
   @OneToOne(() => Account)
@@ -45,7 +45,7 @@ export class CompanyUser extends BaseEntity {
     (company) => company.companyUsers,
     { nullable: true, onDelete: "SET NULL" },
   )
-  @Field((type) => Compagny, { nullable: true })
+  @Field(() => Compagny, { nullable: true })
   company?: Compagny;
 
   constructor(firstname: string, lastname: string) {

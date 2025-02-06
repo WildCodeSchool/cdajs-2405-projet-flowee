@@ -1,8 +1,7 @@
 import { dataSource } from "../dataSource/dataSource";
-import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
 import { Status } from "../enums/Status";
-import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
+import { Mutation, Arg, Resolver } from "type-graphql";
 
 @Resolver(Task)
 export class TaskMutations {
