@@ -3,7 +3,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { dataSource } from "./dataSource/dataSource";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
-7;
+import { initTestData } from "./dataSource/dataSource";
 import { buildSchema } from "type-graphql";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
@@ -39,7 +39,7 @@ async function startServerApollo() {
     await dataSource.initialize();
     console.log("Data Source has been initialized!");
     //cleanDB();
-    //initTestData();
+    initTestData();
 
     const { url } = await startStandaloneServer(server, {
       listen: { port },
