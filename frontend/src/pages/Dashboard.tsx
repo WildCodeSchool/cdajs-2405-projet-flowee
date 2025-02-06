@@ -5,6 +5,7 @@ import SearchBar from "../components/Search";
 import { NavLink } from "react-router-dom";
 import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
 import { CardType, CardVariant } from "../components/Cards";
+import { GET_ALL_DELIVERABLES_QUERY } from "../graphql-queries/deliverables";
 
 interface SectionProps {
   title: string;
@@ -14,6 +15,17 @@ interface SectionProps {
   showMore?: boolean;
   className?: string;
 }
+
+const chooseQuery = (type: CardVariant) => {
+  switch (type) {
+    case "projects":
+      return GET_ALL_PROJECTS_QUERY;
+    case "deliverables":
+      return GET_ALL_DELIVERABLES_QUERY;
+    default:
+      return GET_ALL_PROJECTS_QUERY;
+  }
+};
 
 const Section: React.FC<SectionProps> = ({
   title,
@@ -29,7 +41,7 @@ const Section: React.FC<SectionProps> = ({
       {showMore && <NavLink to={variant}>Voir plus</NavLink>}
     </article>
     <DisplayCards
-      query={GET_ALL_PROJECTS_QUERY}
+      query={chooseQuery(variant)}
       type="company"
       variant={variant}
       searchFilter={searchFilter}
@@ -59,7 +71,7 @@ export default function Dashboard() {
         />
         <Section
           title="Deliverables"
-          type="project" //will have to change this to deliverable
+          type="deliverable" //will have to change this to deliverable
           variant="deliverables"
           searchFilter={searchFilter}
           className="hidden md:flex"

@@ -28,10 +28,13 @@ const DisplayCards = ({
 
   //Filter names of projects
   const getFilteredCards = () => {
-    const key: string = `getAll${
-      cardType.charAt(0).toUpperCase() + cardType.slice(1)
-    }s`;
-    const allData = data[key] || [];
+    const dataKeys: Record<string, string> = {
+      project: "getAllProjects",
+      deliverable: "getAllDeliverables",
+      task: "getAllTasks",
+    };
+
+    const allData = data?.[dataKeys[cardType]] || [];
 
     if (searchFilter) {
       return allData.filter((card: any) => {
@@ -58,7 +61,10 @@ const DisplayCards = ({
           <h3 className="text-xl font-bold">{card.name}</h3>
           <aside className="flex justify-between items-center">
             <p className="mt-2">{card.endDate}</p>
-            <NavLink to={"project"} className="bg-orangebase p-2 rounded-full">
+            <NavLink
+              to={`/${cardType}/${card.id}`}
+              className="bg-orangebase p-2 rounded-full"
+            >
               <ArrowIcon />
             </NavLink>
           </aside>
