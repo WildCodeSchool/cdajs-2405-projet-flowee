@@ -28,10 +28,13 @@ const DisplayCards = ({
 
   //Filter names of projects
   const getFilteredCards = () => {
+    const key: string = `getAll${
+      cardType.charAt(0).toUpperCase() + cardType.slice(1)
+    }s`;
+    const allData = data[key] || [];
+
     if (searchFilter) {
-      return [
-        `getAll${cardType.charAt(0).toUpperCase() + cardType.slice(1)}s`,
-      ].filter((card: any) => {
+      return allData.filter((card: any) => {
         const cardName = card.name.toLowerCase();
         const clientFirstName = card.client?.firstname?.toLowerCase() || "";
         const clientLastName = card.client?.lastname?.toLowerCase() || "";
@@ -44,14 +47,12 @@ const DisplayCards = ({
         );
       });
     }
-    return data[
-      `getAll${cardType.charAt(0).toUpperCase() + cardType.slice(1)}s`
-    ];
+    return allData;
   };
   const cards = getFilteredCards();
 
   return (
-    <div className="flex flex-col md:flex-row gap-4  w-full">
+    <div className="flex flex-col md:flex-row  gap-4  w-full h-auto">
       {cards.slice(0, limit || cards.length).map((card: any) => (
         <Card key={card.id} type={type} variant={variant}>
           <h3 className="text-xl font-bold">{card.name}</h3>
