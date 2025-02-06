@@ -17,7 +17,7 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
 
   //Only filter project and name now
   return (
-    <div className="flex items-center justify-center flex-col">
+    <div className="flex items-center justify-center flex-col mb-3">
       <input
         type="text"
         value={search}
