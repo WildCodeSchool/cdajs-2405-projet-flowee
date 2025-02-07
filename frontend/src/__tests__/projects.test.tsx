@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 import { BrowserRouter } from "react-router-dom";
-import DisplayProjects from "../components/DisplayProjects";
+import DisplayCards from "../components/DisplayCards";
 import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
 
 const mockProjects = [
@@ -31,16 +31,42 @@ const mocks = [
   },
 ];
 
-describe("DisplayProjects Component", () => {
-  it("render without error", async () => {
+describe("DisplayCards Component", () => {
+  it("renders loading state", () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <DisplayProjects variant="projects" type="company" searchFilter="" />
+          <DisplayCards
+            query={GET_ALL_PROJECTS_QUERY}
+            variant="projects"
+            type="company"
+            searchFilter=""
+            cardType="project"
+          />
+        </BrowserRouter>
+      </MockedProvider>,
+    );
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
+  });
+
+  it("renders project data correctly", async () => {
+    render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <DisplayCards
+            query={GET_ALL_PROJECTS_QUERY}
+            variant="projects"
+            type="company"
+            searchFilter=""
+            cardType="project"
+          />
         </BrowserRouter>
       </MockedProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Projet Alpha")).toBeInTheDocument();
+      expect(screen.getByText("2024-12-31")).toBeInTheDocument();
+    });
   });
 });
