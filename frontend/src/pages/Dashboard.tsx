@@ -57,7 +57,14 @@ const Section: React.FC<SectionProps> = ({
     <section className={`flex flex-col gap-4 md:gap-4 ${className || ""}`}>
       <article className="flex justify-between items-center ">
         <h2 className="text-2xl font-bold">{title}</h2>
-        {showMore && <NavLink to={variant}>Voir plus</NavLink>}
+        {showMore && (
+          <NavLink
+            className="bg-midorange rounded-lg px-10 py-2 text-white text-base text-center"
+            to="../projects"
+          >
+            Voir plus
+          </NavLink>
+        )}
       </article>
       <DisplayCards
         query={chooseQuery(variant)}
