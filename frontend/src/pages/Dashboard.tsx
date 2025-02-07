@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DisplayCards from "../components/DisplayCards";
 import Navigation from "../components/Navigation";
 import SearchBar from "../components/Search";
 import { NavLink } from "react-router-dom";
 import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
-import { CardType, CardVariant } from "../components/Cards";
+import { CardVariant } from "../components/Cards";
 import { GET_ALL_DELIVERABLES_QUERY } from "../graphql-queries/deliverables";
 
 interface SectionProps {
@@ -34,22 +34,42 @@ const Section: React.FC<SectionProps> = ({
   searchFilter,
   showMore = false,
   className,
-}) => (
-  <section className={`flex flex-col gap-4 md:gap-4 ${className || ""}`}>
-    <article className="flex justify-between items-center ">
-      <h2 className="text-2xl font-bold">{title}</h2>
-      {showMore && <NavLink to={variant}>Voir plus</NavLink>}
-    </article>
-    <DisplayCards
-      query={chooseQuery(variant)}
-      type="company"
-      variant={variant}
-      searchFilter={searchFilter}
-      cardType={type}
-      limit={4}
-    />
-  </section>
-);
+}) => {
+  const [limit, setLimit] = useState(5);
+
+  useEffect(() => {
+    const updateLimit = () => {
+      if (window.innerWidth < 1300) {
+        setLimit(4);
+      } else {
+        setLimit(5);
+      }
+    };
+
+    updateLimit();
+    window.addEventListener("resize", updateLimit);
+
+    return () => {
+      window.removeEventListener("resize", updateLimit);
+    };
+  }, []);
+  return (
+    <section className={`flex flex-col gap-4 md:gap-4 ${className || ""}`}>
+      <article className="flex justify-between items-center ">
+        <h2 className="text-2xl font-bold">{title}</h2>
+        {showMore && <NavLink to={variant}>Voir plus</NavLink>}
+      </article>
+      <DisplayCards
+        query={chooseQuery(variant)}
+        type="company"
+        variant={variant}
+        searchFilter={searchFilter}
+        cardType={type}
+        limit={limit}
+      />
+    </section>
+  );
+};
 
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");
@@ -71,7 +91,7 @@ export default function Dashboard() {
         />
         <Section
           title="Deliverables"
-          type="deliverable" //will have to change this to deliverable
+          type="deliverable"
           variant="deliverables"
           searchFilter={searchFilter}
           className="hidden md:flex"
