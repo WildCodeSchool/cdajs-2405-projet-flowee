@@ -3,7 +3,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { dataSource } from "./dataSource/dataSource";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
-7;
+
 import { buildSchema } from "type-graphql";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
