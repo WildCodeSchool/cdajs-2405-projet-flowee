@@ -62,7 +62,7 @@ const Section: React.FC<SectionProps> = ({
             className="bg-midorange rounded-lg px-10 py-2 text-white text-base text-center"
             to="../projects"
           >
-            Voir plus
+            See more
           </NavLink>
         )}
       </article>
