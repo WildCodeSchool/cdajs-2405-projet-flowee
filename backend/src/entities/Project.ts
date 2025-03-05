@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { IsEmail, IsNotEmpty } from "class-validator";
 import type { Status } from "../enums/Status";
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
@@ -19,11 +20,18 @@ export class Project extends BaseEntity {
 
   @Column()
   @Field()
+  @IsNotEmpty({ message: "Project Name is required" })
   name: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  author: string;
+  @Column({ nullable: false })
+  @Field()
+  @IsEmail({}, { message: "Invalid email format" })
+  clientEmail : string
+
+  @Column()
+  @Field()
+  @IsNotEmpty({ message: "company user ID is required" })
+  companyUserId: number;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -60,7 +68,8 @@ export class Project extends BaseEntity {
 
   constructor(
     name: string,
-    author: string,
+    clientEmail: string,
+    companyUserId: number,
     description: string,
     startDate?: string,
     endDate?: string,
@@ -69,10 +78,11 @@ export class Project extends BaseEntity {
     super();
 
     this.name = name;
-    this.author = author;
+    this.clientEmail = clientEmail;
+    this.companyUserId = companyUserId;
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
     this.status = status;
-  }
+    
 }
