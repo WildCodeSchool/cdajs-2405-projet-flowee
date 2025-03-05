@@ -13,7 +13,8 @@ import { TaskMutations } from "./graphql-resolvers/TaskMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { ClientQueries } from "./graphql-resolvers/ClientQueries";
-
+import { ClientMutations } from "./graphql-resolvers/ClientMutations";
+import { AccountMutation } from "./graphql-resolvers/AccountMutation";
 const port = 4000;
 
 async function startServerApollo() {
@@ -29,7 +30,9 @@ async function startServerApollo() {
         DeliverableQueries,
         DeliverableMutations,
         ClientQueries,
+        ClientMutations,
         CompagnyMutations,
+        AccountMutation,
       ],
     });
     const server = new ApolloServer({

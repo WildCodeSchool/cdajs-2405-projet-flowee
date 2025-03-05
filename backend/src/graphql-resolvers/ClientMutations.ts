@@ -1,4 +1,5 @@
 import { dataSource } from "../dataSource/dataSource";
+import { Account } from "../entities/Account";
 import { Client } from "../entities/Client";
 import { Mutation, Arg, Resolver } from "type-graphql";
 
@@ -6,16 +7,23 @@ import { Mutation, Arg, Resolver } from "type-graphql";
 export class ClientMutations {
   @Mutation((_) => Client)
   async createClient(
-    @Arg("firstName") firstName: string,
-    @Arg("lastName") lastName: string
+    @Arg("Name") name: string,
+    @Arg("accountId") accountId: number,
   ): Promise<Client> {
     try {
-      const newClient = new Client(firstName, lastName);
+      //On verifié si account existe
+      const account = await dataSource.manager.findOne(Account, {
+        where: { id: accountId },
+      });
+      if (!account) {
+        throw new Error("Account not found");
+      }
+      const newClient = new Client(name, accountId);
       await dataSource.manager.save(newClient);
       return newClient;
     } catch (error) {
-      console.info(error);
-      throw new Error("Invalid information");
+      console.error(error);
+      throw new Error("Failed ot create client");
     }
   }
 }

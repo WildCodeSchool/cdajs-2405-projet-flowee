@@ -18,28 +18,25 @@ export class Client extends BaseEntity {
   @Field(() => ID)
   id?: number;
 
-  @Column()
-  @Field()
-  firstname: string;
-
-  @Column()
-  @Field()
-  lastname: string;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  name: string;
 
   @OneToMany(
     () => Project,
     (project) => project.client,
+    { eager: true },
   )
-  @Field(() => [Project])
   projects?: Project[];
 
-  @OneToOne(() => Account)
-  @JoinColumn()
+  @OneToOne(() => Account, { eager: true })
+  @JoinColumn({ name: "account_id" })
+  @Field(() => Account, { nullable: true })
   account?: Account;
 
-  constructor(firstname: string, lastname: string) {
+  constructor(name: string, account: Account) {
     super();
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.name = name;
+    this.account = account;
   }
 }
