@@ -3,10 +3,10 @@ import {
   BaseEntity,
   Column,
   Entity,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Project } from "./Project";
+import { Client } from "./Client";
 import type { Role } from "../enums/Role";
 
 @ObjectType()
@@ -28,12 +28,11 @@ export class Account extends BaseEntity {
   @Field()
   role: Role;
 
-  @OneToMany(
-    () => Project,
-    (project) => project.client,
+  @OneToOne(
+    () => Client,
+    (client) => client.account,
   )
-  @Field(() => [Project])
-  projects?: Project[];
+  client?: Client;
 
   constructor(email: string, password: string, role: Role) {
     super();
