@@ -6,7 +6,9 @@ import { dataSource } from "../dataSource/dataSource";
 export class ProjectQueries {
   @Query(() => [Project])
   async getAllProjects(): Promise<Project[]> {
-    const projects: Project[] = await dataSource.manager.find(Project);
+    const projects: Project[] = await dataSource.manager.find(Project, {
+      relations: ["client"],
+    });
     return projects;
   }
 }

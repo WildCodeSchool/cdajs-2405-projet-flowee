@@ -4,7 +4,7 @@ import {
   Column,
   Entity,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { CompanyUser } from "./CompanyUser";
 
@@ -35,7 +35,7 @@ export class Compagny extends BaseEntity {
     () => CompanyUser,
     (companyUser) => companyUser.company,
   )
-  @Field((type) => [CompanyUser])
+  @Field(() => [CompanyUser])
   companyUsers?: CompanyUser[];
 
   constructor(name: string, address: string, contactInfo: string) {

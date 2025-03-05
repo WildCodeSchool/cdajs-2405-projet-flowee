@@ -1,5 +1,4 @@
 import Navigation from "../components/Navigation";
-import DisplayProjects from "../components/DisplayProjects";
 export default function Projects() {
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden">
@@ -8,7 +7,6 @@ export default function Projects() {
       </div>
       <div className="flex-1 px-4 md:ml-4 h-full overflow-auto">
         <h1>Welcome to the Projects Page</h1>
-        <DisplayProjects type="company" variant="projects" />
       </div>
     </div>
   );

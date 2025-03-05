@@ -30,7 +30,7 @@ export class Client extends BaseEntity {
     () => Project,
     (project) => project.client,
   )
-  @Field((type) => [Project])
+  @Field(() => [Project])
   projects?: Project[];
 
   @OneToOne(() => Account)

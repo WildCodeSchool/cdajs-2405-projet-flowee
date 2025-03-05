@@ -18,12 +18,9 @@ export class ProjectMutations {
       await dataSource.manager.save(newProject);
       return newProject;
     } catch (error) {
-      // Relancer l’erreur si c’est déjà un GraphQLError
       if (error instanceof GraphQLError) {
         throw error;
       }
-
-      // Sinon, envelopper l’erreur dans un message plus global
       throw new GraphQLError("Failed to create project", {
         extensions: {
           code: "CREATE_PROJECT_ERROR",
