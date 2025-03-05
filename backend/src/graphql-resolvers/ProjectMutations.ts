@@ -1,30 +1,11 @@
 import { dataSource } from "../dataSource/dataSource";
+import { GraphQLError } from "graphql";
 import { Project } from "../entities/Project";
 import { Mutation, Arg, Resolver } from "type-graphql";
 
-// @InputType()
-// export class ProjectInput {
-
-// 	@Field()
-// 	name!: string;
-
-// 	@Field({ nullable: true })
-// 	author?: string;
-
-// 	@Field({ nullable: true })
-// 	description?: string;
-
-// 	@Field((type) => Date)
-// 	startDate?: Date;
-
-// 	@Field((type) => Date)
-// 	endDate?: Date;
-
-// }
-
 @Resolver(Project)
 export class ProjectMutations {
-  @Mutation((_) => Project)
+  @Mutation(() => Project)
   async createProject(
     @Arg("name") name: string,
     @Arg("author", { nullable: true }) author: string,
@@ -33,18 +14,19 @@ export class ProjectMutations {
     @Arg("endDate", { nullable: true }) endDate?: string
   ): Promise<Project> {
     try {
-      const newProject = new Project(
-        name,
-        author,
-        description,
-        startDate,
-        endDate
-      );
+      const newProject = new Project(name, author, description, startDate, endDate);
       await dataSource.manager.save(newProject);
       return newProject;
     } catch (error) {
-      console.info(error);
-      throw new Error("Invalid information");
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+      throw new GraphQLError("Failed to create project", {
+        extensions: {
+          code: "CREATE_PROJECT_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 }

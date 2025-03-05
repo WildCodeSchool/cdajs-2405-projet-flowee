@@ -1,7 +1,7 @@
-import { Project } from "../entities/Project";
 import { faker } from "@faker-js/faker";
-import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
+import { Project } from "../entities/Project";
+import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
 
 describe("Project creation", () => {
 	let projectMutations: ProjectMutations;

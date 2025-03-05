@@ -23,11 +23,16 @@ export class CompagnyMutations {
 
       return newCompagny;
     } catch (error) {
-      const err = error as Error;
+       // Si l’erreur est déjà un GraphQLError
+    if (error instanceof GraphQLError) {
+      throw error;
+    }
+
+     // Sinon, on l’enveloppe dans un message plus général
       throw new GraphQLError("Failed to create compagny", {
         extensions: {
           code: "CREATE_COMPAGNY_ERROR",
-          originalError: err.message || "Unknown error",
+         originalError: (error as Error).message  || "Unknown error",
         },
       });
     }
