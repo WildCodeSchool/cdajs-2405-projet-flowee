@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { IsEmail, IsNotEmpty } from "class-validator";
-import type { Status } from "../enums/Status";
+import { Status } from "../enums/Status";
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
 
@@ -18,7 +18,7 @@ export class Project extends BaseEntity {
   @Field(() => ID)
   id?: number;
 
-  @Column()
+  @Column({ nullable: false })
   @Field()
   @IsNotEmpty({ message: "Project Name is required" })
   name: string;
@@ -26,7 +26,7 @@ export class Project extends BaseEntity {
   @Column({ nullable: false })
   @Field()
   @IsEmail({}, { message: "Invalid email format" })
-  clientEmail : string
+  clientEmail: string;
 
   @Column()
   @Field()
@@ -35,7 +35,7 @@ export class Project extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  description: string;
+  description?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -45,7 +45,7 @@ export class Project extends BaseEntity {
   @Field({ nullable: true })
   endDate?: string;
 
-  @Column({ nullable: true })
+  @Column({ default: Status.NOT_STARTED })
   @Field({ nullable: true })
   status?: Status;
 
@@ -70,7 +70,7 @@ export class Project extends BaseEntity {
     name: string,
     clientEmail: string,
     companyUserId: number,
-    description: string,
+    description?: string,
     startDate?: string,
     endDate?: string,
     status?: Status,
@@ -84,5 +84,5 @@ export class Project extends BaseEntity {
     this.startDate = startDate;
     this.endDate = endDate;
     this.status = status;
-    
+  }
 }

@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { Project } from "../entities/Project";
 import dotenv from "dotenv";
-import { Client } from "../entities/Client";
+// import type { Client } from "../entities/Client";
 import { Deliverable } from "../entities/Deliverable";
 import type { Status } from "../enums/Status";
 dotenv.config();
@@ -29,13 +29,13 @@ export async function cleanDB() {
 }
 
 // Create a new client
-export async function CreateClientTestData(name: string, accountId: number) {
-  const client = new Client(name, accountId);
+// export async function CreateClientTestData(name: string, accountId: number) {
+//   const client = new Client(name, accountId);
 
-  console.log("new client: ", client);
-  await dataSource.manager.save(client);
-  return client;
-}
+//   console.log("new client: ", client);
+//   await dataSource.manager.save(client);
+//   return client;
+// }
 
 //Create a new deliverable
 
@@ -62,19 +62,19 @@ export async function CreateDeliverableTestData(
 //Create a new task
 
 // Create a new project
-export async function CreateProjectTestData(
-  name: string,
-  author: string,
-  description: string,
-  startDate: string,
-  endDate: string,
-  client?: Client,
-) {
-  const project = new Project(name, description, author, startDate, endDate);
-  project.client = client;
-  console.log("new project: ", project);
-  await dataSource.manager.save(project);
-}
+// export async function CreateProjectTestData(
+//   name: string,
+//   author: string,
+//   description: string,
+//   startDate: string,
+//   endDate: string,
+//   client?: Client,
+// ) {
+//   const project = new Project(name, description, author, startDate, endDate);
+//   project.client = client;
+//   console.log("new project: ", project);
+//   await dataSource.manager.save(project);
+// }
 
 // Create test data
 // export async function initTestData() {

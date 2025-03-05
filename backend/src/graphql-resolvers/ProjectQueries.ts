@@ -1,4 +1,5 @@
 import { Query, Arg, Resolver } from "type-graphql";
+import { ILike } from "typeorm";
 import { Project } from "../entities/Project";
 import { dataSource } from "../dataSource/dataSource";
 
@@ -17,12 +18,15 @@ export class ProjectQueries {
     });
     return project;
   }
-}
 
-// @Query(() => Task, { nullable: true })
-// async getTask(@Arg("id") id: number): Promise<Task | null> {
-//   const task: Task | null = await dataSource.manager.findOne(Task, {
-//     where: { id },
-//   });
-//   return task;
-// }
+  @Query(() => [Project], { nullable: true })
+  async getProjectsByName(
+    @Arg("name") name: string,
+  ): Promise<Project[] | null> {
+    const projects = await dataSource.manager.find(Project, {
+      where: { name: ILike(`%${name}%`) },
+    });
+
+    return projects;
+  }
+}
