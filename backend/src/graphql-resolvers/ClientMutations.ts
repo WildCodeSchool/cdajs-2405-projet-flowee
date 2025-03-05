@@ -18,12 +18,18 @@ export class ClientMutations {
       if (!account) {
         throw new Error("Account not found");
       }
-      const newClient = new Client(name, accountId);
+      const existingclient = await dataSource.manager.findOne(Client, {
+        where: { name: name },
+      });
+      if (existingclient) {
+        throw new Error("Le client existe deja ");
+      }
+      const newClient = new Client(name, account);
       await dataSource.manager.save(newClient);
       return newClient;
     } catch (error) {
       console.error(error);
-      throw new Error("Failed ot create client");
+      throw new Error("Failed to create client");
     }
   }
 }
