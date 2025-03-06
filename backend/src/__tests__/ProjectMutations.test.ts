@@ -2,42 +2,72 @@ import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Project } from "../entities/Project";
 import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
+import { Status } from "../enums/Status";
 
 describe("Project creation", () => {
-	let projectMutations: ProjectMutations;
-	let project: Project;
+  let projectMutations: ProjectMutations;
+  let project: Project;
+  // let mockCtx: any;
 
-	beforeEach(() => {
-		projectMutations = new ProjectMutations();
+  beforeEach(() => {
+    projectMutations = new ProjectMutations();
 
-		project = new Project(
-			faker.commerce.productName(),
-			faker.person.fullName(),
-			faker.lorem.sentence(),
-			faker.date.past().toString(),
-			faker.date.future().toString(),
-		);
-	});
+    // mockCtx = { user: { id: faker.number.int({ min: 1, max: 1000 }) } };
 
-	describe("create project", () => {
-		it("should create a project ", async () => {
-			mockTypeOrm().onMock(Project).toReturn(project, "save");
-			console.info("project", project);
-			const createdProject: Project = await projectMutations.createProject(
-				project.name,
-				project.author,
-				project.description,
-				project.startDate,
-				project.endDate,
-			);
-			console.info("dans les tests, projet recupéré", createdProject);
-			expect(createdProject).toMatchObject({
-				name: project.name,
-				author: project.author,
-				description: project.description,
-				startDate: project.startDate,
-				endDate: project.endDate,
-			});
-		});
-	});
+    project = new Project(
+      faker.commerce.productName(),
+      faker.internet.email(),
+      2,
+      faker.lorem.sentence(),
+      new Date().toISOString(), // startDate
+      faker.date.future().toISOString(),
+      Status.NOT_STARTED,
+    );
+    console.log(project.status);
+  });
+
+  describe("create project", () => {
+    it("should create a project ", async () => {
+      mockTypeOrm().onMock(Project).toReturn(project, "save");
+      console.info("project mock", project);
+      const createdProject: Project = await projectMutations.createProject(
+        project.name,
+        project.clientEmail,
+        project.description,
+        project.endDate,
+      );
+      console.info("dans les tests, projet créé", createdProject);
+      expect(createdProject).toMatchObject({
+        name: project.name,
+        clientEmail: project.clientEmail,
+        companyUserId: project.companyUserId,
+        description: project.description,
+        startDate: expect.any(String),
+        endDate: project.endDate,
+        status: project.status,
+      });
+    });
+
+    it("should fail if clientEmail is missing", async () => {
+      await expect(
+        projectMutations.createProject(
+          project.name,
+          "",
+          project.description,
+          project.endDate,
+        ),
+      ).rejects.toThrow("Validation error");
+    });
+
+    it("should fail if no name is provided", async () => {
+      await expect(
+        projectMutations.createProject(
+          "",
+          project.clientEmail,
+          project.description,
+          project.endDate,
+        ),
+      ).rejects.toThrow("Validation error");
+    });
+  });
 });
