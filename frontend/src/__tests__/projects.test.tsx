@@ -15,8 +15,8 @@ const mockProjects = [
     startDate: "2024-01-01",
     endDate: "2024-12-31",
     status: "In Progress",
-    client: { id: "c1", name: "Jean Dupont" },
-    companyUser: { id: "u1", firstname: "Auteur", lastname: "1" },
+    client: { id: "1", name: "Jean Dupont" },
+    companyUser: { id: "1", firstname: "Auteur", lastname: "1" },
   },
 ];
 
