@@ -2,8 +2,7 @@ import { dataSource } from "../dataSource/dataSource";
 import { GraphQLError } from "graphql";
 import { Project } from "../entities/Project";
 import { Mutation, Arg, Resolver } from "type-graphql";
-// import { Validate } from "class-validator";
-// import { Status } from "../enums/Status";
+import { validateOrReject, ValidationError } from "class-validator";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -15,7 +14,7 @@ export class ProjectMutations {
     @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Project> {
     try {
-      const companyUserId = 2; // pour le moment en dur et ensuite sera récupéré du contexte
+      const companyUserId = 2; // pour le moment en dur et ensuite sera récupéré du contexte Ctx
 
       const startDate = new Date().toISOString();
 
@@ -28,21 +27,31 @@ export class ProjectMutations {
         endDate,
       );
 
-      // //valider les champs
-      // const errors = await Validate(newProject);
-      // if (errors.length > 0) {
-      //   console.error("Validation failed. Errors:", errors);
-      //   throw new GraphQLError("Validation error", {
-      //     extensions: { code: "VALIDATION_ERROR", details: errors },
-      //   });
-      // }
+      await validateOrReject(newProject);
 
-      await dataSource.manager.save(newProject);
-      return newProject;
+      console.log("Avant sauvegarde:", newProject);
+
+      const newProjectCreated = await dataSource.manager.save(newProject);
+
+      console.info(newProjectCreated);
+
+      return newProjectCreated;
     } catch (error) {
       if (error instanceof GraphQLError) {
         throw error;
       }
+
+      if (Array.isArray(error) && error[0] instanceof ValidationError) {
+        throw new GraphQLError("Validation error", {
+          extensions: {
+            code: "VALIDATION_ERROR",
+            errors: error.flatMap((err) =>
+              Object.values(err.constraints || {}),
+            ),
+          },
+        });
+      }
+
       throw new GraphQLError("Failed to create project", {
         extensions: {
           code: "CREATE_PROJECT_ERROR",

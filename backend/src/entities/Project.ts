@@ -26,6 +26,7 @@ export class Project extends BaseEntity {
   @Column({ nullable: false })
   @Field()
   @IsEmail({}, { message: "Invalid email format" })
+  @IsNotEmpty({ message: "Email is required" })
   clientEmail: string;
 
   @Column()
