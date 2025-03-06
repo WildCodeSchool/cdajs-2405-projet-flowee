@@ -1,76 +1,108 @@
+import { Arg, Mutation, Resolver } from "type-graphql";
+import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Task } from "../entities/Task";
-import { Status } from "../enums/Status";
-import { Mutation, Arg, Resolver } from "type-graphql";
+import type { Status } from "../enums/Status";
 
 @Resolver(Task)
 export class TaskMutations {
-  @Mutation((_) => Task)
+  @Mutation(() => Task)
   async createTask(
     @Arg("name") name: string,
-    @Arg("description", { nullable: true }) description: string,
-    @Arg("status", { nullable: true }) status: Status = Status.NOT_STARTED,
+    @Arg("description", { nullable: true }) description?: string,
+    @Arg("status", { nullable: true }) status?: Status,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string,
-  ): Promise<Task | undefined> {
+    @Arg("endDate", { nullable: true }) endDate?: string
+  ): Promise<Task> {
+    if (!name) {
+      throw new GraphQLError("Name is required", {
+        extensions: { code: "VALIDATION_ERROR" },
+      });
+    }
+
     try {
-      const newTask = new Task(name, description, startDate, endDate, status);
-
-      // if (deliverableInput) {
-      //   const deliverable = await dataSource.manager.findOne(Deliverable, {
-      //     where: { id: deliverableInput.id },
-      //   });
-
-      // if (!deliverable) {
-      //   throw new Error("Deliverable not found");
-      // }
-      // newTask.deliverable = deliverable;
-
+      const newTask = new Task(name, description ?? "", startDate, endDate, status);
       await dataSource.manager.save(newTask);
-
       return newTask;
     } catch (error) {
-      console.info(error);
-      throw new Error("Invalid information");
+      // Relancer l’erreur si c’est déjà un GraphQLError
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+
+      throw new GraphQLError("Failed to create task", {
+        extensions: {
+          code: "CREATE_TASK_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 
-  @Mutation((_) => Task)
+  @Mutation(() => Task)
   async updateTask(
     @Arg("id") id: number,
-    @Arg("name") name: string,
-    @Arg("description") description: string,
+    @Arg("name", { nullable: true }) name?: string,
+    @Arg("description", { nullable: true }) description?: string,
+    @Arg("status", { nullable: true }) status?: Status,
+    @Arg("startDate", { nullable: true }) startDate?: string,
+    @Arg("endDate", { nullable: true }) endDate?: string
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
       if (!task) {
-        throw new Error("Task not found");
+        throw new GraphQLError(`Task with ID ${id} not found`, {
+          extensions: { code: "TASK_NOT_FOUND" },
+        });
       }
 
-      task.name = name;
-      task.description = description;
+      if (name) task.name = name;
+      if (description) task.description = description;
+      if (status) task.status = status;
+      if (startDate) task.startDate = startDate;
+      if (endDate) task.endDate = endDate;
 
       await dataSource.manager.save(task);
-
       return task;
     } catch (error) {
-      throw new Error("Invalid information");
+      // Si l’erreur est déjà une GraphQLError,
+      if (error instanceof GraphQLError) {
+      throw error;
+    }
+      throw new GraphQLError("Failed to update task", {
+        extensions: {
+          code: "UPDATE_TASK_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 
-  @Mutation((_) => Task)
+  @Mutation(() => Task)
   async deleteTask(@Arg("id") id: number): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
       if (!task) {
-        throw new Error("Task not found");
+        throw new GraphQLError(`Task with ID ${id} not found`, {
+          extensions: { code: "TASK_NOT_FOUND" },
+        });
       }
 
       await dataSource.manager.remove(task);
-
       return task;
     } catch (error) {
-      throw new Error("Invalid information");
+      //Releve l erreur initiale si c'est une erreur GraphQLError
+      if(error instanceof GraphQLError) {
+        throw error;
+      }
+
+      throw new GraphQLError("Failed to delete task", {
+        extensions: {
+          code: "DELETE_TASK_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 }
+

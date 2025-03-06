@@ -1,84 +1,91 @@
-// import { Status } from "../entities/Task";
-// import { faker } from "@faker-js/faker";
-// import { Deliverable } from "../entities/Deliverable";
-// import { DeliverableQueries } from "../graphql-resolvers/DeliverableQueries";
-// import { mockTypeOrm } from "../__tests_mockTypeorm-config";
+import { faker } from "@faker-js/faker";
+import { mockTypeOrm } from "../__tests_mockTypeorm-config";
+import { Deliverable } from "../entities/Deliverable";
+import { DeliverableQueries } from "../graphql-resolvers/DeliverableQueries";
+import { Status } from "../enums/Status";
 
-// describe("Deliverable Graphql queries", () => {
-//   let deliverableQueries: DeliverableQueries;
-//   let deliverables: Deliverable[];
+describe("Deliverable Queries", () => {
+  let deliverableQueries: DeliverableQueries;
 
-//   beforeEach(() => {
-//     deliverableQueries = new DeliverableQueries();
-//     deliverables = [
-//       new Deliverable(
-//         faker.lorem.sentence(),
-//         faker.commerce.productDescription(),
-//         faker.date.future(),
-//         faker.helpers.arrayElement([
-//           Status.NOT_STARTED,
-//           Status.BLOCKED,
-//           Status.IN_PROGRESS,
-//           Status.COMPLETED,
-//         ]),
-//         faker.date.future()
-//       ),
-//       new Deliverable(
-//         faker.lorem.sentence(),
-//         faker.commerce.productDescription(),
-//         faker.date.future(),
-//         faker.helpers.arrayElement([
-//           Status.NOT_STARTED,
-//           Status.BLOCKED,
-//           Status.IN_PROGRESS,
-//           Status.COMPLETED,
-//         ]),
-//         faker.date.future()
-//       ),
-//       new Deliverable(
-//         faker.lorem.sentence(),
-//         faker.commerce.productDescription(),
-//         faker.date.future(),
-//         faker.helpers.arrayElement([
-//           Status.NOT_STARTED,
-//           Status.BLOCKED,
-//           Status.IN_PROGRESS,
-//           Status.COMPLETED,
-//         ]),
-//         faker.date.future()
-//       ),
-//       new Deliverable(
-//         faker.lorem.sentence(),
-//         faker.commerce.productDescription(),
-//         faker.date.future(),
-//         faker.helpers.arrayElement([
-//           Status.NOT_STARTED,
-//           Status.BLOCKED,
-//           Status.IN_PROGRESS,
-//           Status.COMPLETED,
-//         ]),
-//         faker.date.future()
-//       ),
-//     ];
-//   });
+  beforeEach(() => {
+    deliverableQueries = new DeliverableQueries();
+  });
 
-//   describe("query all deliverables from TypeORM", () => {
-//     it("should return all deliverables", async () => {
-//       mockTypeOrm().onMock(Deliverable).toReturn(deliverables, "find");
-//       const allDeliverables: Deliverable[] =
-//         await deliverableQueries.getAllDeliverables();
-//       expect(allDeliverables).toMatchObject(deliverables);
-//     });
-//   });
+  // 1) getAllDeliverables
 
-//   describe("query a deliverable by id from TypeORM", () => {
-//     it("should return a deliverable by id", async () => {
-//       const deliverable: Deliverable = deliverables[0];
-//       mockTypeOrm().onMock(Deliverable).toReturn(deliverable, "findOne");
+  describe("getAllDeliverables", () => {
+    it("should return an array of deliverables", async () => {
+      // Préparation du tableau simulé
+      const deliverables: Deliverable[] = [
+        new Deliverable(
+          faker.lorem.word(),          // name
+          faker.lorem.sentence(),      // perimeter
+          faker.date.future().toISOString(), // deliveryDate
+           Status.IN_PROGRESS,               // status
+          faker.date.past().toISOString(),   // createdAt
+          faker.number.int({ min: 0, max: 3 }) // reviews
+        ),
+        new Deliverable(
+          faker.lorem.word(),
+          faker.lorem.sentence(),
+          faker.date.future().toISOString(),
+          Status.COMPLETED,
+          faker.date.past().toISOString(),
+          faker.number.int({ min: 0, max: 3 })
+        ),
+      ];
 
-//       const retrievedDeliverable: Deliverable | null =
-//         await deliverableQueries.getDeliverable(deliverable.id!);
-//       expect(retrievedDeliverable).toMatchObject(deliverable);
-//     });
-//   });
-// });
+      // Mock la méthode 'find'
+      mockTypeOrm().onMock(Deliverable).toReturn(deliverables, "find");
+
+      const result = await deliverableQueries.getAllDeliverables();
+
+      expect(result).toHaveLength(deliverables.length);
+      expect(result[0].name).toBe(deliverables[0].name);
+      expect(result[1].status).toBe(deliverables[1].status);
+    });
+
+    it("should return an empty array if no deliverables exist", async () => {
+      // Simule la BDD vide
+      mockTypeOrm().onMock(Deliverable).toReturn([], "find");
+
+      const result = await deliverableQueries.getAllDeliverables();
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  // 2) getDeliverable
+
+  describe("getDeliverable", () => {
+    it("should return a deliverable if found", async () => {
+      // Création du deliverable
+      const existingDeliverable = new Deliverable(
+        faker.lorem.word(),
+        faker.lorem.sentence(),
+        faker.date.future().toISOString(),
+        Status.IN_PROGRESS,
+        faker.date.past().toISOString(),
+        faker.number.int({ min: 0, max: 3 })
+      );
+      existingDeliverable.id = 42;
+
+      mockTypeOrm().onMock(Deliverable).toReturn(existingDeliverable, "findOne");
+
+      const result = await deliverableQueries.getDeliverable(42);
+
+      expect(result).not.toBeNull();
+      expect(result?.id).toBe(42);
+      expect(result?.name).toBe(existingDeliverable.name);
+    });
+
+    it("should return null if deliverable not found", async () => {
+      // Mock 'findOne' pour qu'il renvoie null
+      mockTypeOrm().onMock(Deliverable).toReturn(null, "findOne");
+
+      const result = await deliverableQueries.getDeliverable(9999);
+
+      expect(result).toBeNull();
+    });
+  });
+});

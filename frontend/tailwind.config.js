@@ -10,9 +10,12 @@ module.exports = {
         orangelight: "#E3AB76",
         verylightorange: "#E9BB8E",
         orangeBg: "#FAF1E7",
+        darkblue: "#25335F",
+        midblue: "#31447F",
         bluebase: "#4A65BE",
-        bluelight: "#ABB7E1",
+        bluelight: "#7A8ECF",
         verylightblue: "#EDF0FB",
+        blueBg: "#DBE0F2",
       },
       boxShadow: {
         "t-md":
@@ -21,6 +24,13 @@ module.exports = {
       spacing: {},
       fontFamily: {
         quicksand: ["Quicksand", "sans-serif"],
+      },
+      fontWeight: {
+        light: "300",
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
       },
     },
     plugins: [],

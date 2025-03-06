@@ -1,6 +1,6 @@
 import { Arg, Query, Resolver } from "type-graphql";
-import { Deliverable } from "../entities/Deliverable";
 import { dataSource } from "../dataSource/dataSource";
+import { Deliverable } from "../entities/Deliverable";
 
 @Resolver(Deliverable)
 export class DeliverableQueries {

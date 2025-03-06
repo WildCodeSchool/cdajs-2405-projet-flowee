@@ -13,7 +13,9 @@ import { TaskMutations } from "./graphql-resolvers/TaskMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { ClientQueries } from "./graphql-resolvers/ClientQueries";
-
+import { ClientMutations } from "./graphql-resolvers/ClientMutations";
+import { AccountMutation } from "./graphql-resolvers/AccountMutation";
+import { AccountQueries } from "./graphql-resolvers/AccountQueries";
 const port = 4000;
 
 async function startServerApollo() {
@@ -29,7 +31,10 @@ async function startServerApollo() {
         DeliverableQueries,
         DeliverableMutations,
         ClientQueries,
+        ClientMutations,
         CompagnyMutations,
+        AccountMutation,
+        AccountQueries,
       ],
     });
     const server = new ApolloServer({
@@ -37,7 +42,7 @@ async function startServerApollo() {
     });
 
     await dataSource.initialize();
-    console.log("Data Source has been initialized!");
+    console.info("Data Source has been initialized!");
     //cleanDB();
     //initTestData();
 
@@ -45,7 +50,7 @@ async function startServerApollo() {
       listen: { port },
     });
 
-    console.log(`🚀  Server ready at: ${url}`);
+    console.info(`🚀  Server ready at: ${url}`);
   } catch (error) {
     console.error("Error starting server:", error);
   }
