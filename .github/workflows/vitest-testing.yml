@@ -19,7 +19,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run Vitest tests
-        run: cd frontend npm run test
+        run: cd frontend && DEBUG=apollo:* npm run test
