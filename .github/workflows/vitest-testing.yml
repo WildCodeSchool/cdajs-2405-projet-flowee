@@ -4,6 +4,10 @@ on:
   push:
     branches: [dev]
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
     branches: [dev]
 
 jobs:
