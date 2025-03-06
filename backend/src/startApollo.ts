@@ -42,7 +42,7 @@ async function startServerApollo() {
     });
 
     await dataSource.initialize();
-    console.log("Data Source has been initialized!");
+    console.info("Data Source has been initialized!");
     //cleanDB();
     //initTestData();
 
@@ -50,7 +50,7 @@ async function startServerApollo() {
       listen: { port },
     });
 
-    console.log(`🚀  Server ready at: ${url}`);
+    console.info(`🚀  Server ready at: ${url}`);
   } catch (error) {
     console.error("Error starting server:", error);
   }

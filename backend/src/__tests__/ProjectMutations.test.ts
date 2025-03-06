@@ -23,20 +23,17 @@ describe("Project creation", () => {
       faker.date.future().toISOString(),
       Status.NOT_STARTED,
     );
-    console.log(project.status);
   });
 
   describe("create project", () => {
     it("should create a project ", async () => {
       mockTypeOrm().onMock(Project).toReturn(project, "save");
-      console.info("project mock", project);
       const createdProject: Project = await projectMutations.createProject(
         project.name,
         project.clientEmail,
         project.description,
         project.endDate,
       );
-      console.info("dans les tests, projet créé", createdProject);
       expect(createdProject).toMatchObject({
         name: project.name,
         clientEmail: project.clientEmail,

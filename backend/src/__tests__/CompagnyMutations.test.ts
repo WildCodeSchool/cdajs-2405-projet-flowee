@@ -19,8 +19,6 @@ describe("Compagny Mutations", () => {
   describe("createCompagny", () => {
     it("should create a new compagny", async () => {
       mockTypeOrm().onMock(Compagny).toReturn(compagny, "save");
-      console.log("Mock configuré pour Compagny avec 'save'");
-
       const createdCompagny: Compagny = await compagnyMutations.createCompagny(
         compagny.name,
         compagny.address,

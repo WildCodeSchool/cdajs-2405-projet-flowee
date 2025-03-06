@@ -29,11 +29,7 @@ export class ProjectMutations {
 
       await validateOrReject(newProject);
 
-      console.log("Avant sauvegarde:", newProject);
-
       const newProjectCreated = await dataSource.manager.save(newProject);
-
-      console.info(newProjectCreated);
 
       return newProjectCreated;
     } catch (error) {
