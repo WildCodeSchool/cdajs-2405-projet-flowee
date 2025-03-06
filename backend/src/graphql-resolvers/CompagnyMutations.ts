@@ -9,7 +9,7 @@ export class CompagnyMutations {
   async createCompagny(
     @Arg("name") name: string,
     @Arg("address") address: string,
-    @Arg("contactInfo") contactInfo: string
+    @Arg("contactInfo") contactInfo: string,
   ): Promise<Compagny> {
     if (!name || !address || !contactInfo) {
       throw new GraphQLError("All fields are required", {
@@ -19,20 +19,19 @@ export class CompagnyMutations {
     try {
       const newCompagny = new Compagny(name, address, contactInfo);
       await dataSource.manager.save(newCompagny);
-      console.info(newCompagny);
 
       return newCompagny;
     } catch (error) {
-       // Si l’erreur est déjà un GraphQLError
-    if (error instanceof GraphQLError) {
-      throw error;
-    }
+      // Si l’erreur est déjà un GraphQLError
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
 
-     // Sinon, on l’enveloppe dans un message plus général
+      // Sinon, on l’enveloppe dans un message plus général
       throw new GraphQLError("Failed to create compagny", {
         extensions: {
           code: "CREATE_COMPAGNY_ERROR",
-         originalError: (error as Error).message  || "Unknown error",
+          originalError: (error as Error).message || "Unknown error",
         },
       });
     }
@@ -43,10 +42,12 @@ export class CompagnyMutations {
     @Arg("id") id: number,
     @Arg("name", { nullable: true }) name?: string,
     @Arg("address", { nullable: true }) address?: string,
-    @Arg("contactInfo", { nullable: true }) contactInfo?: string
+    @Arg("contactInfo", { nullable: true }) contactInfo?: string,
   ): Promise<Compagny> {
     try {
-      const company = await dataSource.manager.findOne(Compagny, { where: { id } });
+      const company = await dataSource.manager.findOne(Compagny, {
+        where: { id },
+      });
 
       if (!company) {
         throw new GraphQLError(`Compagny with ID ${id} not found`, {
@@ -74,10 +75,12 @@ export class CompagnyMutations {
   @Mutation(() => Boolean)
   async deleteCompagny(@Arg("id") id: number): Promise<boolean> {
     try {
-      const company = await dataSource.manager.findOne(Compagny, { where: { id } });
+      const company = await dataSource.manager.findOne(Compagny, {
+        where: { id },
+      });
 
       if (!company) {
-        console.log(`no company found with is id: ${id}!!`);
+        console.info(`no company found with is id: ${id}!!`);
         throw new GraphQLError(`Compagny with ID ${id} not found`, {
           extensions: { code: "COMPAGNY_NOT_FOUND" },
         });
