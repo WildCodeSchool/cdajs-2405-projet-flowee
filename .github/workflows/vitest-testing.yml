@@ -12,7 +12,7 @@ on:
 
 jobs:
   front-vitest-tests:
-    name : Run Vitest Tests
+    name: Run Vitest Tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -25,11 +25,18 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm i
+        run: |
+          cd frontend
+          npm install
 
       - name: Check installed dependencies
-        run: npm list --depth=0
-
+        run: |
+          cd frontend
+          npm list --depth=0
 
       - name: Run Vitest tests
-        run: cd frontend && DEBUG=apollo:* npm run test
+        run: |
+          cd frontend
+          npx vitest --run
+        env:
+          DEBUG: 'apollo:*'
