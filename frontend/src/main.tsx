@@ -3,7 +3,12 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+} from "@apollo/client";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -13,8 +18,12 @@ import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
 
+const uriprod = new HttpLink({
+  uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
+});
+
 const client = new ApolloClient({
-  uri: "http://localhost:4000",
+  link: uriprod,
   cache: new InMemoryCache(),
 });
 
@@ -67,7 +76,7 @@ if (rootElement) {
       <ApolloProvider client={client}>
         <RouterProvider router={router} />
       </ApolloProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
   console.error("Root element not found");
