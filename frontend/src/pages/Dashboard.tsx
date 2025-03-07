@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import { GET_ALL_PROJECTS_QUERY } from "../graphql-queries/projects";
 import { CardVariant } from "../components/Cards";
 import { GET_ALL_DELIVERABLES_QUERY } from "../graphql-queries/deliverables";
+import Tracker from "../components/tracker";
 
 interface SectionProps {
   title: string;
@@ -62,7 +63,7 @@ const Section: React.FC<SectionProps> = ({
             className="bg-midorange rounded-lg px-10 py-2 text-white text-base text-center"
             to="../projects"
           >
-            Voir plus
+            See more
           </NavLink>
         )}
       </article>
@@ -87,6 +88,7 @@ export default function Dashboard() {
         <Navigation />
       </aside>
       <main className="flex-1 px-4 md:ml-4 h-full overflow-hidden w-full flex-col font-quicksand gap-6 flex">
+        <Tracker />
         <SearchBar setSearchFilter={setSearchFilter} />
 
         <Section
