@@ -3,7 +3,6 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { dataSource } from "./dataSource/dataSource";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
-
 import { buildSchema } from "type-graphql";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
@@ -16,6 +15,7 @@ import { ClientQueries } from "./graphql-resolvers/ClientQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
 import { AccountMutation } from "./graphql-resolvers/AccountMutation";
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
+
 const port = 4000;
 
 async function startServerApollo() {
@@ -47,7 +47,7 @@ async function startServerApollo() {
     //initTestData();
 
     const { url } = await startStandaloneServer(server, {
-      listen: { port },
+      listen: { port, host: "0.0.0.0" },
     });
 
     console.info(`🚀  Server ready at: ${url}`);
