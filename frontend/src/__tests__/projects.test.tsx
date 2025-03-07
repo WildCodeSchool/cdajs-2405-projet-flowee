@@ -9,12 +9,14 @@ const mockProjects = [
   {
     id: "1",
     name: "Projet Alpha",
+    clientEmail: "jean.dupont@example.com",
+    companyUserId: "1",
     description: "Description Alpha",
     startDate: "2024-01-01",
     endDate: "2024-12-31",
     status: "In Progress",
-    author: "Auteur 1",
-    client: { firstname: "Jean", lastname: "Dupont" },
+    client: { id: "1", name: "Jean Dupont" },
+    companyUser: { id: "1", firstname: "Auteur", lastname: "1" },
   },
 ];
 

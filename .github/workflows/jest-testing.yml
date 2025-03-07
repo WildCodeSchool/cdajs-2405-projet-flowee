@@ -5,7 +5,7 @@ on:
     branches: [dev]
     
 jobs:
-  test-client:
+  test-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
