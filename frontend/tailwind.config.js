@@ -33,6 +33,13 @@ module.exports = {
         semibold: "600",
         bold: "700",
       },
+      fontSize: {
+        h1: "1.875rem",
+        h2: "1.563rem",
+        h3: "1.2rem",
+        label: "1.125rem",
+        p: "1rem",
+      },
     },
     plugins: [],
   },
