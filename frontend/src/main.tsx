@@ -17,6 +17,7 @@ import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
+import DesignSystem from "./pages/DesignSystem";
 
 const uriprod = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
         element: <Settings />,
       },
       {
+        path: "designSystem",
+        element: <DesignSystem />,
+      },
+      {
         path: "*",
         element: <Error404visitor />,
       },
@@ -76,7 +81,7 @@ if (rootElement) {
       <ApolloProvider client={client}>
         <RouterProvider router={router} />
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");
