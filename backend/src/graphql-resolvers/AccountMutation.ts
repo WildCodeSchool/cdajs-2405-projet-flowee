@@ -11,6 +11,11 @@ export class AccountMutation {
     @Arg("role") role: Role,
   ): Promise<Account> {
     try {
+      console.log("Received data:", { email, password, role });
+
+      if (!dataSource.isInitialized) {
+        throw new Error("Database connection not initialized");
+      }
       // Vérification si l'email existe déjà
       const existingAccount = await dataSource.manager.findOne(Account, {
         where: { email },

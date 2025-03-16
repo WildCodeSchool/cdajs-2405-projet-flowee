@@ -17,6 +17,7 @@ import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
+import NewAccount from "./pages/NewAccount";
 
 const uriprod = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -59,6 +60,14 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <Settings />,
+      },
+      {
+        path: "/newclient",
+        element: <NewAccount user="client" color="bg-blueBg" />,
+      },
+      {
+        path: "/newcompanyuser",
+        element: <NewAccount user="admin" color="bg-orangeBg" />,
       },
       {
         path: "*",

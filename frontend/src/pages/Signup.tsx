@@ -2,6 +2,7 @@ import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import LogoClientIcon from "../components/Icons/LogoClient";
 import LogoEntrepriseIcon from "../components/Icons/LogoEntreprise";
+import Oops from "../components/Oops";
 
 interface FormData {
   email: string;
@@ -42,7 +43,7 @@ export default function Signup() {
               name="email"
               value={signUpData.email}
               placeholder="Email"
-              className="text-center p-2 border border-gray-300 rounded-md w-full"
+              className=" p-2 border border-gray-300 rounded-md w-full"
               onChange={handleChangeForm}
               required
             />
@@ -54,7 +55,7 @@ export default function Signup() {
               name="accessCode"
               value={signUpData.accessCode}
               placeholder="Code"
-              className="text-center p-2 border border-gray-300 rounded-md w-full"
+              className=" p-2 border border-gray-300 rounded-md w-full"
               onChange={handleChangeForm}
               required
             />
