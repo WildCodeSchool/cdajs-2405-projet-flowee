@@ -19,7 +19,7 @@ import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
 
 const uriprod = new HttpLink({
-  uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
+  uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000",
 });
 
 const client = new ApolloClient({
