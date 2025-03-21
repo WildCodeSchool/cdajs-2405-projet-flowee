@@ -21,7 +21,7 @@ export class AccountMutation {
         where: { email },
       });
       if (existingAccount) {
-        throw new Error("Email already exists");
+        throw new Error("Client already exists");
       }
 
       // Création de l'Account
@@ -31,7 +31,7 @@ export class AccountMutation {
       return newAccount;
     } catch (error) {
       console.error("Error creating account:", error);
-      throw new Error("Failed to create account");
+      throw new Error("Failed to create account! Please try again.");
     }
   }
 }

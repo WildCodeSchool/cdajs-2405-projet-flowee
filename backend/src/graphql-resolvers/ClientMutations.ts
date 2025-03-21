@@ -7,7 +7,7 @@ import { Mutation, Arg, Resolver } from "type-graphql";
 export class ClientMutations {
   @Mutation((_) => Client)
   async createClient(
-    @Arg("Name") name: string,
+    @Arg("name") name: string,
     @Arg("accountId") accountId: number,
   ): Promise<Client> {
     try {
@@ -28,7 +28,7 @@ export class ClientMutations {
       await dataSource.manager.save(newClient);
       return newClient;
     } catch (error) {
-      console.error(error);
+      console.error("erreur graphql", error);
       throw new Error("Failed to create client");
     }
   }

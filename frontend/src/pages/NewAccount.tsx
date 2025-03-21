@@ -20,11 +20,18 @@ interface FormData {
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation CreateAccount($role: String!, $password: String!, $email: String!) {
     createAccount(role: $role, password: $password, email: $email) {
-      id
-      email
-      role
+      id   
     }
+  } 
+`;
+
+const CREATE_CLIENT_MUTATION = gql`
+ mutation Mutation($accountId: Float!, $name: String!) {
+  createClient(accountId: $accountId, name: $name) {
+    id
+    name  
   }
+}
 `;
 
 export default function NewAccount({ user, color }: PropsType) {
@@ -39,7 +46,10 @@ export default function NewAccount({ user, color }: PropsType) {
   const [createAccount, { loading, error }] = useMutation(
     CREATE_ACCOUNT_MUTATION,
   );
-  const [emailError, setEmailError] = useState("");
+
+  const [createClient] = useMutation(CREATE_CLIENT_MUTATION);
+
+  const [success, setSuccess] = useState(false);
 
   const handleChangeForm = (e: ChangeEvent<HTMLInputElement>) => {
     setSignUpData((prev) => ({
@@ -50,7 +60,6 @@ export default function NewAccount({ user, color }: PropsType) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setEmailError(""); // Réinitialise l'erreur à chaque soumission
 
     if (signUpData.password !== signUpData.passwordConfirmation) {
       alert("Passwords do not match!");
@@ -58,42 +67,45 @@ export default function NewAccount({ user, color }: PropsType) {
     }
 
     try {
-      await createAccount({
+      const { data } = await createAccount({
         variables: {
           email: signUpData.email,
           password: signUpData.password,
           role: user.toLowerCase(),
         },
       });
-
-      alert("Account successfully created!");
-      setSignUpData(initialFormData); // Réinitialisation du formulaire après succès
-    } catch (err) {
-      console.error("Error creating account:", err);
-
-      // Vérifie si l'erreur vient du backend et concerne l'email
-      if (err instanceof Error && "graphQLErrors" in err) {
-        const graphQLError = err.graphQLErrors.find((error) =>
-          error.message.includes("Email already exists"),
-        );
-
-        if (graphQLError) {
-          setEmailError(graphQLError.message); // Stocke l'erreur pour l'afficher sous l'input email
-          return;
+      const accountId = Number(data.createAccount.id);
+      if (!accountId) {
+        console.error("No account ID received, aborting client creation.");
+        return;
+      }
+      if (user === "client") {
+        try {
+          await createClient({
+            variables: {
+              name: signUpData.name,
+              accountId: Number(accountId),
+            },
+          });
+          console.log("Client created successfully");
+        } catch (err) {
+          console.error("Error creating client:", err);
         }
       }
 
-      // Autre erreur (erreur serveur, timeout, etc.)
-      alert("Failed to create account! Please try again.");
+      setSuccess(true);
+      setSignUpData(initialFormData);
+    } catch (err) {
+      console.error("Error creating account:", err);
     }
   };
 
   return (
     <div
-      className={`px-10 min-h-svh ${color} flex flex-col gap-4 justify-center items-center`}
+      className={` pt-10 min-h-svh ${color} flex flex-col gap-10 justify-center items-center`}
     >
       {user === "admin" ? (
-        <LogoEntrepriseIcon className="h-12 w-12" />
+        <LogoEntrepriseIcon className="h-20 w-20" />
       ) : (
         <LogoClientIcon className="h-20 w-20" />
       )}
@@ -101,87 +113,106 @@ export default function NewAccount({ user, color }: PropsType) {
         CREATE {user.toUpperCase()} ACCOUNT
       </h1>
 
-      <div className="flex flex-col gap-4 w-full max-w-96">
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <label htmlFor="email" className="flex flex-col w-full">
-            Email
-            <input
-              type="email"
-              name="email"
-              value={signUpData.email}
-              placeholder="Email"
-              className="p-2 border border-gray-300 rounded-md w-full"
-              onChange={handleChangeForm}
-              required
-            />
-            {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
-          </label>
+      <div
+        className={`${user === "admin" ? "bg-orangelight" : "bg-bluelight"} w-full rounded-t-3xl `}
+      >
+        <div
+          className={`${user === "admin" ? "bg-orangelight" : "bg-bluelight"} w-full h-14 rounded-t-[3rem] left-0`}
+        />
 
-          <label htmlFor="name" className="flex flex-col">
-            {`${user} Name`}
-            <input
-              type="text"
-              name="name"
-              value={signUpData.name}
-              placeholder={`${user} Name`}
-              className="p-2 border border-gray-300 rounded-md w-full"
-              onChange={handleChangeForm}
-              required
-            />
-          </label>
+        <div
+          className={`${user === "admin" ? "bg-midorange" : "bg-midblue"} w-full h-14 rounded-t-[3rem] left-0`}
+        />
+        <div className={`${user === "admin" ? "bg-midorange" : "bg-midblue"}`}>
+          <div className="bg-white flex flex-col items-center gap-10 rounded-t-[3rem] py-10">
+            <div className="flex flex-col gap-4  max-w-96 justify-self-center">
+              <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                <label htmlFor="email" className="flex flex-col w-full">
+                  Email
+                  <input
+                    type="email"
+                    name="email"
+                    value={signUpData.email}
+                    placeholder="Email"
+                    className="p-2 border border-gray-300 rounded-md w-full"
+                    onChange={handleChangeForm}
+                    required
+                  />
+                </label>
 
-          <label htmlFor="password" className="flex flex-col">
-            Password
-            <input
-              type="password"
-              name="password"
-              value={signUpData.password}
-              placeholder="Password"
-              className="p-2 border border-gray-300 rounded-md w-full"
-              onChange={handleChangeForm}
-              required
-            />
-          </label>
+                <label htmlFor="name" className="flex flex-col">
+                  {`${user} Name`}
+                  <input
+                    type="text"
+                    name="name"
+                    value={signUpData.name}
+                    placeholder={`${user} Name`}
+                    className="p-2 border border-gray-300 rounded-md w-full"
+                    onChange={handleChangeForm}
+                    required
+                  />
+                </label>
 
-          <label htmlFor="passwordConfirmation" className="flex flex-col">
-            Confirm Password
-            <input
-              type="password"
-              name="passwordConfirmation"
-              value={signUpData.passwordConfirmation}
-              placeholder="Confirm Password"
-              className="p-2 border border-gray-300 rounded-md w-full"
-              onChange={handleChangeForm}
-              required
-            />
-          </label>
+                <label htmlFor="password" className="flex flex-col">
+                  Password
+                  <input
+                    type="password"
+                    name="password"
+                    value={signUpData.password}
+                    placeholder="Password"
+                    className="p-2 border border-gray-300 rounded-md w-full"
+                    onChange={handleChangeForm}
+                    required
+                  />
+                </label>
 
-          <button
-            type="submit"
-            className={`w-56 inline-block rounded-lg py-2 px-4 text-white text-base self-center ${
-              user === "client" ? "bg-bluebase" : "bg-orangebase"
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Signing Up..." : "Sign Up"}
-          </button>
-        </form>
+                <label htmlFor="passwordConfirmation" className="flex flex-col">
+                  Confirm Password
+                  <input
+                    type="password"
+                    name="passwordConfirmation"
+                    value={signUpData.passwordConfirmation}
+                    placeholder="Confirm Password"
+                    className="p-2 border border-gray-300 rounded-md w-full"
+                    onChange={handleChangeForm}
+                    required
+                  />
+                </label>
 
-        {error && (
-          <p className="text-red-500 text-sm text-center">
-            Error: {error.message}
-          </p>
-        )}
+                <button
+                  type="submit"
+                  className={`w-56 inline-block rounded-lg py-2 px-4 text-white text-base self-center ${
+                    user === "client" ? "bg-bluebase" : "bg-orangebase"
+                  }`}
+                  disabled={loading}
+                >
+                  {loading ? "Signing Up..." : "Sign Up"}
+                </button>
+              </form>
 
-        <div className="flex flex-row items-center gap-2 justify-center">
-          <p className="text-xs">You already have an account?</p>
-          <Link to="/login" className="font-bold text-xs underline">
-            Sign in
-          </Link>
+              {error && (
+                <p className="text-red-500 text-sm text-center">
+                  {error.message}
+                </p>
+              )}
+              {success && (
+                <p className="text-green-700 text-sm text-center">
+                  Account successfully created
+                </p>
+              )}
+
+              <div className="flex flex-row items-center gap-2 justify-center">
+                <p className="text-xs">You already have an account?</p>
+                <Link to="/login" className="font-bold text-xs underline">
+                  Sign in
+                </Link>
+              </div>
+            </div>
+
+            <Oops user={user} />
+          </div>
         </div>
       </div>
-
-      <Oops user={user} />
     </div>
   );
 }
