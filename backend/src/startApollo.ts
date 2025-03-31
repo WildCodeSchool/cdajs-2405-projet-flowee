@@ -19,8 +19,10 @@ import { ClientQueries } from "./graphql-resolvers/ClientQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
 import { AccountMutation } from "./graphql-resolvers/AccountMutation";
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
-import { initTestData } from "./scripts/initTestData";
+import { MyContext } from "./types/MyContext";
+// import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
+import { getAccount } from "./middlewares/auth";
 
 registerEnumType(Role, {
   name: "Role",
@@ -62,14 +64,24 @@ async function startServerApollo() {
         AccountQueries,
       ],
     });
-    const server = new ApolloServer({ schema });
+    const server = new ApolloServer<MyContext>({ schema });
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
     // cleanDB();
-    initTestData();
+    // initTestData();
 
-    const { url } = await startStandaloneServer(server, {
+    const { url } = await startStandaloneServer<MyContext>(server, {
+      context: async ({ req }) => {
+        // Get the user token from the headers.
+        const token = req.headers.authorization || "";
+
+        // Try to retrieve a user with the token
+        const user = await getAccount(token);
+
+        // // Add the user to the context
+        return { user };
+      },
       listen: { port, host: "0.0.0.0" },
     });
 
