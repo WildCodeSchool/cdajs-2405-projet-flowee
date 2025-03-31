@@ -1,6 +1,7 @@
-import { Query, Resolver, Arg } from "type-graphql";
+import { Query, Resolver, Arg, Ctx } from "type-graphql";
 import { Account } from "../entities/Account";
 import { dataSource } from "../dataSource/dataSource";
+import type { MyContext } from "../types/MyContext";
 
 @Resolver(Account)
 export class AccountQueries {
@@ -16,5 +17,10 @@ export class AccountQueries {
       where: { id },
     });
     return account;
+  }
+
+  @Query(() => Account, { nullable: true })
+  me(@Ctx() context: MyContext): Account | null {
+    return context.user;
   }
 }

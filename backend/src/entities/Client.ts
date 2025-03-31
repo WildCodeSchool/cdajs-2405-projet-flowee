@@ -20,7 +20,7 @@ export class Client extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  name: string;
+  clientName: string;
 
   @OneToMany(
     () => Project,
@@ -30,13 +30,13 @@ export class Client extends BaseEntity {
   projects?: Project[];
 
   @OneToOne(() => Account, { eager: true })
-  @JoinColumn({ name: "account_id" })
+  @JoinColumn({ name: "account_id" }) // la clé étrangère est ici
   @Field(() => Account, { nullable: true })
   account?: Account;
 
-  constructor(name: string, account: Account) {
+  constructor(clientName: string, account: Account) {
     super();
-    this.name = name;
+    this.clientName = clientName;
     this.account = account;
   }
 }

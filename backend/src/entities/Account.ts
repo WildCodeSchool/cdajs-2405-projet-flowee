@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { Client } from "./Client";
 import type { Role } from "../enums/Role";
+import { AccountStatus } from "../enums/AccountStatus";
 
 @ObjectType()
 @Entity("account")
@@ -20,13 +21,16 @@ export class Account extends BaseEntity {
   @Field()
   email: string;
 
-  @Column()
-  @Field()
+  @Column() // pas de @Field ici pour éviter de l'exposer
   password: string;
 
   @Column()
   @Field()
   role: Role;
+
+  @Column({ type: "enum", enum: AccountStatus, default: AccountStatus.PENDING })
+  @Field(() => AccountStatus)
+  status: AccountStatus;
 
   @OneToOne(
     () => Client,
@@ -34,10 +38,16 @@ export class Account extends BaseEntity {
   )
   client?: Client;
 
-  constructor(email: string, password: string, role: Role) {
+  constructor(
+    email: string,
+    password: string,
+    role: Role,
+    status: AccountStatus,
+  ) {
     super();
     this.email = email;
     this.password = password;
     this.role = role;
+    this.status = status;
   }
 }

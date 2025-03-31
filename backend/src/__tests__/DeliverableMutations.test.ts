@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Deliverable } from "../entities/Deliverable";
 import { DeliverableMutations } from "../graphql-resolvers/DeliverableMutations";
-import { Status } from "../enums/Status";
+import { ProjectStatus } from "../enums/ProjectStatus";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
@@ -17,7 +17,7 @@ describe("deliverable Mutations", () => {
       faker.date
         .future()
         .toISOString(), // date de livraison
-      Status.IN_PROGRESS, // exemple de status
+      ProjectStatus.IN_PROGRESS, // exemple de status
       faker.date
         .past()
         .toISOString(), // createAt

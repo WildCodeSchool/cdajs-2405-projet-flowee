@@ -6,10 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { IsEmail, IsNotEmpty } from "class-validator";
-import { Status } from "../enums/Status";
+import { IsNotEmpty } from "class-validator";
+
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
+import { ProjectStatus } from "../enums/ProjectStatus";
 
 @ObjectType()
 @Entity()
@@ -18,16 +19,10 @@ export class Project extends BaseEntity {
   @Field(() => ID)
   id?: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   @Field()
   @IsNotEmpty({ message: "Project Name is required" })
-  name: string;
-
-  @Column({ nullable: false })
-  @Field()
-  @IsEmail({}, { message: "Invalid email format" })
-  @IsNotEmpty({ message: "Email is required" })
-  clientEmail: string;
+  projectName: string;
 
   @Column()
   @Field()
@@ -46,17 +41,17 @@ export class Project extends BaseEntity {
   @Field({ nullable: true })
   endDate?: string;
 
-  @Column({ default: Status.NOT_STARTED })
+  @Column({ default: ProjectStatus.NOT_STARTED })
   @Field({ nullable: true })
-  status?: Status;
+  status?: ProjectStatus;
 
   //relations
   @ManyToOne(
     () => Client,
     (client) => client.projects,
-    { nullable: true, onDelete: "SET NULL" },
+    { nullable: false },
   )
-  @Field(() => Client, { nullable: true })
+  @Field(() => Client)
   client?: Client;
 
   @ManyToOne(
@@ -68,18 +63,16 @@ export class Project extends BaseEntity {
   companyUser?: CompanyUser;
 
   constructor(
-    name: string,
-    clientEmail: string,
+    projectName: string,
     companyUserId: number,
     description?: string,
     startDate?: string,
     endDate?: string,
-    status?: Status,
+    status?: ProjectStatus,
   ) {
     super();
 
-    this.name = name;
-    this.clientEmail = clientEmail;
+    this.projectName = projectName;
     this.companyUserId = companyUserId;
     this.description = description;
     this.startDate = startDate;

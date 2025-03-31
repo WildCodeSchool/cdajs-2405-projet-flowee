@@ -2,6 +2,9 @@ import { dataSource } from "../dataSource/dataSource";
 import { Account } from "../entities/Account";
 import { Mutation, Arg, Resolver } from "type-graphql";
 import type { Role } from "../enums/Role";
+import { AccountStatus } from "../enums/AccountStatus";
+import argon2 from "argon2";
+import { generateToken } from "../middlewares/auth";
 @Resolver(Account)
 export class AccountMutation {
   @Mutation(() => Account)
@@ -19,8 +22,14 @@ export class AccountMutation {
         throw new Error("Email already exists");
       }
 
-      // Création de l'Account
-      const newAccount = new Account(email, password, role);
+      const hashedPassword = await argon2.hash(password);
+      // Création du Account
+      const newAccount = new Account(
+        email,
+        hashedPassword,
+        role,
+        AccountStatus.PENDING,
+      );
 
       await dataSource.manager.save(newAccount);
       return newAccount;
@@ -28,5 +37,34 @@ export class AccountMutation {
       console.error("Error creating account:", error);
       throw new Error("Failed to create account");
     }
+  }
+}
+
+export class AuthMutation {
+  @Mutation(() => String)
+  async login(
+    @Arg("email") email: string,
+    @Arg("password") password: string,
+  ): Promise<string> {
+    const account = await dataSource.manager.findOne(Account, {
+      where: { email },
+    });
+
+    if (!account) {
+      throw new Error("Email ou mot de passe incorrect");
+    }
+
+    if (account.status !== AccountStatus.ACTIVE) {
+      throw new Error("Le compte n'est pas activé.");
+    }
+
+    const isValid = await argon2.verify(account.password, password);
+    if (!isValid) {
+      throw new Error("Email ou mot de passe incorrect");
+    }
+
+    const token = generateToken(account);
+    console.info("token", token);
+    return token;
   }
 }
