@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Deliverable } from "../entities/Deliverable";
 import { DeliverableQueries } from "../graphql-resolvers/DeliverableQueries";
-import { Status } from "../enums/Status";
+import { ProjectStatus } from "../enums/ProjectStatus";
 
 describe("Deliverable Queries", () => {
   let deliverableQueries: DeliverableQueries;
@@ -18,20 +18,24 @@ describe("Deliverable Queries", () => {
       // Préparation du tableau simulé
       const deliverables: Deliverable[] = [
         new Deliverable(
-          faker.lorem.word(),          // name
-          faker.lorem.sentence(),      // perimeter
-          faker.date.future().toISOString(), // deliveryDate
-           Status.IN_PROGRESS,               // status
-          faker.date.past().toISOString(),   // createdAt
-          faker.number.int({ min: 0, max: 3 }) // reviews
+          faker.lorem.word(), // name
+          faker.lorem.sentence(), // perimeter
+          faker.date
+            .future()
+            .toISOString(), // deliveryDate
+          ProjectStatus.IN_PROGRESS, // status
+          faker.date
+            .past()
+            .toISOString(), // createdAt
+          faker.number.int({ min: 0, max: 3 }), // reviews
         ),
         new Deliverable(
           faker.lorem.word(),
           faker.lorem.sentence(),
           faker.date.future().toISOString(),
-          Status.COMPLETED,
+          ProjectStatus.COMPLETED,
           faker.date.past().toISOString(),
-          faker.number.int({ min: 0, max: 3 })
+          faker.number.int({ min: 0, max: 3 }),
         ),
       ];
 
@@ -64,13 +68,15 @@ describe("Deliverable Queries", () => {
         faker.lorem.word(),
         faker.lorem.sentence(),
         faker.date.future().toISOString(),
-        Status.IN_PROGRESS,
+        ProjectStatus.IN_PROGRESS,
         faker.date.past().toISOString(),
-        faker.number.int({ min: 0, max: 3 })
+        faker.number.int({ min: 0, max: 3 }),
       );
       existingDeliverable.id = 42;
 
-      mockTypeOrm().onMock(Deliverable).toReturn(existingDeliverable, "findOne");
+      mockTypeOrm()
+        .onMock(Deliverable)
+        .toReturn(existingDeliverable, "findOne");
 
       const result = await deliverableQueries.getDeliverable(42);
 

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Task } from "../entities/Task";
-import { Status } from "../enums/Status";
+import { ProjectStatus } from "../enums/ProjectStatus";
 import { TaskMutations } from "../graphql-resolvers/TaskMutations";
 
 describe("Task Mutations", () => {
@@ -13,18 +13,21 @@ describe("Task Mutations", () => {
 
     // Créer une instance fictive de Task (avec un Status fixe)
     task = new Task(
-      faker.lorem.words(3),           // name
-      faker.lorem.sentence(),         // description
-      faker.date.past().toISOString(), // startDate (string)
-      faker.date.future().toISOString(), // endDate (string)
-      Status.IN_PROGRESS              // Status FIXE pour (tests déterministes)
+      faker.lorem.words(3), // name
+      faker.lorem.sentence(), // description
+      faker.date
+        .past()
+        .toISOString(), // startDate (string)
+      faker.date
+        .future()
+        .toISOString(), // endDate (string)
+      ProjectStatus.IN_PROGRESS, // Status FIXE pour (tests déterministes)
     );
 
     // On peut aussi attribuer un ID fictif pour simuler un objet existant lors de l'update/delete
     // Mais on le fera dans les tests qui en ont besoin
   });
 
-  
   // 1) Tests pour createTask
 
   describe("createTask", () => {
@@ -38,7 +41,7 @@ describe("Task Mutations", () => {
         task.description,
         task.status,
         task.startDate,
-        task.endDate
+        task.endDate,
       );
 
       // Vérifie que l'objet retourné match l'original
@@ -58,14 +61,12 @@ describe("Task Mutations", () => {
         taskMutations.createTask(
           "", // name vide
           "Some description",
-          Status.NOT_STARTED
+          ProjectStatus.NOT_STARTED,
           // startDate et endDate peuvent être omis
-        )
+        ),
       ).rejects.toThrow("Name is required");
     });
   });
-
-
 
   // 2) Tests pour updateTask
 
@@ -77,7 +78,7 @@ describe("Task Mutations", () => {
         "Old Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        Status.NOT_STARTED
+        ProjectStatus.NOT_STARTED,
       );
       existingTask.id = 42; // ID fictif
 
@@ -87,9 +88,13 @@ describe("Task Mutations", () => {
       // Moquer 'save' pour retourner la tâche mise à jour
       mockTypeOrm().onMock(Task).toReturn(existingTask, "save");
 
+      if (!existingTask.id) {
+        throw new Error("Task ID is missing.");
+      }
+
       // Appel de updateTask
       const updatedTask = await taskMutations.updateTask(
-        existingTask.id!,
+        existingTask.id,
         "New Name",
         "New Description",
       );
@@ -108,7 +113,7 @@ describe("Task Mutations", () => {
       mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
 
       await expect(
-        taskMutations.updateTask(999, "Name", "Description")
+        taskMutations.updateTask(999, "Name", "Description"),
       ).rejects.toThrow("Task with ID 999 not found");
     });
   });
@@ -124,7 +129,7 @@ describe("Task Mutations", () => {
         "Some Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        Status.BLOCKED
+        ProjectStatus.BLOCKED,
       );
       existingTask.id = 123;
 
@@ -149,8 +154,9 @@ describe("Task Mutations", () => {
     it("should throw error if task not found", async () => {
       mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
 
-      await expect(taskMutations.deleteTask(9999))
-      .rejects.toThrow("Task with ID 9999 not found");
+      await expect(taskMutations.deleteTask(9999)).rejects.toThrow(
+        "Task with ID 9999 not found",
+      );
     });
   });
 });

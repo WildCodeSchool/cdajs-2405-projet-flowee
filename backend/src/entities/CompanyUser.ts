@@ -35,7 +35,7 @@ export class CompanyUser extends BaseEntity {
   projects?: Project[];
 
   @OneToOne(() => Account)
-  @JoinColumn()
+  @JoinColumn({ name: "account_id" }) // la clé étrangère est ici
   @Field((_) => Account)
   account?: Account;
 

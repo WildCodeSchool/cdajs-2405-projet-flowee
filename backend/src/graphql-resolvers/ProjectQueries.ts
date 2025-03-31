@@ -24,7 +24,7 @@ export class ProjectQueries {
     @Arg("name") name: string,
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
-      where: { name: ILike(`%${name}%`) },
+      where: { projectName: ILike(`%${name}%`) },
     });
 
     return projects;

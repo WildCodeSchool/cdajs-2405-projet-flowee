@@ -19,7 +19,7 @@ export class ClientMutations {
         throw new Error("Account not found");
       }
       const existingclient = await dataSource.manager.findOne(Client, {
-        where: { name: name },
+        where: { clientName: name },
       });
       if (existingclient) {
         throw new Error("Le client existe deja ");

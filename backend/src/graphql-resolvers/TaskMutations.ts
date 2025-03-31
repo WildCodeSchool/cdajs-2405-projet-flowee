@@ -2,7 +2,7 @@ import { Arg, Mutation, Resolver } from "type-graphql";
 import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Task } from "../entities/Task";
-import type { Status } from "../enums/Status";
+import type { ProjectStatus } from "../enums/ProjectStatus";
 
 @Resolver(Task)
 export class TaskMutations {
@@ -10,9 +10,9 @@ export class TaskMutations {
   async createTask(
     @Arg("name") name: string,
     @Arg("description", { nullable: true }) description?: string,
-    @Arg("status", { nullable: true }) status?: Status,
+    @Arg("status", { nullable: true }) status?: ProjectStatus,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     if (!name) {
       throw new GraphQLError("Name is required", {
@@ -21,7 +21,13 @@ export class TaskMutations {
     }
 
     try {
-      const newTask = new Task(name, description ?? "", startDate, endDate, status);
+      const newTask = new Task(
+        name,
+        description ?? "",
+        startDate,
+        endDate,
+        status,
+      );
       await dataSource.manager.save(newTask);
       return newTask;
     } catch (error) {
@@ -44,9 +50,9 @@ export class TaskMutations {
     @Arg("id") id: number,
     @Arg("name", { nullable: true }) name?: string,
     @Arg("description", { nullable: true }) description?: string,
-    @Arg("status", { nullable: true }) status?: Status,
+    @Arg("status", { nullable: true }) status?: ProjectStatus,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
@@ -67,8 +73,8 @@ export class TaskMutations {
     } catch (error) {
       // Si l’erreur est déjà une GraphQLError,
       if (error instanceof GraphQLError) {
-      throw error;
-    }
+        throw error;
+      }
       throw new GraphQLError("Failed to update task", {
         extensions: {
           code: "UPDATE_TASK_ERROR",
@@ -92,7 +98,7 @@ export class TaskMutations {
       return task;
     } catch (error) {
       //Releve l erreur initiale si c'est une erreur GraphQLError
-      if(error instanceof GraphQLError) {
+      if (error instanceof GraphQLError) {
         throw error;
       }
 
@@ -105,4 +111,3 @@ export class TaskMutations {
     }
   }
 }
-

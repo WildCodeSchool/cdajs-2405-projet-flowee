@@ -1,7 +1,8 @@
-export enum Status {
+export enum ProjectStatus {
   NOT_STARTED = "NOT_STARTED",
   BLOCKED = "BLOCKED",
   IN_PROGRESS = "IN_PROGRESS",
   MODIFY = "MODIFY",
   COMPLETED = "COMPLETED",
+  PENDING = "PENDING",
 }

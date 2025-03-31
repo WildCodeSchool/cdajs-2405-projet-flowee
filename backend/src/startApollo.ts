@@ -4,6 +4,10 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { dataSource } from "./dataSource/dataSource";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
 import { buildSchema } from "type-graphql";
+import { registerEnumType } from "type-graphql";
+import { Role } from "./enums/Role";
+import { ProjectStatus } from "./enums/ProjectStatus";
+import { AccountStatus } from "./enums/AccountStatus";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
 import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
@@ -15,6 +19,27 @@ import { ClientQueries } from "./graphql-resolvers/ClientQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
 import { AccountMutation } from "./graphql-resolvers/AccountMutation";
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
+import { initTestData } from "./scripts/initTestData";
+import { Project } from "./entities/Project";
+
+registerEnumType(Role, {
+  name: "Role",
+  description: "Roles available for a user (admin or client) ",
+});
+
+registerEnumType(ProjectStatus, {
+  name: "ProjectStatus",
+  description: "Project, task or deliverable status",
+});
+
+registerEnumType(AccountStatus, {
+  name: "AccountStatus",
+  description: "Account status",
+});
+
+export async function cleanDB() {
+  await dataSource.manager.clear(Project);
+}
 
 const port = 4000;
 
@@ -37,14 +62,12 @@ async function startServerApollo() {
         AccountQueries,
       ],
     });
-    const server = new ApolloServer({
-      schema,
-    });
+    const server = new ApolloServer({ schema });
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
-    //cleanDB();
-    //initTestData();
+    // cleanDB();
+    initTestData();
 
     const { url } = await startStandaloneServer(server, {
       listen: { port, host: "0.0.0.0" },

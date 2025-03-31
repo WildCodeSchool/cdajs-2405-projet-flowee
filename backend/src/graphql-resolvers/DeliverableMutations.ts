@@ -3,7 +3,7 @@ import { Arg, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
-import type { Status } from "../enums/Status";
+import type { ProjectStatus } from "../enums/ProjectStatus";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
@@ -12,7 +12,7 @@ export class DeliverableMutations {
     @Arg("name") name: string,
     @Arg("perimeter", { nullable: true }) perimeter?: string,
     @Arg("deliveryDate", { nullable: true }) deliveryDate?: string,
-    @Arg("status", { nullable: true }) status?: Status,
+    @Arg("status", { nullable: true }) status?: ProjectStatus,
     @Arg("createdAt", { nullable: true }) createdAt?: string,
     @Arg("reviewTimes", { nullable: true }) reviewTimes?: number,
   ): Promise<Deliverable> {
@@ -34,9 +34,9 @@ export class DeliverableMutations {
       console.info("Deliverable created:", newDeliverable);
       return newDeliverable;
     } catch (error) {
-       if (error instanceof GraphQLError) {
-      throw error;
-    }
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
       throw new GraphQLError("Failed to create deliverable", {
         extensions: {
           code: "CREATE_DELIVERABLE_ERROR",
@@ -98,7 +98,7 @@ export class DeliverableMutations {
 
       // je supprime le livrable
       await dataSource.manager.remove(deliverable);
-       console.info(`Deliverable with ID ${id} deleted`);
+      console.info(`Deliverable with ID ${id} deleted`);
 
       return true;
     } catch (error) {

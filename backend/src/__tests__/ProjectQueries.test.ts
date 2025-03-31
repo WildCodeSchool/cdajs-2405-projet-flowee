@@ -12,7 +12,6 @@ describe("Project Graphql queries", () => {
     projects = Array.from({ length: 4 }).map(() => {
       return new Project(
         faker.commerce.productName(),
-        faker.internet.email(),
         faker.number.int({ min: 1, max: 1000 }),
         faker.lorem.sentence(),
         faker.date.past().toISOString(),
@@ -27,8 +26,7 @@ describe("Project Graphql queries", () => {
       const retrievedProjects: Project[] =
         await projectQueries.getAllProjects();
       expect(retrievedProjects.length).toBe(projects.length);
-      expect(retrievedProjects[0]).toHaveProperty("name");
-      expect(retrievedProjects[0]).toHaveProperty("clientEmail");
+      expect(retrievedProjects[0]).toHaveProperty("projectName");
       expect(retrievedProjects[0]).toHaveProperty("description");
       expect(retrievedProjects[0]).toHaveProperty("startDate");
       expect(retrievedProjects[0]).toHaveProperty("endDate");
