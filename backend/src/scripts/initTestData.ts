@@ -15,9 +15,9 @@ export async function CreateTestData(
   clientEmail: string,
   description: string,
   startDate: string,
-  endDate: string,
+  endDate: string
 ) {
-  const companyUserId = 2; // ou autre ID statique/temporaire pour test
+  const companyUserId = 3; // ou autre ID statique/temporaire pour test
 
   let account = await dataSource.manager.findOne(Account, {
     where: { email: clientEmail },
@@ -56,6 +56,7 @@ export async function CreateTestData(
     companyUserId,
   });
 
+  console.info(project);
   await dataSource.manager.save(Project, project);
 
   console.log(`✅ Projet "${projectName}" créé avec client ${clientName}`);
@@ -68,7 +69,7 @@ export async function initTestData() {
     "cyrielle@example.com",
     "Un site vitrine pour son activité freelance",
     "2024-10-23",
-    "2025-04-10",
+    "2025-04-10"
   );
   await CreateTestData(
     "Plateforme Coaching",
@@ -76,7 +77,7 @@ export async function initTestData() {
     "alex.coach@example.com",
     "Plateforme pour réserver des séances de coaching",
     "2024-11-01",
-    "2025-05-20",
+    "2025-05-20"
   );
   await CreateTestData(
     "Application Nutrition",
@@ -84,7 +85,7 @@ export async function initTestData() {
     "luis.nutri@example.com",
     "Application de suivi nutritionnel",
     "2024-10-15",
-    "2025-03-30",
+    "2025-03-30"
   );
   await CreateTestData(
     "Projet CRM pour PME",
@@ -92,6 +93,6 @@ export async function initTestData() {
     "claire@pmecrm.fr",
     "Outil de gestion des relations client",
     "2024-09-01",
-    "2025-01-15",
+    "2025-01-15"
   );
 }

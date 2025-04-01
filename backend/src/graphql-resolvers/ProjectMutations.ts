@@ -15,11 +15,11 @@ import { ValidationError } from "class-validator";
 export class ProjectMutations {
   @Mutation(() => Project)
   async createProject(
-    @Arg("newProject", () => CreateProjectInput) newProject: CreateProjectInput,
+    @Arg("newProject", () => CreateProjectInput) newProject: CreateProjectInput
     // @Ctx() ctx: MyContext,
   ): Promise<Project> {
     try {
-      const companyUserId = 2; // pour le moment en dur et ensuite sera récupéré du contexte Ctx
+      const companyUserId = 3; // pour le moment en dur et ensuite sera récupéré du contexte Ctx
       const startDate = new Date().toISOString();
       const { projectName, clientEmail, clientName, description, endDate } =
         newProject;
@@ -80,7 +80,7 @@ export class ProjectMutations {
           extensions: {
             code: "VALIDATION_ERROR",
             errors: error.flatMap((err) =>
-              Object.values(err.constraints || {}),
+              Object.values(err.constraints || {})
             ),
           },
         });
