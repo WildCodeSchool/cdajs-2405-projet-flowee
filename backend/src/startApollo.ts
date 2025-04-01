@@ -17,7 +17,10 @@ import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { ClientQueries } from "./graphql-resolvers/ClientQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
-import { AccountMutation } from "./graphql-resolvers/AccountMutation";
+import {
+  AccountMutation,
+  AuthMutation,
+} from "./graphql-resolvers/AccountMutation";
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
 import { MyContext } from "./types/MyContext";
 // import { initTestData } from "./scripts/initTestData";
@@ -62,6 +65,7 @@ async function startServerApollo() {
         CompagnyMutations,
         AccountMutation,
         AccountQueries,
+        AuthMutation,
       ],
     });
     const server = new ApolloServer<MyContext>({ schema });

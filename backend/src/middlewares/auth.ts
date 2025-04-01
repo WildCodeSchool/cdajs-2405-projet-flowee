@@ -12,14 +12,15 @@ export function generateToken(account: Account): string {
 }
 
 export async function getAccount(token: string): Promise<Account | null> {
+  console.info(token);
   try {
-    if (!token) {
+    if (!token || token.trim() === "") {
       return null;
     }
 
-    // const cleanToken = token.replace(/^Bearer\s/, "");
+    const cleanToken = token.replace(/^Bearer\s/, "");
 
-    const payload = jwt.verify(token, JWT_SECRET) as { accountId: number };
+    const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: number };
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },

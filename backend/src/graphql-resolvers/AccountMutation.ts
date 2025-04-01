@@ -22,8 +22,8 @@ export class AccountMutation {
         throw new Error("Email already exists");
       }
 
-      // const hashedPassword = await argon2.hash(password);
-      const hashedPassword = password;
+      const hashedPassword = await argon2.hash(password);
+      console.info("je passe par ici pour creer le compte", hashedPassword);
       // Création du Account
       const newAccount = new Account(
         email,
