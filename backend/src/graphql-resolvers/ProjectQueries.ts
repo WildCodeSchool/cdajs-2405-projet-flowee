@@ -33,7 +33,7 @@ export class ProjectQueries {
   }
 
   // Query qui récupère l'utilisateur connecté et renvoie ses projets
-  @Authorized("ADMIN") // Protège cette requête pour les utilisateurs connectés
+  @Authorized("CLIENT") // Protège cette requête pour les utilisateurs connectés
   @Query(() => [Project])
   async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
     const user = context.user;
