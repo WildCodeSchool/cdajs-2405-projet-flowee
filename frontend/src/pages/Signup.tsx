@@ -22,7 +22,6 @@ export default function Signup() {
   };
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.info(signUpData);
     setSignUpData(initialFormData);
   };
 

@@ -22,10 +22,10 @@ import {
   AuthMutation,
 } from "./graphql-resolvers/AccountMutation";
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
-import { MyContext } from "./types/MyContext";
+import type { MyContext } from "./types/MyContext";
 // import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
-import { getAccount } from "./middlewares/auth";
+import { authChecker, getAccount } from "./middlewares/auth";
 
 registerEnumType(Role, {
   name: "Role",
@@ -67,6 +67,7 @@ async function startServerApollo() {
         AccountQueries,
         AuthMutation,
       ],
+      authChecker,
     });
     const server = new ApolloServer<MyContext>({ schema });
 

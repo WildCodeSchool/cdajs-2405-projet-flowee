@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import { Account } from "../entities/Account";
 import { AccountStatus } from "../enums/AccountStatus";
 import { dataSource } from "../dataSource/dataSource";
+import { AuthChecker } from "type-graphql";
+import { MyContext } from "../types/MyContext";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
 
@@ -12,7 +14,6 @@ export function generateToken(account: Account): string {
 }
 
 export async function getAccount(token: string): Promise<Account | null> {
-  console.info(token);
   try {
     if (!token || token.trim() === "") {
       return null;
@@ -31,7 +32,6 @@ export async function getAccount(token: string): Promise<Account | null> {
     if (account.status !== AccountStatus.ACTIVE) {
       return null;
     }
-    console.info("recup account", account);
 
     return account;
   } catch (error) {
@@ -39,3 +39,23 @@ export async function getAccount(token: string): Promise<Account | null> {
     return null;
   }
 }
+
+export const authChecker: AuthChecker<MyContext> = (
+  { context: { user } },
+  roles,
+) => {
+  // Check user
+  if (!user) {
+    // No user, restrict access
+    return false;
+  }
+
+  // Check '@Authorized()'
+  if (roles.length === 0) {
+    // Only authentication required
+    return true;
+  }
+
+  // Check '@Authorized(...)' roles overlap
+  return roles.includes(user.role as string); // @Authorized() attend une string mais notre user.role est une enum donc comparé à une string => on le convertit en string
+};

@@ -1,7 +1,9 @@
-import { Query, Arg, Resolver } from "type-graphql";
+import { Query, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ILike } from "typeorm";
 import { Project } from "../entities/Project";
 import { dataSource } from "../dataSource/dataSource";
+import { MyContext } from "../types/MyContext";
+import { Client } from "../entities/Client";
 
 @Resolver(Project)
 export class ProjectQueries {
@@ -28,5 +30,29 @@ export class ProjectQueries {
     });
 
     return projects;
+  }
+
+  // Query qui récupère l'utilisateur connecté et renvoie ses projets
+  @Authorized("ADMIN") // Protège cette requête pour les utilisateurs connectés
+  @Query(() => [Project])
+  async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
+    const user = context.user;
+    console.info("USER DANS QUERY PROJECT", context);
+
+    if (!user) {
+      throw new Error("Not connected");
+    }
+
+    const client = await dataSource.manager.findOne(Client, {
+      where: {
+        account: { id: user.id },
+      },
+    });
+
+    if (!client) {
+      throw new Error("Nothing to retreive");
+    }
+
+    return client.projects ?? [];
   }
 }
