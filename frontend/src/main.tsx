@@ -9,6 +9,7 @@ import {
   ApolloProvider,
   HttpLink,
 } from "@apollo/client";
+import { type ContextSetter, setContext } from "@apollo/client/link/context";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -18,12 +19,24 @@ import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
 
-const uriprod = new HttpLink({
+const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
 
+const authHeaderFunction: ContextSetter = (_request, { headers }) => {
+  const token: string | null = localStorage.getItem("AUTH_TOKEN");
+  console.info("token dans le front", token);
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+};
+const authHeaderLink = setContext(authHeaderFunction);
+
 const client = new ApolloClient({
-  link: uriprod,
+  link: authHeaderLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

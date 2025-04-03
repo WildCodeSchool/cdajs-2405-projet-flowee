@@ -18,6 +18,7 @@ export default function Login() {
     onCompleted: (data: LoginMutation) => {
       const token: string = data.login;
       console.info("login succeded", token);
+      localStorage.setItem("AUTH_TOKEN", token);
       navigate("/dashboard");
     },
     onError: (error: ApolloError) => {

@@ -20,8 +20,10 @@ export async function getAccount(token: string): Promise<Account | null> {
     }
 
     const cleanToken = token.replace(/^Bearer\s/, "");
+    console.info("token dans getAccount", cleanToken);
 
     const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: number };
+    console.info("accountId", payload.accountId);
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },

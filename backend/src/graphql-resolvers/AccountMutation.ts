@@ -65,6 +65,7 @@ export class AuthMutation {
     }
 
     const token = generateToken(account);
+    console.info("token genere au login ", token);
 
     return token;
   }
