@@ -13,3 +13,17 @@ export const GET_ALL_PROJECTS_QUERY = gql`
   }
   }
 `;
+
+export const GET_PROJECT_BY_USER = gql`
+  query GetProjectsByUser {
+  getProjectsByUser {
+    id
+    projectName
+    companyUserId
+    description
+    startDate
+    endDate
+    status
+  }
+}
+`;

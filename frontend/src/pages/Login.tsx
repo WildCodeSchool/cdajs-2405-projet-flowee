@@ -19,7 +19,7 @@ export default function Login() {
       const token: string = data.login;
       console.info("login succeded", token);
       localStorage.setItem("AUTH_TOKEN", token);
-      navigate("/dashboard");
+      navigate("/test");
     },
     onError: (error: ApolloError) => {
       console.error("login failed", error);
