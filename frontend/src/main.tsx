@@ -19,6 +19,7 @@ import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
 import Test from "./pages/Test";
+import { AuthProvider } from "./context/authcontext";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -92,7 +93,9 @@ if (rootElement) {
   root.render(
     <StrictMode>
       <ApolloProvider client={client}>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </ApolloProvider>
     </StrictMode>,
   );
