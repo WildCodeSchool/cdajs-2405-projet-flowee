@@ -26,7 +26,7 @@ const httpLink = new HttpLink({
 
 const authHeaderFunction: ContextSetter = (_request, { headers }) => {
   const token: string | null = localStorage.getItem("AUTH_TOKEN");
-  console.info("token dans le front", token);
+
   return {
     headers: {
       ...headers,

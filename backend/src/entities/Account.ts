@@ -9,6 +9,7 @@ import {
 import { Client } from "./Client";
 import type { Role } from "../enums/Role";
 import { AccountStatus } from "../enums/AccountStatus";
+import { CompanyUser } from "./CompanyUser";
 
 @ObjectType()
 @Entity("account")
@@ -37,6 +38,17 @@ export class Account extends BaseEntity {
     (client) => client.account,
   )
   client?: Client;
+
+  //Beosin d'ajouter la relation avec Company User
+  @OneToOne(
+    () => CompanyUser,
+    (companyUser) => companyUser.account,
+    {
+      nullable: true,
+    },
+  )
+  @Field(() => CompanyUser, { nullable: true })
+  companyUser?: CompanyUser;
 
   constructor(
     email: string,

@@ -17,7 +17,7 @@ export default function Login() {
   const [sendLoginMutation, { loading, error }] = useLoginMutation({
     onCompleted: (data: LoginMutation) => {
       const token: string = data.login;
-      console.info("login succeded", token);
+
       localStorage.setItem("AUTH_TOKEN", token);
       navigate("/test");
     },
@@ -29,7 +29,6 @@ export default function Login() {
   const { handleSubmit, register } = useForm<LoginFormData>();
 
   const LoginFormSubmitted = (formData: LoginFormData) => {
-    console.info("formData", formData);
     sendLoginMutation({
       variables: formData,
     });
