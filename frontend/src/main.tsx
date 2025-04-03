@@ -9,6 +9,7 @@ import {
   ApolloProvider,
   HttpLink,
 } from "@apollo/client";
+import { type ContextSetter, setContext } from "@apollo/client/link/context";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -17,13 +18,27 @@ import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
+import Test from "./pages/Test";
+import { AuthProvider } from "./context/authcontext";
 
-const uriprod = new HttpLink({
+const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
 
+const authHeaderFunction: ContextSetter = (_request, { headers }) => {
+  const token: string | null = localStorage.getItem("AUTH_TOKEN");
+
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+};
+const authHeaderLink = setContext(authHeaderFunction);
+
 const client = new ApolloClient({
-  link: uriprod,
+  link: authHeaderLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
@@ -61,6 +76,10 @@ const router = createBrowserRouter([
         element: <Settings />,
       },
       {
+        path: "/test",
+        element: <Test />,
+      },
+      {
         path: "*",
         element: <Error404visitor />,
       },
@@ -74,7 +93,9 @@ if (rootElement) {
   root.render(
     <StrictMode>
       <ApolloProvider client={client}>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </ApolloProvider>
     </StrictMode>,
   );

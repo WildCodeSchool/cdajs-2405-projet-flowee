@@ -5,6 +5,7 @@ import {
 } from "../__generated__/graphql-types";
 import type { ApolloError } from "@apollo/client";
 import { useNavigate } from "react-router";
+import { useAuth } from "../context/authcontext";
 
 interface LoginFormData {
   email: string;
@@ -12,13 +13,17 @@ interface LoginFormData {
 }
 
 export default function Login() {
+  const { setToken } = useAuth();
   const navigate = useNavigate();
 
   const [sendLoginMutation, { loading, error }] = useLoginMutation({
     onCompleted: (data: LoginMutation) => {
+      console.info("coucou je suis là");
       const token: string = data.login;
-      console.info("login succeded", token);
-      navigate("/dashboard");
+
+      setToken(token);
+      // localStorage.setItem("AUTH_TOKEN", token);
+      navigate("/test");
     },
     onError: (error: ApolloError) => {
       console.error("login failed", error);
@@ -28,7 +33,6 @@ export default function Login() {
   const { handleSubmit, register } = useForm<LoginFormData>();
 
   const LoginFormSubmitted = (formData: LoginFormData) => {
-    console.info("formData", formData);
     sendLoginMutation({
       variables: formData,
     });

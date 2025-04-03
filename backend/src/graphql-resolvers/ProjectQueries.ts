@@ -37,7 +37,6 @@ export class ProjectQueries {
   @Query(() => [Project])
   async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
     const user = context.user;
-    console.info("USER DANS QUERY PROJECT", context);
 
     if (!user) {
       throw new Error("Not connected");

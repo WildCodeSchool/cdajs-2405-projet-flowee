@@ -8,9 +8,61 @@ import { MyContext } from "../types/MyContext";
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
 
 export function generateToken(account: Account): string {
-  return jwt.sign({ accountId: account.id }, JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  console.info("ACCOUNT AVANT generate", account);
+  return jwt.sign(
+    { accountId: account.id, email: account.email, role: account.role },
+    JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+}
+
+export function generateClientToken(account: Account): string {
+  if (!account.client) {
+    throw new Error("Client data is missing from the account.");
+  }
+
+  const { id: accountId, email, role } = account;
+  const { id: clientId, clientName } = account.client;
+
+  return jwt.sign(
+    {
+      accountId,
+      clientId,
+      email,
+      role,
+      clientName,
+    },
+    JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+}
+
+export function generateCompanyUserToken(account: Account): string {
+  if (!account.companyUser) {
+    throw new Error("Company User data is missing from the account.");
+  }
+
+  const { id: accountId, email, role } = account;
+  const { id: companyUserId, firstname, lastname } = account.companyUser;
+
+  return jwt.sign(
+    {
+      accountId,
+      companyUserId,
+      email,
+      role,
+      firstname,
+      lastname,
+    },
+    JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
 }
 
 export async function getAccount(token: string): Promise<Account | null> {
