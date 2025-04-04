@@ -72,7 +72,6 @@ export class AuthMutation {
     }
 
     if (account.role === "CLIENT") {
-      console.info("role", account.role);
       const client = await dataSource.manager.findOne(Client, {
         where: { account: { id: account.id } },
       });

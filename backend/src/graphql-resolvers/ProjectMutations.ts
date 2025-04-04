@@ -8,26 +8,51 @@ import { CreateProjectInput } from "../inputs/CreateProjectInput";
 import { ProjectStatus } from "../enums/ProjectStatus";
 import { Role } from "../enums/Role";
 import { AccountStatus } from "../enums/AccountStatus";
-import { Mutation, Arg, Resolver } from "type-graphql";
+import { Mutation, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ValidationError } from "class-validator";
+import type { MyContext } from "../types/MyContext";
+import { CompanyUser } from "../entities/CompanyUser";
 
 @Resolver(Project)
 export class ProjectMutations {
+  @Authorized("ADMIN")
   @Mutation(() => Project)
   async createProject(
-    @Arg("newProject", () => CreateProjectInput) newProject: CreateProjectInput
-    // @Ctx() ctx: MyContext,
+    @Arg("newProject", () => CreateProjectInput) newProject: CreateProjectInput,
+    @Ctx() ctx: MyContext,
   ): Promise<Project> {
     try {
-      const companyUserId = 3; // pour le moment en dur et ensuite sera récupéré du contexte Ctx
+      const user = ctx.user;
+
+      if (!user || user.role !== Role.ADMIN) {
+        throw new GraphQLError("Accès interdit : rôle admin requis", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
+
+      const companyUser = await dataSource.manager.findOne(CompanyUser, {
+        where: { account: { id: user.id } },
+      });
+
+      if (!companyUser) {
+        throw new GraphQLError(
+          "Accès interdit : utilisateur entreprise non reconnu",
+          {
+            extensions: { code: "FORBIDDEN" },
+          },
+        );
+      }
+
+      const companyUserId = companyUser.id;
+
       const startDate = new Date().toISOString();
+
       const { projectName, clientEmail, clientName, description, endDate } =
         newProject;
 
-      // const companyUserId = ctx.user?.id;
-      // if (!companyUserId) {
-      //   throw new Error("Non autorisé : utilisateur non connecté");
-      // }
+      if (!companyUserId) {
+        throw new Error("User not connected");
+      }
 
       //  Step 1 : account creation
       let account: Account | null = await dataSource.manager.findOne(Account, {
@@ -37,7 +62,7 @@ export class ProjectMutations {
       if (!account) {
         account = dataSource.manager.create(Account, {
           email: clientEmail,
-          password: "changeme",
+          password: "changeme", // ENVOYER UN MAIL OU TOKEN POUR LA MISE A JOUR
           role: Role.CLIENT,
           status: AccountStatus.PENDING,
         });
@@ -47,7 +72,7 @@ export class ProjectMutations {
       //STep 2 : Verify client or create client
 
       let client = await dataSource.manager.findOne(Client, {
-        where: { account: { id: account.id } },
+        where: { account: { id: account?.id } },
         relations: ["account"],
       });
 
@@ -80,7 +105,7 @@ export class ProjectMutations {
           extensions: {
             code: "VALIDATION_ERROR",
             errors: error.flatMap((err) =>
-              Object.values(err.constraints || {})
+              Object.values(err.constraints || {}),
             ),
           },
         });

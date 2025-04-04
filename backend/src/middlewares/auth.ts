@@ -2,13 +2,12 @@ import jwt from "jsonwebtoken";
 import { Account } from "../entities/Account";
 import { AccountStatus } from "../enums/AccountStatus";
 import { dataSource } from "../dataSource/dataSource";
-import { AuthChecker } from "type-graphql";
-import { MyContext } from "../types/MyContext";
+import type { AuthChecker } from "type-graphql";
+import type { MyContext } from "../types/MyContext";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
 
 export function generateToken(account: Account): string {
-  console.info("ACCOUNT AVANT generate", account);
   return jwt.sign(
     { accountId: account.id, email: account.email, role: account.role },
     JWT_SECRET,

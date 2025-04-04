@@ -16,6 +16,7 @@ services:
       - 4000:4000
     volumes:
       - ./backend:/app
+      - /app/node_modules
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
