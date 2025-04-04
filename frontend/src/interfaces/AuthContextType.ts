@@ -1,6 +1,6 @@
-import { AuthContextClientType } from "./AuthContextClientType";
+import { AuthContextUserType } from "./AuthContextUserType";
 
 export interface AuthContextType {
-  authUserData: Partial<AuthContextClientType>;
+  authUserData: Partial<AuthContextUserType>;
   setToken: (token: string) => void;
 }
