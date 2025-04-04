@@ -16,6 +16,10 @@ module.exports = {
         bluelight: "#7A8ECF",
         verylightblue: "#EDF0FB",
         blueBg: "#DBE0F2",
+        red: "#D9495B",
+        green: "#379C3B",
+        lightgray: "#F3F3F3",
+        gray: "#CFCFCF",
       },
       boxShadow: {
         "t-md":

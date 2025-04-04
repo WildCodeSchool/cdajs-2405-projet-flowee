@@ -8,13 +8,12 @@ import { MyContext } from "../types/MyContext";
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
 
 export function generateToken(account: Account): string {
-  console.info("ACCOUNT AVANT generate", account);
   return jwt.sign(
     { accountId: account.id, email: account.email, role: account.role },
     JWT_SECRET,
     {
       expiresIn: "7d",
-    },
+    }
   );
 }
 
@@ -37,7 +36,7 @@ export function generateClientToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    },
+    }
   );
 }
 
@@ -61,7 +60,7 @@ export function generateCompanyUserToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    },
+    }
   );
 }
 
@@ -94,7 +93,7 @@ export async function getAccount(token: string): Promise<Account | null> {
 
 export const authChecker: AuthChecker<MyContext> = (
   { context: { user } },
-  roles,
+  roles
 ) => {
   // Check user
   if (!user) {

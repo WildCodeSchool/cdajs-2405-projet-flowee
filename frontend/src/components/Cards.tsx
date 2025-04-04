@@ -1,19 +1,15 @@
-// import { NavLink } from "react-router-dom";
 import { ReactNode } from "react";
 import { CardBackground } from "./illustrations/cardBackground";
+import { useAuth } from "../context/authContext";
 
-//Variants
 type CompanyVariant = "projects" | "deliverables" | "tasks";
 type ClientVariant = "projects" | "deliverables" | "toReview";
 
 export type CardVariant = CompanyVariant | ClientVariant;
-
-// Types of cards
 export type CardType = "company" | "client";
 
-// Props for the card component
 interface CardProps {
-  children: ReactNode;
+  children?: ReactNode;
   variant: CardVariant;
   type: CardType;
 }
@@ -31,47 +27,39 @@ const backgrounds = {
   },
 } as const;
 
-export const Card = ({ children, type, variant }: CardProps) => {
-  let bg: string;
-  let stripes: string;
+function isCompanyVariant(variant: CardVariant): variant is CompanyVariant {
+  return ["projects", "deliverables", "tasks"].includes(variant);
+}
 
-  switch (type) {
-    case "company":
-      switch (variant) {
-        case "projects":
-        case "deliverables":
-        case "tasks":
-          ({ bg, stripes } = backgrounds.company[variant]);
-          break;
-        default:
-          throw new Error("Invalid company variant");
-      }
-      break;
-    case "client":
-      switch (variant) {
-        case "projects":
-        case "deliverables":
-        case "toReview":
-          ({ bg, stripes } = backgrounds.client[variant]);
-          break;
-        default:
-          throw new Error("Invalid client variant");
-      }
-      break;
-    default:
-      throw new Error("Invalid card type");
+function isClientVariant(variant: CardVariant): variant is ClientVariant {
+  return ["projects", "deliverables", "toReview"].includes(variant);
+}
+
+export const Card = ({ children, variant }: CardProps) => {
+  const { authUserData } = useAuth();
+  const role = authUserData.role === "CLIENT" ? "client" : "company";
+
+  let bg = "#fff";
+  let stripes = "#ccc";
+
+  if (role === "company" && isCompanyVariant(variant)) {
+    ({ bg, stripes } = backgrounds.company[variant]);
+  } else if (role === "client" && isClientVariant(variant)) {
+    ({ bg, stripes } = backgrounds.client[variant]);
+  } else {
+    throw new Error("Invalid role/variant combination");
   }
 
   return (
-    <div className="relative h-[180px]  w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden">
-      {/* Background SVG */}
+    <div className="relative h-[180px] w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden">
       <CardBackground
         bg={bg}
         stripes={stripes}
-        className="absolute h-full w-full inset-0  z-0"
+        className="absolute h-full w-full inset-0 z-0"
       />
-
       <div className="relative z-10 p-5 flex flex-col justify-between h-full font-quicksand">
+        <div className="text-3xl font-bold">{children}</div>
+        <div className="text-base capitalize">{variant}</div>
         {children}
       </div>
     </div>
