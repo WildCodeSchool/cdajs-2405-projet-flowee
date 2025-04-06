@@ -1,15 +1,23 @@
+
+import { useState } from "react";
 import Navigation from "../components/Navigation";
+import SearchBar from "../components/Search";
+import DisplayClientsCard from "../components/DisplayClientsCard";
+
 
 export default function Clients() {
+  const [searchFilter, setSearchFilter] = useState("");
+
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="md:w-20 md:flex-shrink-0">
+      <aside className="md:w-20 md:flex-shrink-0">
         <Navigation />
-      </div>
-      <div className="flex-1 p-4 md:ml-4">
-        <h1>Welcome to the Clients Page</h1>
-        {/* Add your page content here */}
-      </div>
+      </aside>
+      <main className="flex-1 p-4 md:ml-4">
+        <h1 className="text-2xl font-bold mb-4">Clients</h1>
+        <SearchBar setSearchFilter={setSearchFilter} />
+        <DisplayClientsCard searchFilter={searchFilter} />
+      </main>
     </div>
   );
 }
