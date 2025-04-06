@@ -20,6 +20,7 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  companyUser?: Maybe<CompanyUser>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   role: Scalars['String']['output'];
@@ -38,7 +39,15 @@ export type Client = {
   account?: Maybe<Account>;
   clientName?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  status?: Maybe<ClientStatus>;
 };
+
+/** Client status */
+export enum ClientStatus {
+  Active = 'ACTIVE',
+  Archived = 'ARCHIVED',
+  Inactive = 'INACTIVE'
+}
 
 export type Compagny = {
   __typename?: 'Compagny';
@@ -266,6 +275,11 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: string };
 
+export type GetAllClientsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<{ __typename?: 'Client', id: string, clientName?: string | null, status?: ClientStatus | null, account?: { __typename?: 'Account', email: string, role: string } | null }> };
+
 export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -314,6 +328,51 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GetAllClientsDocument = gql`
+    query GetAllClients {
+  getAllClients {
+    id
+    clientName
+    account {
+      email
+      role
+    }
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetAllClientsQuery__
+ *
+ * To run a query within a React component, call `useGetAllClientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllClientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllClientsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllClientsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllClientsQuery, GetAllClientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllClientsQuery, GetAllClientsQueryVariables>(GetAllClientsDocument, options);
+      }
+export function useGetAllClientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllClientsQuery, GetAllClientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllClientsQuery, GetAllClientsQueryVariables>(GetAllClientsDocument, options);
+        }
+export function useGetAllClientsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllClientsQuery, GetAllClientsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllClientsQuery, GetAllClientsQueryVariables>(GetAllClientsDocument, options);
+        }
+export type GetAllClientsQueryHookResult = ReturnType<typeof useGetAllClientsQuery>;
+export type GetAllClientsLazyQueryHookResult = ReturnType<typeof useGetAllClientsLazyQuery>;
+export type GetAllClientsSuspenseQueryHookResult = ReturnType<typeof useGetAllClientsSuspenseQuery>;
+export type GetAllClientsQueryResult = Apollo.QueryResult<GetAllClientsQuery, GetAllClientsQueryVariables>;
 export const GetAllDeliverablesDocument = gql`
     query GetAllDeliverables {
   getAllDeliverables {
