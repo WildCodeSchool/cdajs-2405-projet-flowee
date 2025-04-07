@@ -22,12 +22,11 @@ export default function DisplayClients({ searchFilter }: DisplayClientsProps) {
   });
 
   return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="flex flex-row flex-wrap gap-3">
       {filteredClients.map((client) => (
         <CardsClient
           key={client.id}
           name={client.clientName || "No name"}
-          email={client.account?.email || "N/A"}
           status={client.status || ClientStatus.Active}
           onEdit={() => console.log("Edit", client.id)}
           onDelete={() => console.log("Delete", client.id)}
