@@ -48,7 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (token) {
-      console.info("token dans use effect", token);
       localStorage.setItem("AUTH_TOKEN", token);
       setAuthUserData(decodeContextData(token));
     }
