@@ -14,6 +14,7 @@
   --error: #d9495b;
   --light-gray: #f3f3f3;
   --gray: #cfcfcf;
+  --dark-gray: #383838;
 }
 :root.admin {
   --very-light: #faf1e7;
@@ -25,6 +26,7 @@
   --error: #d9495b;
   --light-gray: #f3f3f3;
   --gray: #cfcfcf;
+  --dark-gray: #383838;
 }
 
 :root.visitor {
@@ -33,6 +35,7 @@
   --error: #d9495b;
   --light-gray: #f3f3f3;
   --gray: #cfcfcf;
+  --dark-gray: #383838;
 }
 
 @layer base {

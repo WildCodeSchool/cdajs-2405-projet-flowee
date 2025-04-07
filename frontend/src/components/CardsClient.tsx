@@ -27,10 +27,10 @@ export default function CardsClient({
     .slice(0, 2); // limité à 2 lettres
 
   // Couleur en fonction du statut
-  let statusColor = "text-green-600";
-  if (status === ClientStatus.Inactive) statusColor = "text-orange-500";
+  let statusColor = "text-theme-success";
+  if (status === ClientStatus.Inactive) statusColor = "text-theme-warning";
   if (status === ClientStatus.Archived)
-    statusColor = "text-gray-500 line-through";
+    statusColor = "text-theme-darkGray line-through";
 
   // Gestion de l'ouverture du menu à trois points
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,9 +54,9 @@ export default function CardsClient({
   }, []);
 
   return (
-    <div className="relative h-[180px] w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden border border-gray-300 p-5 flex flex-col justify-between font-quicksand">
+    <div className="relative h-[180px] w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden border border-gray p-5 flex flex-col justify-between font-quicksand">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-[#f5eee7] flex items-center justify-center text-orange-600 font-semibold">
+        <div className="w-12 h-12 rounded-full bg-theme-veryLight flex items-center justify-center text-orange-600 font-semibold">
           {initials}
         </div>
         <div className="flex flex-col flex-1">
@@ -69,7 +69,7 @@ export default function CardsClient({
             <button
               type="button"
               onClick={toggleMenu}
-              className="text-gray-500"
+              className="text-theme-darkGray"
             >
               <FaEllipsisV />
             </button>
