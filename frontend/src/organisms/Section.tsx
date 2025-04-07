@@ -1,6 +1,5 @@
-// src/components/organisms/Section.tsx
 import { useState, useEffect } from "react";
-import { CardVariant } from "../components/Cards";
+import { Card, CardVariant } from "../components/Cards";
 import DisplayCards from "../components/DisplayCards";
 import Button from "../atoms/Button";
 import { useAuth } from "../context/authContext";
@@ -9,12 +8,14 @@ import {
   useGetAllDeliverablesQuery,
   GetProjectsByUserQuery,
   GetAllDeliverablesQuery,
+  Project,
+  Deliverable,
 } from "../__generated__/graphql-types";
 
 export interface SectionProps {
   title: string;
   variant: CardVariant;
-  type: "project" | "deliverable" | "task";
+  type: "projects" | "deliverable" | "task";
   searchFilter: string;
   showMore?: boolean;
   className?: string;
@@ -53,8 +54,6 @@ export const Section: React.FC<SectionProps> = ({
         return useGetProjectsByUserQuery;
       case "deliverables":
         return useGetAllDeliverablesQuery;
-      // case "tasks":
-      //   return useGetAllTasksQuery;
       default:
         return useGetAllDeliverablesQuery;
     }
@@ -63,18 +62,17 @@ export const Section: React.FC<SectionProps> = ({
   function extractItemsFromData(
     variant: CardVariant,
     data?: SectionQueryData
-  ): any[] {
+  ): (Project | Deliverable)[] {
     switch (variant) {
       case "projects":
         return (data as GetProjectsByUserQuery)?.getProjectsByUser ?? [];
       case "deliverables":
         return (data as GetAllDeliverablesQuery)?.getAllDeliverables ?? [];
-      // case "tasks":
-      //   return (data as GetAllTasksQuery)?.getAllTasks ?? [];
       default:
         return [];
     }
   }
+
   const useQuery = chooseQueryHook(variant);
   const { data, loading, error } = useQuery();
   const items = extractItemsFromData(variant, data);
@@ -87,15 +85,26 @@ export const Section: React.FC<SectionProps> = ({
           <Button label="See More" role={authUserData.role} to={`/${type}`} />
         )}
       </article>
+
       <DisplayCards
         items={items}
         loading={loading}
         error={error}
-        type="company"
         variant={variant}
         searchFilter={searchFilter}
-        cardType={type}
         limit={limit}
+        renderItem={(item) => (
+          <Card key={item.id} variant={variant}>
+            <h3 className="font-semibold text-xl">
+              {"projectName" in item ? item.projectName : item.name}
+            </h3>
+            {"startDate" in item && item.startDate && (
+              <p className="text-sm">
+                {new Date(item.startDate).toLocaleDateString("fr-FR")}
+              </p>
+            )}
+          </Card>
+        )}
       />
     </section>
   );

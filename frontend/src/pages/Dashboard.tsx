@@ -1,14 +1,15 @@
 import { useState } from "react";
 import Navigation from "../components/Navigation";
 import SearchBar from "../components/Search";
-import Tracker from "../components/tracker";
+import Tracker from "../organisms/Tracker";
 import { Section } from "../organisms/Section";
 import { useAuth } from "../context/authContext";
+import { useRoleTheme } from "../context/roleThemeContext";
 
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");
   const { authUserData } = useAuth();
-
+  const role = useRoleTheme();
   if (!authUserData?.role) return null;
 
   return (
@@ -23,7 +24,7 @@ export default function Dashboard() {
 
         <Section
           title="Projects"
-          type="project"
+          type="projects"
           variant="projects"
           searchFilter={searchFilter}
           showMore
@@ -37,7 +38,7 @@ export default function Dashboard() {
           showMore
         />
 
-        {authUserData.role === "ADMIN" && (
+        {role === "admin" && (
           <Section
             title="Tasks"
             type="task"

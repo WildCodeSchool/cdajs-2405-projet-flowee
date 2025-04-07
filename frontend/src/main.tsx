@@ -21,7 +21,7 @@ import Error404visitor from "./pages/Error404";
 import Test from "./pages/Test";
 import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
-
+import { RoleThemeProvider } from "./context/roleThemeContext";
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -99,10 +99,12 @@ if (rootElement) {
     <StrictMode>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <RoleThemeProvider>
+            <RouterProvider router={router} />
+          </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");

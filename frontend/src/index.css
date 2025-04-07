@@ -4,6 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root.client {
+  --very-light: #edf0fb;
+  --light: #8597d0;
+  --base: #4a65be;
+  --dark: #4a65be;
+  --very-dark: #25335f;
+}
+:root.admin {
+  --very-light: #faf1e7;
+  --light: #e3ab76;
+  --base: #d98d44;
+  --dark: #d4711d;
+  --very-dark: #d16309;
+}
+
 @layer base {
   html {
     @apply font-quicksand;

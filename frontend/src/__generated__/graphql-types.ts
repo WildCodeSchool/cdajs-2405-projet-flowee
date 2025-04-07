@@ -290,7 +290,7 @@ export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<{ 
 export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, deliveryDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null }> };
+export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, deliveryDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null }> }> };
 
 export type GetAllProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -300,7 +300,7 @@ export type GetAllProjectsQuery = { __typename?: 'Query', getAllProjects: Array<
 export type GetProjectsByUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProjectsByUserQuery = { __typename?: 'Query', getProjectsByUser: Array<{ __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null }> };
+export type GetProjectsByUserQuery = { __typename?: 'Query', getProjectsByUser: Array<{ __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null, client: { __typename?: 'Client', id: string, clientName?: string | null } }> };
 
 
 export const CreateProjectDocument = gql`
@@ -429,6 +429,12 @@ export const GetAllDeliverablesDocument = gql`
     status
     createdAt
     reviewTimes
+    tasks {
+      id
+      name
+      description
+      status
+    }
   }
 }
     `;
@@ -519,6 +525,10 @@ export const GetProjectsByUserDocument = gql`
     startDate
     endDate
     status
+    client {
+      id
+      clientName
+    }
   }
 }
     `;
