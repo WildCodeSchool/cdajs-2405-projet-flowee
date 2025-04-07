@@ -19,7 +19,6 @@ export default function Login() {
   const [sendLoginMutation, { loading, error }] = useLoginMutation({
     onCompleted: (data: LoginMutation) => {
       const token: string = data.login;
-
       setToken(token);
       navigate("/test");
     },

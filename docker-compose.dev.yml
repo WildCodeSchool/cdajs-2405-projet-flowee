@@ -11,6 +11,7 @@ services:
 
   backend:
     build: ./backend
+    command: sh -c "npm run start"
     restart: unless-stopped
     ports:
       - 4000:4000

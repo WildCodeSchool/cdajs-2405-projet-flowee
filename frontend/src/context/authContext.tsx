@@ -1,32 +1,23 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import type { AuthContextType } from "../interfaces/AuthContextType";
+import type { AuthContextUserType } from "../interfaces/AuthContextUserType";
 
-export interface AuthContextClientType {
-  email: string;
-  role: string;
-  clientName: string;
-}
-
-interface AuthContextType {
-  authUserData: Partial<AuthContextClientType>;
-  setToken: (token: string) => void;
-}
-
-function decodeContextData(
-  token: string | null,
-): Partial<AuthContextClientType> {
+function decodeContextData(token: string | null): Partial<AuthContextUserType> {
   if (!token || token.split(".").length !== 3) {
     // localStorage.removeItem("AUTH_TOKEN");
     return {};
   }
 
   try {
-    const tokenData: AuthContextClientType = jwtDecode(token);
+    const tokenData: AuthContextUserType = jwtDecode(token);
     console.log("update context data from tokenData", tokenData);
     return {
       email: tokenData.email,
       role: tokenData.role,
       clientName: tokenData.clientName,
+      firstname: tokenData.firstname,
+      lastname: tokenData.lastname,
     };
   } catch (e) {
     console.error("Erreur lors du décodage du token :", e);
@@ -41,7 +32,7 @@ export const authContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authUserData, setAuthUserData] = useState<
-    Partial<AuthContextClientType>
+    Partial<AuthContextUserType>
   >(decodeContextData(localStorage.getItem("AUTH_TOKEN")));
 
   const [token, setToken] = useState(localStorage.getItem("AUTH_TOKEN") ?? "");

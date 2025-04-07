@@ -1,4 +1,5 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
+
 import {
   BaseEntity,
   Column,
@@ -8,8 +9,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Project } from "./Project";
+import { ClientStatus } from "../enums/ClientStatus";
 import { Account } from "./Account";
+import { Project } from "./Project";
 
 @ObjectType()
 @Entity("client")
@@ -21,6 +23,10 @@ export class Client extends BaseEntity {
   @Column({ nullable: true })
   @Field({ nullable: true })
   clientName: string;
+
+  @Column({ nullable: true, default: ClientStatus.ACTIVE })
+  @Field(() => ClientStatus, { nullable: true })
+  status?: ClientStatus;
 
   @OneToMany(
     () => Project,

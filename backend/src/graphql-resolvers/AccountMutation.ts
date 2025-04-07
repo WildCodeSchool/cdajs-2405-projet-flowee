@@ -57,7 +57,6 @@ export class AuthMutation {
     const account = await dataSource.manager.findOne(Account, {
       where: { email },
     });
-
     if (!account) {
       throw new Error("Wrong credentials");
     }

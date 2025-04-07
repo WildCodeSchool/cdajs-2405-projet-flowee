@@ -13,7 +13,7 @@ export function generateToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    },
+    }
   );
 }
 
@@ -36,7 +36,7 @@ export function generateClientToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    },
+    }
   );
 }
 
@@ -60,7 +60,7 @@ export function generateCompanyUserToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    },
+    }
   );
 }
 
@@ -93,7 +93,7 @@ export async function getAccount(token: string): Promise<Account | null> {
 
 export const authChecker: AuthChecker<MyContext> = (
   { context: { user } },
-  roles,
+  roles
 ) => {
   // Check user
   if (!user) {
