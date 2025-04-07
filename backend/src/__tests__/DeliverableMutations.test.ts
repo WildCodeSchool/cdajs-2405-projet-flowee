@@ -14,14 +14,10 @@ describe("deliverable Mutations", () => {
     deliverable = new Deliverable(
       faker.company.buzzAdjective(), // name
       faker.lorem.sentence(), // perimeter
-      faker.date
-        .future()
-        .toISOString(), // date de livraison
+      faker.date.future().toISOString(), // date de livraison
       ProjectStatus.IN_PROGRESS, // exemple de status
-      faker.date
-        .past()
-        .toISOString(), // createAt
-      faker.number.int({ min: 1, max: 5 }), // ReviewTimes
+      faker.date.past().toISOString(), // createAt
+      faker.number.int({ min: 1, max: 5 }) // ReviewTimes
     );
   });
 
@@ -33,16 +29,16 @@ describe("deliverable Mutations", () => {
         await deliverableMutations.createDeliverable(
           deliverable.name,
           deliverable.perimeter,
-          deliverable.deliveryDate,
+          deliverable.endDate,
           deliverable.status,
           deliverable.createdAt,
-          deliverable.reviewTimes,
+          deliverable.reviewTimes
         );
 
       expect(createdDeliverable).toMatchObject({
         name: deliverable.name,
         perimeter: deliverable.perimeter,
-        deliveryDate: deliverable.deliveryDate,
+        endDate: deliverable.endDate,
         status: deliverable.status,
         createdAt: deliverable.createdAt,
         reviewTimes: deliverable.reviewTimes,

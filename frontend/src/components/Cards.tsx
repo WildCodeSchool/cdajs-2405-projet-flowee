@@ -14,14 +14,15 @@ export const Card = ({ children, variant }: CardProps) => {
   if (!role) return null;
 
   return (
-    <div className="card relative h-[180px] w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden bg-theme-cardBg">
+    <div className="card relative h-[180px] w-full min-w-[250px] max-w-[330px] md:h-[160px] rounded-lg overflow-hidden bg-theme-cardBg">
       <CardBackground
         variant={variant}
         className="absolute h-full w-full inset-0 z-0"
       />
       <div className="relative z-10 p-5 flex flex-col justify-between h-full font-quicksand">
-        <div className="text-3xl font-bold">{children}</div>
-        <div className="text-base capitalize">{variant}</div>
+        <div className="text-3xl font-bold flex flex-col h-full justify-between ">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import LogoIcon from "../components/Icons/Logo";
+import Button from "../atoms/Button";
 
 export default function Home() {
   return (
@@ -11,12 +12,15 @@ export default function Home() {
 
         {/* Right Side (Sign-in Button) */}
         <div className="hidden md:w-1/3 md:flex items-center justify-center md:justify-end">
-          <NavLink
-            to="/login"
+          <Button
+            label="Sign in"
+            role="visitor"
+            variant="OUTLINE"
+            to="/login" // Assuming the role is visitor for the sign-in button
             className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base md:w-48  text-center"
           >
             Sign in
-          </NavLink>
+          </Button>
         </div>
       </div>
 
@@ -29,12 +33,13 @@ export default function Home() {
           Keep your projects moving effortlessly. <br /> Smooth collaboration
           between teams and clients.
         </p>
-        <NavLink
+        <Button
+          label="Sign up"
           to="/signup"
           className="bg-theme-visitorBtnBG rounded-lg px-12 py-2 md:mx-10 md:block hidden text-white text-base mt-6 md:w-48 text-center"
         >
           Sign up
-        </NavLink>
+        </Button>
         <div
           style={{ backgroundImage: "url(/images/homeImage.png)" }}
           className="mt-8  md:w-full md:h-[50vh] md:bg-cover md:bg-center hidden  md:block"
@@ -43,18 +48,21 @@ export default function Home() {
 
       {/* Mobile Buttons (Stacked) */}
       <aside className="flex flex-col items-center justify-center gap-3 w-3/5 md:hidden mt-6">
-        <NavLink
+        <Button
+          label="Sign up"
           to="/signup"
           className="bg-theme-visitorBtnBG rounded-lg px-12 py-2 text-white text-base w-full text-center"
         >
           Sign up
-        </NavLink>
-        <NavLink
+        </Button>
+        <Button
+          label="Sign in"
           to="/login"
+          variant="OUTLINE"
           className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base w-full text-center"
         >
           Sign in
-        </NavLink>
+        </Button>
       </aside>
     </div>
   );

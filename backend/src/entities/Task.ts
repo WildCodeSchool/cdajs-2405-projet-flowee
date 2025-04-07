@@ -37,11 +37,10 @@ export class Task extends BaseEntity {
   endDate?: string;
 
   //relations
-  @ManyToOne(
-    () => Deliverable,
-    (deliverable) => deliverable.tasks,
-    { nullable: true, onDelete: "SET NULL" },
-  )
+  @ManyToOne(() => Deliverable, (deliverable) => deliverable.tasks, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
   @Field(() => Deliverable, { nullable: true })
   deliverable?: Deliverable;
 
@@ -50,7 +49,7 @@ export class Task extends BaseEntity {
     description: string,
     startDate?: string,
     endDate?: string,
-    status?: ProjectStatus,
+    status?: ProjectStatus
   ) {
     super();
 
