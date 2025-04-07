@@ -4,22 +4,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        darkorange: "#D16309",
-        midorange: "#D4711D",
-        orangebase: "#D98D44",
-        orangelight: "#E3AB76",
-        verylightorange: "#E9BB8E",
-        orangeBg: "#FAF1E7",
-        darkblue: "#25335F",
-        midblue: "#31447F",
-        bluebase: "#4A65BE",
-        bluelight: "#7A8ECF",
-        verylightblue: "#EDF0FB",
-        blueBg: "#DBE0F2",
+        theme: {
+          cardBg: "var(--very-light)",
+          projectStripes: "var(--light)",
+          deliverableStripes: "var(--dark)",
+          taskStripes: "var(--very-dark)",
+          btnBG: "var(--dark)",
+          btnText: "#ffffff",
+        },
+        red: "#D9495B",
+        green: "#379C3B",
+        lightgray: "#F3F3F3",
+        gray: "#CFCFCF",
       },
       boxShadow: {
         "t-md":
           "0 -4px 6px -1px rgba(0, 0, 0, 0.05), 0 -2px 4px -1px rgba(0, 0, 0, 0.03)",
+        soft: "0 0px 12px rgba(0, 0, 0, 0.10)",
       },
       spacing: {},
       fontFamily: {

@@ -5,11 +5,17 @@ export const GET_ALL_DELIVERABLES_QUERY = gql`
     getAllDeliverables {
       id
       name
-      deliveryDate
       perimeter
-      reviewTimes
+      deliveryDate
       status
       createdAt
+      reviewTimes
+      tasks {
+        id
+        name
+        description
+        status
+      }
     }
   }
 `;

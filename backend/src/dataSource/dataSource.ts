@@ -3,7 +3,7 @@ import { Project } from "../entities/Project";
 import dotenv from "dotenv";
 // import type { Client } from "../entities/Client";
 import { Deliverable } from "../entities/Deliverable";
-import type { Status } from "../enums/Status";
+import type { ProjectStatus } from "../enums/ProjectStatus";
 dotenv.config();
 
 const dbHost: string = process.env.DB_HOST || "";
@@ -34,7 +34,7 @@ export async function CreateDeliverableTestData(
   name: string,
   perimeter: string,
   deliveryDate?: string,
-  status?: Status,
+  status?: ProjectStatus,
   createdAt?: string,
   reviewTimes?: number,
 ) {

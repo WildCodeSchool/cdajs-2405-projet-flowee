@@ -1,7 +1,8 @@
-import { Query, Arg, Resolver } from "type-graphql";
+import { Query, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ILike } from "typeorm";
 import { Project } from "../entities/Project";
 import { dataSource } from "../dataSource/dataSource";
+import type { MyContext } from "../types/MyContext";
 
 @Resolver(Project)
 export class ProjectQueries {
@@ -24,9 +25,45 @@ export class ProjectQueries {
     @Arg("name") name: string,
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
-      where: { name: ILike(`%${name}%`) },
+      where: { projectName: ILike(`%${name}%`) },
     });
 
     return projects;
+  }
+
+  // Query qui récupère l'utilisateur connecté et renvoie ses projets
+  @Authorized("CLIENT", "ADMIN") // Protège cette requête pour les utilisateurs connectés
+  @Query(() => [Project])
+  async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
+    const user = context.user;
+    console.info("user dans queries", user);
+
+    if (!user) {
+      throw new Error("Not connected");
+    }
+
+    if (user.role === "CLIENT") {
+      const projects = await dataSource.manager.find(Project, {
+        where: {
+          client: { account: { id: user.id } },
+        },
+        relations: ["client", "companyUser"],
+      });
+
+      return projects;
+    }
+
+    if (user.role === "ADMIN") {
+      const projects = await dataSource.manager.find(Project, {
+        where: {
+          companyUser: { account: { id: user.id } },
+        },
+        relations: ["client", "companyUser"],
+      });
+
+      return projects;
+    }
+
+    throw new Error("User role not supported");
   }
 }

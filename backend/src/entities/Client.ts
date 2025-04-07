@@ -1,4 +1,5 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
+
 import {
   BaseEntity,
   Column,
@@ -8,8 +9,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Project } from "./Project";
+import { ClientStatus } from "../enums/ClientStatus";
 import { Account } from "./Account";
+import { Project } from "./Project";
 
 @ObjectType()
 @Entity("client")
@@ -20,7 +22,11 @@ export class Client extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  name: string;
+  clientName: string;
+
+  @Column({ nullable: true, default: ClientStatus.ACTIVE })
+  @Field(() => ClientStatus, { nullable: true })
+  status?: ClientStatus;
 
   @OneToMany(
     () => Project,
@@ -30,13 +36,13 @@ export class Client extends BaseEntity {
   projects?: Project[];
 
   @OneToOne(() => Account, { eager: true })
-  @JoinColumn({ name: "account_id" })
+  @JoinColumn({ name: "account_id" }) // la clé étrangère est ici
   @Field(() => Account, { nullable: true })
   account?: Account;
 
-  constructor(name: string, account: Account) {
+  constructor(clientName: string, account: Account) {
     super();
-    this.name = name;
+    this.clientName = clientName;
     this.account = account;
   }
 }

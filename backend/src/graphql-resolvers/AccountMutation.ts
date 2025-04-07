@@ -2,6 +2,14 @@ import { dataSource } from "../dataSource/dataSource";
 import { Account } from "../entities/Account";
 import { Mutation, Arg, Resolver } from "type-graphql";
 import type { Role } from "../enums/Role";
+import { AccountStatus } from "../enums/AccountStatus";
+import argon2 from "argon2";
+import {
+  generateClientToken,
+  generateCompanyUserToken,
+} from "../middlewares/auth";
+import { Client } from "../entities/Client";
+import { CompanyUser } from "../entities/CompanyUser";
 @Resolver(Account)
 export class AccountMutation {
   @Mutation(() => Account)
@@ -19,8 +27,15 @@ export class AccountMutation {
         throw new Error("Email already exists");
       }
 
-      // Création de l'Account
-      const newAccount = new Account(email, password, role);
+      const hashedPassword = await argon2.hash(password);
+
+      // Création du Account
+      const newAccount = new Account(
+        email,
+        hashedPassword,
+        role,
+        AccountStatus.PENDING,
+      );
 
       await dataSource.manager.save(newAccount);
       return newAccount;
@@ -28,5 +43,54 @@ export class AccountMutation {
       console.error("Error creating account:", error);
       throw new Error("Failed to create account");
     }
+  }
+}
+
+export class AuthMutation {
+  @Mutation(() => String)
+  async login(
+    @Arg("email") email: string,
+    @Arg("password") password: string,
+  ): Promise<string> {
+    let token = "";
+
+    const account = await dataSource.manager.findOne(Account, {
+      where: { email },
+    });
+    if (!account) {
+      throw new Error("Wrong credentials");
+    }
+
+    if (account.status !== AccountStatus.ACTIVE) {
+      throw new Error("Account is inactive");
+    }
+
+    const isValid = await argon2.verify(account.password, password);
+    if (!isValid) {
+      throw new Error("Wrong credentials");
+    }
+
+    if (account.role === "CLIENT") {
+      const client = await dataSource.manager.findOne(Client, {
+        where: { account: { id: account.id } },
+      });
+
+      if (!client) {
+        throw new Error("Client not found");
+      }
+      account.client = client;
+      token = generateClientToken(account);
+    } else if (account.role === "ADMIN") {
+      const companyUser = await dataSource.manager.findOne(CompanyUser, {
+        where: { account: { id: account.id } },
+      });
+      if (!companyUser) {
+        throw new Error("Company user not found");
+      }
+      account.companyUser = companyUser;
+      token = generateCompanyUserToken(account);
+    }
+
+    return token;
   }
 }
