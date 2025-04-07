@@ -26,6 +26,7 @@ import type { MyContext } from "./types/MyContext";
 // import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
 import { authChecker, getAccount } from "./middlewares/auth";
+import { ClientStatus } from "./enums/ClientStatus";
 
 registerEnumType(Role, {
   name: "Role",
@@ -40,6 +41,11 @@ registerEnumType(ProjectStatus, {
 registerEnumType(AccountStatus, {
   name: "AccountStatus",
   description: "Account status",
+});
+
+registerEnumType(ClientStatus, {
+  name: "ClientStatus",
+  description: "Client status",
 });
 
 export async function cleanDB() {
@@ -80,7 +86,6 @@ async function startServerApollo() {
       context: async ({ req }) => {
         // Get the user token from the headers.
         const token = req.headers.authorization || "";
-        console.info("token dans startApollo", token);
 
         // Try to retrieve a user with the token
         const user = await getAccount(token);

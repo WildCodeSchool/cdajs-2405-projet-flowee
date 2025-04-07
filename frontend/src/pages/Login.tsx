@@ -19,9 +19,7 @@ export default function Login() {
 
   const [sendLoginMutation, { loading, error }] = useLoginMutation({
     onCompleted: (data: LoginMutation) => {
-      console.info("coucou je suis là");
       const token: string = data.login;
-
       setToken(token);
       // localStorage.setItem("AUTH_TOKEN", token);
       navigate("/dashboard");

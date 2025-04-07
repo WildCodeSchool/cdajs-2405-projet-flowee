@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { AuthContextType } from "../interfaces/AuthContextType";
-import { AuthContextUserType } from "../interfaces/AuthContextUserType";
+import type { AuthContextType } from "../interfaces/AuthContextType";
+import type { AuthContextUserType } from "../interfaces/AuthContextUserType";
 
 function decodeContextData(token: string | null): Partial<AuthContextUserType> {
   if (!token || token.split(".").length !== 3) {
@@ -39,7 +39,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (token) {
-      console.info("token dans use effect", token);
       localStorage.setItem("AUTH_TOKEN", token);
       setAuthUserData(decodeContextData(token));
     }
