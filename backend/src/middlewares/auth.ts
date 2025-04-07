@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import { Account } from "../entities/Account";
 import { AccountStatus } from "../enums/AccountStatus";
 import { dataSource } from "../dataSource/dataSource";
-import { AuthChecker } from "type-graphql";
-import { MyContext } from "../types/MyContext";
+import type { AuthChecker } from "type-graphql";
+import type { MyContext } from "../types/MyContext";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
 

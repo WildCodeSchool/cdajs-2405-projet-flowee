@@ -2,7 +2,7 @@ import { Query, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ILike } from "typeorm";
 import { Project } from "../entities/Project";
 import { dataSource } from "../dataSource/dataSource";
-import { MyContext } from "../types/MyContext";
+import type { MyContext } from "../types/MyContext";
 
 @Resolver(Project)
 export class ProjectQueries {
@@ -22,7 +22,7 @@ export class ProjectQueries {
 
   @Query(() => [Project], { nullable: true })
   async getProjectsByName(
-    @Arg("name") name: string
+    @Arg("name") name: string,
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
       where: { projectName: ILike(`%${name}%`) },
@@ -36,6 +36,7 @@ export class ProjectQueries {
   @Query(() => [Project])
   async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
     const user = context.user;
+    console.info("user dans queries", user);
 
     if (!user) {
       throw new Error("Not connected");

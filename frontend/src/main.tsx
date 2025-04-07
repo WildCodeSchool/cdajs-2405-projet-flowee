@@ -20,6 +20,7 @@ import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
 import Test from "./pages/Test";
 import { AuthProvider } from "./context/authContext";
+import CreateProject from "./pages/CreateProject";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
         element: <Test />,
       },
       {
+        path: "/newproject",
+        element: <CreateProject />,
+      },
+      {
         path: "*",
         element: <Error404visitor />,
       },
@@ -97,7 +102,7 @@ if (rootElement) {
           <RouterProvider router={router} />
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
   console.error("Root element not found");

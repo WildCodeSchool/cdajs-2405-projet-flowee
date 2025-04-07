@@ -4,6 +4,9 @@ import { Project } from "../entities/Project";
 import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
 import { ProjectStatus } from "../enums/ProjectStatus";
 import type { CreateProjectInput } from "../inputs/CreateProjectInput";
+import { AccountStatus } from "../enums/AccountStatus";
+import { Role } from "../enums/Role";
+import type { MyContext } from "../types/MyContext";
 
 describe("Project creation", () => {
   let projectMutations: ProjectMutations;
@@ -24,6 +27,16 @@ describe("Project creation", () => {
 
   describe("Success cases", () => {
     it("should create a project successfully", async () => {
+      const mockCtx = {
+        user: {
+          id: 123,
+          email: "admin@example.com",
+          role: Role.ADMIN,
+          password: "test",
+          status: AccountStatus.ACTIVE,
+        },
+      };
+
       const savedProject = {
         id: 1,
         projectName: validInput.projectName,
@@ -41,8 +54,10 @@ describe("Project creation", () => {
 
       mockTypeOrm().onMock(Project).toReturn(savedProject, "save");
 
-      const createdProject: Project =
-        await projectMutations.createProject(validInput);
+      const createdProject: Project = await projectMutations.createProject(
+        validInput,
+        mockCtx as MyContext,
+      );
 
       expect(createdProject).toEqual(expect.anything());
       console.log("Expected:", {
