@@ -2,16 +2,15 @@ import { useState, useEffect } from "react";
 import { Card, CardVariant } from "../components/Cards";
 import DisplayCards from "../components/DisplayCards";
 import Button from "../atoms/Button";
-import { useAuth } from "../context/authContext";
 import {
   useGetProjectsByUserQuery,
-  useGetAllDeliverablesQuery,
-  GetProjectsByUserQuery,
-  GetAllDeliverablesQuery,
-  Project,
   Deliverable,
+  Project,
+  Task,
 } from "../__generated__/graphql-types";
-
+import { useRoleTheme } from "../context/roleThemeContext";
+import ArrowIcon from "../components/Icons/Arrow";
+import { NavLink } from "react-router-dom";
 export interface SectionProps {
   title: string;
   variant: CardVariant;
@@ -29,7 +28,8 @@ export const Section: React.FC<SectionProps> = ({
   showMore = false,
   className,
 }) => {
-  const { authUserData } = useAuth();
+  const role = useRoleTheme();
+  const isAdmin = role === "admin";
   const [limit, setLimit] = useState(5);
 
   useEffect(() => {
@@ -42,48 +42,35 @@ export const Section: React.FC<SectionProps> = ({
     return () => window.removeEventListener("resize", updateLimit);
   }, []);
 
-  if (!authUserData.role) return null;
+  if (!role) return null;
 
-  type SectionQueryData = GetProjectsByUserQuery | GetAllDeliverablesQuery;
+  const { data, loading, error } = useGetProjectsByUserQuery();
+  const projects = data?.getProjectsByUser ?? [];
+  let items: (Project | Deliverable | Task)[] = [];
 
-  const chooseQueryHook = (
-    variant: CardVariant
-  ): (() => { data?: SectionQueryData; loading: boolean; error?: any }) => {
-    switch (variant) {
-      case "projects":
-        return useGetProjectsByUserQuery;
-      case "deliverables":
-        return useGetAllDeliverablesQuery;
-      default:
-        return useGetAllDeliverablesQuery;
-    }
-  };
+  switch (variant) {
+    case "projects":
+      items = projects;
 
-  function extractItemsFromData(
-    variant: CardVariant,
-    data?: SectionQueryData
-  ): (Project | Deliverable)[] {
-    switch (variant) {
-      case "projects":
-        return (data as GetProjectsByUserQuery)?.getProjectsByUser ?? [];
-      case "deliverables":
-        return (data as GetAllDeliverablesQuery)?.getAllDeliverables ?? [];
-      default:
-        return [];
-    }
+      break;
+    case "deliverables":
+      items = projects.flatMap((project) => project.deliverables ?? []);
+      break;
+    case "tasks":
+      items = isAdmin
+        ? projects.flatMap(
+            (project) =>
+              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? []
+          )
+        : [];
+      break;
   }
-
-  const useQuery = chooseQueryHook(variant);
-  const { data, loading, error } = useQuery();
-  const items = extractItemsFromData(variant, data);
 
   return (
     <section className={`flex flex-col gap-4 md:gap-4 ${className || ""}`}>
       <article className="flex justify-between items-center ">
         <h2 className="text-2xl font-bold">{title}</h2>
-        {showMore && (
-          <Button label="See More" role={authUserData.role} to={`/${type}`} />
-        )}
+        {showMore && <Button label="See More" role={role} to={`/${type}`} />}
       </article>
 
       <DisplayCards
@@ -98,11 +85,25 @@ export const Section: React.FC<SectionProps> = ({
             <h3 className="font-semibold text-xl">
               {"projectName" in item ? item.projectName : item.name}
             </h3>
-            {"startDate" in item && item.startDate && (
+
+            <section className="flex flex-row justify-between">
               <p className="text-sm">
-                {new Date(item.startDate).toLocaleDateString("fr-FR")}
+                {"endDate" in item && item.endDate
+                  ? new Date(item.endDate).toLocaleDateString("fr-FR")
+                  : ""}
               </p>
-            )}
+
+              <NavLink
+                to={
+                  "projectName" in item
+                    ? `/${item.projectName?.toLowerCase()}-${item.id}`
+                    : `/${item.name?.toLowerCase()}-${item.id}`
+                }
+                className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight "
+              >
+                <ArrowIcon />
+              </NavLink>
+            </section>
           </Card>
         )}
       />

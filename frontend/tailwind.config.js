@@ -9,7 +9,7 @@ module.exports = {
           projectStripes: "var(--light)",
           deliverableStripes: "var(--dark)",
           taskStripes: "var(--very-dark)",
-          btnBG: "var(--dark)",
+          btnBG: "var(--base)",
           btnText: "#ffffff",
           success: "var(--success)",
           error: "var(--error)",

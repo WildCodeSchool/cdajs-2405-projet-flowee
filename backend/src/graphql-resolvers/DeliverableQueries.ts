@@ -6,8 +6,9 @@ import { Deliverable } from "../entities/Deliverable";
 export class DeliverableQueries {
   @Query(() => [Deliverable])
   async getAllDeliverables(): Promise<Deliverable[]> {
-    const deliverable: Deliverable[] =
-      await dataSource.manager.find(Deliverable);
+    const deliverable: Deliverable[] = await dataSource.manager.find(
+      Deliverable
+    );
     return deliverable;
   }
 
@@ -17,7 +18,7 @@ export class DeliverableQueries {
       Deliverable,
       {
         where: { id },
-      },
+      }
     );
     return deliverable;
   }

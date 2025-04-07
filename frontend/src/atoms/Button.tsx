@@ -1,7 +1,7 @@
 import { NavLink, NavLinkProps } from "react-router-dom";
 import { useRoleTheme } from "../context/roleThemeContext";
 
-export type ButtonVariant = "filled" | "DANGER" | "SUCCES" | "GRAY";
+export type ButtonVariant = "filled" | "DANGER" | "SUCCES" | "GRAY" | "OUTLINE";
 
 interface ButtonProps extends NavLinkProps {
   label: string;
@@ -21,9 +21,9 @@ export default function Button({
 
   const roleBasedVariants = {
     filled: {
-      client: "bg-bluebase text-white hover:bg-blue-700",
-      admin: "bg-orangebase text-white hover:bg-orange-700",
-      visitor: "bg-orangebase text-white hover:bg-orange-700",
+      client: "bg-theme-base text-white hover:bg-blue-700",
+      admin: "bg-theme-base text-white hover:bg-orange-700",
+      visitor: "bg-theme-base text-white hover:bg-orange-700",
     },
   } as const;
 
@@ -31,6 +31,7 @@ export default function Button({
     DANGER: "bg-red text-white hover:bg-red-700",
     SUCCES: "bg-green text-white hover:bg-green-700",
     GRAY: "bg-lightgray border border-gray text-white",
+    OUTLINE: "bg-white border border-darkGray text-darkGray hover:bg-lightgray",
   } as const;
 
   let colorStyle = "";

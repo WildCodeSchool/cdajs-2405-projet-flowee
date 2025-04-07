@@ -1,15 +1,15 @@
 import { CardVariant } from "./Cards";
-import { Project, Deliverable } from "../__generated__/graphql-types";
+import { Project, Deliverable, Task } from "../__generated__/graphql-types";
 import { ReactNode } from "react";
 
 interface DisplayCardsProps {
-  items?: (Project | Deliverable)[];
+  items?: (Project | Deliverable | Task)[];
   loading: boolean;
   error?: Error;
   variant: CardVariant;
   searchFilter: string;
   limit: number;
-  renderItem: (item: Project | Deliverable) => ReactNode;
+  renderItem: (item: Project | Deliverable | Task) => ReactNode;
 }
 
 export default function DisplayCards({
@@ -24,7 +24,7 @@ export default function DisplayCards({
   if (error) return <p>Error: {error.message}</p>;
   if (!items) return <p>No data</p>;
 
-  const getItemTitle = (item: Project | Deliverable): string => {
+  const getItemTitle = (item: Project | Deliverable | Task): string => {
     return "projectName" in item ? item.projectName : item.name;
   };
 

@@ -79,13 +79,14 @@ export type CreateProjectInput = {
 export type Deliverable = {
   __typename?: 'Deliverable';
   createdAt?: Maybe<Scalars['String']['output']>;
-  deliveryDate?: Maybe<Scalars['String']['output']>;
+  endDate?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   perimeter?: Maybe<Scalars['String']['output']>;
+  project?: Maybe<Project>;
   reviewTimes?: Maybe<Scalars['Float']['output']>;
   status?: Maybe<Scalars['String']['output']>;
-  tasks: Array<Task>;
+  tasks?: Maybe<Array<Task>>;
 };
 
 export type Mutation = {
@@ -200,6 +201,7 @@ export type Project = {
   client: Client;
   companyUser?: Maybe<CompanyUser>;
   companyUserId: Scalars['Float']['output'];
+  deliverables?: Maybe<Array<Deliverable>>;
   description?: Maybe<Scalars['String']['output']>;
   endDate?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
@@ -290,7 +292,7 @@ export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<{ 
 export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, deliveryDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null }> }> };
+export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null }> | null }> };
 
 export type GetAllProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -300,7 +302,7 @@ export type GetAllProjectsQuery = { __typename?: 'Query', getAllProjects: Array<
 export type GetProjectsByUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProjectsByUserQuery = { __typename?: 'Query', getProjectsByUser: Array<{ __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null, client: { __typename?: 'Client', id: string, clientName?: string | null } }> };
+export type GetProjectsByUserQuery = { __typename?: 'Query', getProjectsByUser: Array<{ __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null, client: { __typename?: 'Client', id: string, clientName?: string | null }, deliverables?: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null }> | null }> | null }> };
 
 
 export const CreateProjectDocument = gql`
@@ -425,7 +427,7 @@ export const GetAllDeliverablesDocument = gql`
     id
     name
     perimeter
-    deliveryDate
+    endDate
     status
     createdAt
     reviewTimes
@@ -528,6 +530,23 @@ export const GetProjectsByUserDocument = gql`
     client {
       id
       clientName
+    }
+    deliverables {
+      id
+      name
+      perimeter
+      endDate
+      status
+      createdAt
+      reviewTimes
+      tasks {
+        id
+        name
+        description
+        status
+        startDate
+        endDate
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
@@ -11,6 +12,7 @@ import { IsNotEmpty } from "class-validator";
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
 import { ProjectStatus } from "../enums/ProjectStatus";
+import { Deliverable } from "./Deliverable";
 
 @ObjectType()
 @Entity()
@@ -46,19 +48,18 @@ export class Project extends BaseEntity {
   status?: ProjectStatus;
 
   //relations
-  @ManyToOne(
-    () => Client,
-    (client) => client.projects,
-    { nullable: false },
-  )
+  @OneToMany(() => Deliverable, (deliverable) => deliverable.project)
+  @Field(() => [Deliverable], { nullable: true })
+  deliverables?: Deliverable[];
+
+  @ManyToOne(() => Client, (client) => client.projects, { nullable: false })
   @Field(() => Client)
   client?: Client;
 
-  @ManyToOne(
-    () => CompanyUser,
-    (companyUser) => companyUser.projects,
-    { nullable: true, onDelete: "SET NULL" },
-  )
+  @ManyToOne(() => CompanyUser, (companyUser) => companyUser.projects, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
   @Field(() => CompanyUser, { nullable: true })
   companyUser?: CompanyUser;
 
@@ -68,7 +69,7 @@ export class Project extends BaseEntity {
     description?: string,
     startDate?: string,
     endDate?: string,
-    status?: ProjectStatus,
+    status?: ProjectStatus
   ) {
     super();
 

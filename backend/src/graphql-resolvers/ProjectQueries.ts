@@ -22,7 +22,7 @@ export class ProjectQueries {
 
   @Query(() => [Project], { nullable: true })
   async getProjectsByName(
-    @Arg("name") name: string,
+    @Arg("name") name: string
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
       where: { projectName: ILike(`%${name}%`) },
@@ -47,7 +47,7 @@ export class ProjectQueries {
         where: {
           client: { account: { id: user.id } },
         },
-        relations: ["client", "companyUser"],
+        relations: ["client", "companyUser", "deliverables"],
       });
 
       return projects;
@@ -58,7 +58,12 @@ export class ProjectQueries {
         where: {
           companyUser: { account: { id: user.id } },
         },
-        relations: ["client", "companyUser"],
+        relations: [
+          "client",
+          "companyUser",
+          "deliverables",
+          "deliverables.tasks",
+        ],
       });
 
       return projects;
