@@ -13,6 +13,7 @@ module.exports = {
           btnText: "#ffffff",
           success: "var(--success)",
           error: "var(--error)",
+          warning: "var(--warning)",
           lightGray: "var(--light-gray)",
           gray: "var(--gray)",
           darkGray: "var(--dark-gray)",

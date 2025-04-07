@@ -3,7 +3,8 @@ import { Project } from "../entities/Project";
 import dotenv from "dotenv";
 // import type { Client } from "../entities/Client";
 import { Deliverable } from "../entities/Deliverable";
-import type { ProjectStatus } from "../enums/ProjectStatus";
+
+import { DeliverableStatus } from "../enums/DeliverableStatus";
 dotenv.config();
 
 const dbHost: string = process.env.DB_HOST || "";
@@ -34,9 +35,9 @@ export async function CreateDeliverableTestData(
   name: string,
   perimeter: string,
   deliveryDate?: string,
-  status?: ProjectStatus,
+  status?: DeliverableStatus,
   createdAt?: string,
-  reviewTimes?: number,
+  reviewTimes?: number
 ) {
   const deliverable = new Deliverable(
     name,
@@ -44,7 +45,7 @@ export async function CreateDeliverableTestData(
     deliveryDate,
     status,
     createdAt,
-    reviewTimes,
+    reviewTimes
   );
   console.info("new deliverable: ", deliverable);
   await dataSource.manager.save(deliverable);

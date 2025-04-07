@@ -65,7 +65,7 @@ describe("Project creation", () => {
         projectName: validInput.projectName,
         description: validInput.description,
         endDate: validInput.endDate,
-        status: DeliverableStatus.IN_PROGRESS,
+        status: ProjectStatus.IN_PROGRESS,
         client: {
           name: validInput.clientName,
           email: validInput.clientEmail,

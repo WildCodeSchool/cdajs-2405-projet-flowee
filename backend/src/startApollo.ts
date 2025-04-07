@@ -27,6 +27,7 @@ import type { MyContext } from "./types/MyContext";
 import { Project } from "./entities/Project";
 import { authChecker, getAccount } from "./middlewares/auth";
 import { ClientStatus } from "./enums/ClientStatus";
+import { TrackerStatsQueries } from "./graphql-resolvers/TrackerStatsQueries";
 
 registerEnumType(Role, {
   name: "Role",
@@ -72,6 +73,7 @@ async function startServerApollo() {
         AccountMutation,
         AccountQueries,
         AuthMutation,
+        TrackerStatsQueries,
       ],
       authChecker,
     });

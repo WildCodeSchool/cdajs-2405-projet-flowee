@@ -9,21 +9,22 @@ export default function Tracker() {
   // dynamic button with how many deliverables are approved
   //onclick it will show the projects with deliverables that are approved
   const role = useRoleTheme();
+  if (!role) return null;
   const stats = [
     {
       count: 5,
       label: { full: "Projects are late", short: "Projects are late" },
-      color: "text-red-700",
+      color: "text-theme-error",
     },
     {
       count: 3,
       label: { full: "Deliverables need review", short: "Need review" },
-      color: "text-orangebase",
+      color: "text-theme-warning",
     },
     {
       count: 10,
       label: { full: "Deliverables approved", short: "Deliverables approved" },
-      color: "text-green-700",
+      color: "text-theme-success",
     },
   ];
 
