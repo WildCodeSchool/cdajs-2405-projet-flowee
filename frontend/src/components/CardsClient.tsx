@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { FaEllipsisV } from "react-icons/fa";
+
 import { ClientStatus } from "../__generated__/graphql-types";
+import EllipsesIcon from "./Icons/Ellipses";
 
 interface CardsClientProps {
   name: string;
@@ -69,10 +70,11 @@ export default function CardsClient({
             <button
               type="button"
               onClick={toggleMenu}
-              className="text-theme-darkGray"
+              className="text-theme-Gray"
             >
-              <FaEllipsisV />
+              <EllipsesIcon className="h-4 w-4 text-theme-darkGray" />
             </button>
+
             {isMenuOpen && (
               <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-10">
                 {onEdit && (
