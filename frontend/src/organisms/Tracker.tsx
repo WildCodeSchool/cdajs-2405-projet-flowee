@@ -1,3 +1,5 @@
+import { useRoleTheme } from "../context/roleThemeContext";
+
 export default function Tracker() {
   //This compomnent will be used to display the tracker on the dashboard
   // dynamic button with how many projects are late
@@ -6,7 +8,7 @@ export default function Tracker() {
   //onclick it will show the projects with deliverables that need review
   // dynamic button with how many deliverables are approved
   //onclick it will show the projects with deliverables that are approved
-
+  const role = useRoleTheme();
   const stats = [
     {
       count: 5,

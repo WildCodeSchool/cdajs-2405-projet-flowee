@@ -7,6 +7,7 @@ import type { CreateProjectInput } from "../inputs/CreateProjectInput";
 import { AccountStatus } from "../enums/AccountStatus";
 import { Role } from "../enums/Role";
 import type { MyContext } from "../types/MyContext";
+import { DeliverableStatus } from "../enums/DeliverableStatus";
 
 describe("Project creation", () => {
   let projectMutations: ProjectMutations;
@@ -43,7 +44,7 @@ describe("Project creation", () => {
         description: validInput.description,
         startDate: new Date().toISOString(),
         endDate: validInput.endDate,
-        status: ProjectStatus.PENDING,
+        status: DeliverableStatus.IN_PROGRESS,
         companyUserId: 123,
         client: {
           id: 1,
@@ -56,7 +57,7 @@ describe("Project creation", () => {
 
       const createdProject: Project = await projectMutations.createProject(
         validInput,
-        mockCtx as MyContext,
+        mockCtx as MyContext
       );
 
       expect(createdProject).toEqual(expect.anything());
@@ -64,7 +65,7 @@ describe("Project creation", () => {
         projectName: validInput.projectName,
         description: validInput.description,
         endDate: validInput.endDate,
-        status: ProjectStatus.PENDING,
+        status: DeliverableStatus.IN_PROGRESS,
         client: {
           name: validInput.clientName,
           email: validInput.clientEmail,
