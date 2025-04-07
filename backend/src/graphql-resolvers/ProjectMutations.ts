@@ -25,7 +25,7 @@ export class ProjectMutations {
       const user = ctx.user;
 
       if (!user || user.role !== Role.ADMIN) {
-        throw new GraphQLError("Accès interdit : rôle admin requis", {
+        throw new GraphQLError("Unauthorized  : admin required", {
           extensions: { code: "FORBIDDEN" },
         });
       }
@@ -35,12 +35,9 @@ export class ProjectMutations {
       });
 
       if (!companyUser) {
-        throw new GraphQLError(
-          "Accès interdit : utilisateur entreprise non reconnu",
-          {
-            extensions: { code: "FORBIDDEN" },
-          },
-        );
+        throw new GraphQLError("Unauthorized : user not registered", {
+          extensions: { code: "FORBIDDEN" },
+        });
       }
 
       const companyUserId = companyUser.id;

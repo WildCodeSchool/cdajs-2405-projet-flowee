@@ -5,7 +5,7 @@ import {
 } from "../__generated__/graphql-types";
 import type { ApolloError } from "@apollo/client";
 import { useNavigate } from "react-router";
-import { useAuth } from "../context/authcontext";
+import { useAuth } from "../context/authContext";
 
 interface LoginFormData {
   email: string;
