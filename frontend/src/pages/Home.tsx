@@ -31,7 +31,7 @@ export default function Home() {
         </p>
         <NavLink
           to="/signup"
-          className="bg-midorange rounded-lg px-12 py-2 md:mx-10 md:block hidden text-white text-base mt-6 md:w-48 text-center"
+          className="bg-theme-visitorBtnBG rounded-lg px-12 py-2 md:mx-10 md:block hidden text-white text-base mt-6 md:w-48 text-center"
         >
           Sign up
         </NavLink>
@@ -45,7 +45,7 @@ export default function Home() {
       <aside className="flex flex-col items-center justify-center gap-3 w-3/5 md:hidden mt-6">
         <NavLink
           to="/signup"
-          className="bg-midorange rounded-lg px-12 py-2 text-white text-base w-full text-center"
+          className="bg-theme-visitorBtnBG rounded-lg px-12 py-2 text-white text-base w-full text-center"
         >
           Sign up
         </NavLink>
