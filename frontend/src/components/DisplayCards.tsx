@@ -33,9 +33,10 @@ export default function DisplayCards({
   );
 
   const displayedItems = filtered.slice(0, limit);
+  console.log("LIMITE", limit);
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-col md:flex-row gap-4 ">
       {displayedItems.map((item) => renderItem(item))}
     </div>
   );

@@ -34,7 +34,8 @@ export const Section: React.FC<SectionProps> = ({
 
   useEffect(() => {
     const updateLimit = () => {
-      setLimit(window.innerWidth < 1300 ? 4 : 5);
+      setLimit(window.innerWidth <= 1320 ? 4 : 5);
+      setLimit(window.innerWidth <= 768 ? 2 : limit);
     };
 
     updateLimit();
@@ -67,7 +68,7 @@ export const Section: React.FC<SectionProps> = ({
   }
 
   return (
-    <section className={`flex flex-col gap-4 md:gap-4 ${className || ""}`}>
+    <section className={`flex flex-col gap-4 ${className || ""}`}>
       <article className="flex justify-between items-center ">
         <h2 className="text-2xl font-bold">{title}</h2>
         {showMore && <Button label="See More" role={role} to={`/${type}`} />}
