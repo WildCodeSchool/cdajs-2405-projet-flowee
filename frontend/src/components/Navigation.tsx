@@ -5,17 +5,20 @@ import PlusIcon from "./Icons/PlusIcon";
 import ClientsIcon from "./Icons/ClientsIcon";
 import SettingsIcon from "./Icons/SettingsIcon";
 import LogoEntrepriseIcon from "./Icons/LogoEntreprise";
+import { useRoleTheme } from "../context/roleThemeContext";
+import LogoClientIcon from "./Icons/LogoClient";
 
 export default function Navigation() {
+  const role = useRoleTheme();
   return (
     <nav className="fixed bottom-0 left-0 z-50 w-full bg-white shadow-t-md md:w-20 md:h-[calc(100%-24px)] md:shadow-lg  md:m-4 md:p-3 md:pt-4 md:pb-4 md:rounded-lg">
       <ul className="flex justify-around items-center h-16 md:flex-col md:justify-between md:items-center md:h-full md:space-y-4">
         <li className="hidden md:block md:w-full">
           <NavLink
-            to="/dashboard"
+            to="/"
             className="flex flex-col items-center text-gray-500 hover:text-darkorange md:justify-center"
           >
-            <LogoEntrepriseIcon className="h-9 w-9" />
+            {role === "admin" ? <LogoEntrepriseIcon /> : <LogoClientIcon />}
           </NavLink>
         </li>
         <li className="md:w-full">
