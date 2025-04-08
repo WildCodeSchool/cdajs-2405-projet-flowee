@@ -68,18 +68,23 @@ export class ProjectMutations {
 
       //STep 2 : Verify client or create client
 
-      let client = await dataSource.manager.findOne(Client, {
+      const existingClient = await dataSource.manager.findOne(Client, {
         where: { account: { id: account?.id } },
         relations: ["account"],
       });
 
-      if (!client) {
-        client = dataSource.manager.create(Client, {
-          clientName: clientName,
-          account,
+      if (existingClient) {
+        throw new GraphQLError("A client already exists for this account", {
+          extensions: { code: "CLIENT_ALREADY_EXISTS" },
         });
-        await dataSource.manager.save(Client, client);
       }
+
+      const client = dataSource.manager.create(Client, {
+        clientName,
+        account,
+        accountId: account.id,
+      });
+      await dataSource.manager.save(Client, client);
 
       const newproject: Project = await dataSource.manager.save(Project, {
         projectName: projectName,
