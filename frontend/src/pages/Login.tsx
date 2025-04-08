@@ -36,13 +36,3 @@ export default function Login() {
     </div>
   );
 }
-
-{
-  /* <div className="bg-white flex flex-col items-center gap-10 rounded-t-[3rem] py-5 mt-6 relative z-0">
-<div className="h-32 bg-warning rounded-t-[32px]" />
-<div className="h-32 bg-blue rounded-t-[32px] -mt-8 z-10 relative" />
-<div className="bg-white rounded-t-[32px] -mt-8 z-20 relative px-6 pb-6">
-  <LoginForm />
-</div>
-</div> */
-}
