@@ -10,7 +10,9 @@ export default function SignedInLayout({ children }: SignedInLayoutProps) {
       <aside className="md:w-20 md:flex-shrink-0">
         <Navigation />
       </aside>
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 p-6 md:ml-4 h-full overflow-hidden w-full flex-col  gap-6 flex">
+        {children}
+      </main>
     </div>
   );
 }

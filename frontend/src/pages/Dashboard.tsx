@@ -12,32 +12,30 @@ export default function Dashboard() {
 
   return (
     <SignedInLayout>
-      <main className="flex-1 px-4 md:ml-4 h-full overflow-hidden w-full flex-col  gap-6 flex">
-        <Tracker />
-        <SearchBar setSearchFilter={setSearchFilter} />
+      <Tracker />
+      <SearchBar setSearchFilter={setSearchFilter} />
 
+      <Section
+        title="Projects"
+        type="projects"
+        variant="projects"
+        searchFilter={searchFilter}
+        showMore
+      />
+      <Section
+        title="Deliverables"
+        type="deliverable"
+        variant="deliverables"
+        searchFilter={searchFilter}
+      />
+      {role === "admin" && (
         <Section
-          title="Projects"
-          type="projects"
-          variant="projects"
-          searchFilter={searchFilter}
-          showMore
-        />
-        <Section
-          title="Deliverables"
-          type="deliverable"
-          variant="deliverables"
+          title="Tasks"
+          type="task"
+          variant="tasks"
           searchFilter={searchFilter}
         />
-        {role === "admin" && (
-          <Section
-            title="Tasks"
-            type="task"
-            variant="tasks"
-            searchFilter={searchFilter}
-          />
-        )}
-      </main>
+      )}
     </SignedInLayout>
   );
 }
