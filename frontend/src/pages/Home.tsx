@@ -16,7 +16,7 @@ export default function Home() {
             role="visitor"
             variant="OUTLINE"
             to="/login"
-            className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base md:w-48  text-center"
+            className="bg-white border-black border rounded-lg px-12 py-2 text-base md:w-48  text-center"
           >
             Sign in
           </Button>
@@ -58,7 +58,7 @@ export default function Home() {
           label="Sign in"
           to="/login"
           variant="OUTLINE"
-          className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base w-full text-center"
+          className="bg-white border-black border rounded-lg px-12 py-2 text-base w-full text-center"
         >
           Sign in
         </Button>
