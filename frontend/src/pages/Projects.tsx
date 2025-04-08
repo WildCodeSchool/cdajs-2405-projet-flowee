@@ -7,16 +7,15 @@ import DisplayCards from "../components/DisplayCards";
 import SearchBar from "../components/Search";
 import { useState } from "react";
 import { Card } from "../components/Cards";
-import Navigation from "../components/Navigation";
 import { NavLink } from "react-router-dom";
 import ArrowIcon from "../components/Icons/Arrow";
-
+import SignedInLayout from "../layout/SignedInLayout";
 export default function Projects() {
   const [searchFilter, setSearchFilter] = useState("");
   const role = useGetProjectsByUserQuery();
   if (!role) return <ErrorBanner message="Unauthorized user!" />;
   let projects: Project[] = [];
-  const { data, loading } = useGetProjectsByUserQuery();
+  const { data, loading } = useGetProjectsByUserQuery({});
   projects = data?.getProjectsByUser ?? [];
   if (projects.length === 0)
     return <ErrorBanner message="No projects found!" />;
@@ -24,10 +23,7 @@ export default function Projects() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="flex flex-col mt-4 md:flex-row h-full overflow-hidden">
-      <aside className="md:w-20 md:flex-shrink-0">
-        <Navigation />
-      </aside>
+    <SignedInLayout>
       <main className="flex flex-1 px-4 py-2 md:ml-4 h-full  w-full flex-col gap-6 ">
         <h1 className="text-2xl font-semibold">Projects</h1>
         <SearchBar setSearchFilter={setSearchFilter} />
@@ -65,6 +61,6 @@ export default function Projects() {
           />
         </div>
       </main>
-    </div>
+    </SignedInLayout>
   );
 }
