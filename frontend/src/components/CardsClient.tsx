@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-
 import { ClientStatus } from "../__generated__/graphql-types";
 import EllipsesIcon from "./Icons/Ellipses";
 
+// Function for formatting status
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 interface CardsClientProps {
   name: string;
-  email: string;
   status?: ClientStatus;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -14,26 +17,24 @@ interface CardsClientProps {
 
 export default function CardsClient({
   name,
-  email,
   status = ClientStatus.Active,
   onEdit,
   onDelete,
   onArchive,
 }: CardsClientProps) {
-  // Calcul des initiales
   const initials = name
     .split(" ")
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("")
-    .slice(0, 2); // limité à 2 lettres
+    .slice(0, 2);
 
-  // Couleur en fonction du statut
   let statusColor = "text-theme-success";
   if (status === ClientStatus.Inactive) statusColor = "text-theme-warning";
-  if (status === ClientStatus.Archived)
+  if (status === ClientStatus.Archived) {
     statusColor = "text-theme-darkGray line-through";
+  }
 
-  // Gestion de l'ouverture du menu à trois points
+  // Handler menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +42,7 @@ export default function CardsClient({
     setIsMenuOpen((prev) => !prev);
   };
 
-  // Fermer le menu lorsqu'on clique à l'extérieur
+  // Close menu when click upside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -55,16 +56,12 @@ export default function CardsClient({
   }, []);
 
   return (
-    <div className="relative h-[180px] w-full min-w-[250px] max-w-[350px] md:h-[160px] rounded-lg overflow-hidden border border-gray p-5 flex flex-col justify-between font-quicksand">
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-theme-veryLight flex items-center justify-center text-orange-600 font-semibold">
-          {initials}
-        </div>
-        <div className="flex flex-col flex-1">
-          <h2 className="text-md font-semibold">{name}</h2>
-          <p className="text-sm text-gray-500">{email}</p>
-        </div>
-        {/* Bouton menu à trois points */}
+    <div
+      className="box-border relative w-full md:w-[300px] lg:w-[320px] h-[180px] md:h-[160px] rounded-[5px] border border-gray
+      bg-white px-[13px] py-[7px] mr-1 flex flex-col justify-between font-quicksand"
+    >
+      <div className="flex items-center justify-between">
+        <input type="checkbox" className="w-3 h-3 cursor-pointer" />
         {(onEdit || onDelete || onArchive) && (
           <div className="relative" ref={menuRef}>
             <button
@@ -74,13 +71,12 @@ export default function CardsClient({
             >
               <EllipsesIcon className="h-4 w-4 text-theme-darkGray" />
             </button>
-
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-28 bg-white border rounded shadow-lg z-10">
                 {onEdit && (
                   <button
                     type="button"
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
                     onClick={() => {
                       onEdit();
                       setIsMenuOpen(false);
@@ -92,7 +88,7 @@ export default function CardsClient({
                 {onDelete && (
                   <button
                     type="button"
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
                     onClick={() => {
                       onDelete();
                       setIsMenuOpen(false);
@@ -104,7 +100,7 @@ export default function CardsClient({
                 {onArchive && (
                   <button
                     type="button"
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
                     onClick={() => {
                       onArchive();
                       setIsMenuOpen(false);
@@ -118,7 +114,14 @@ export default function CardsClient({
           </div>
         )}
       </div>
-      <p className={`text-sm mt-2 ${statusColor}`}>{status}</p>
+
+      <div className="flex flex-col items-center">
+        <div className="w-[55px] h-[55px] rounded-full bg-theme-veryLight flex items-center justify-center text-orange-600  text-xl font-semibold">
+          {initials}
+        </div>
+        <h2 className="text-lg font-semibold mt-3 text-center">{name}</h2>
+        <p className={`text-sm ${statusColor}`}>{capitalize(status)}</p>
+      </div>
     </div>
   );
 }
