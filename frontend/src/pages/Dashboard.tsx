@@ -34,7 +34,6 @@ export default function Dashboard() {
           type="deliverable"
           variant="deliverables"
           searchFilter={searchFilter}
-          showMore
         />
 
         {role === "admin" && (
@@ -43,7 +42,6 @@ export default function Dashboard() {
             type="task"
             variant="tasks"
             searchFilter={searchFilter}
-            showMore
           />
         )}
       </main>
