@@ -28,7 +28,7 @@ export default function Projects() {
       <aside className="md:w-20 md:flex-shrink-0">
         <Navigation />
       </aside>
-      <main className="flex-1 px-4 md:ml-4 h-full overflow-hidden w-full flex-col font-quicksand gap-6 flex">
+      <main className="flex flex-1 px-4 py-2 md:ml-4 h-full  w-full flex-col gap-6 ">
         <h1 className="text-2xl font-semibold">Projects</h1>
         <SearchBar setSearchFilter={setSearchFilter} />
         <div className="flex flex-col md:flex-row h-screen flex-wrap">
