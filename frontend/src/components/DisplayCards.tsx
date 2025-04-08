@@ -8,7 +8,7 @@ interface DisplayCardsProps {
   error?: Error;
   variant: CardVariant;
   searchFilter: string;
-  limit: number;
+  limit?: number;
   renderItem: (item: Project | Deliverable | Task) => ReactNode;
 }
 
