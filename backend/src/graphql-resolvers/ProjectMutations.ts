@@ -141,6 +141,8 @@ export class ProjectMutations {
     const quitusDoc: Uint8Array = base64ToByteArray(quitusDocBase64);
     const triggeredProjects: Project[] = this.projectService.getTriggeredProjects(project);
 
-    this.projectService.closeProject(project, new Date(), financialDetails, validatorEmails, validatorComments, quitusDoc, billDoc, ...triggeredProjects)
+    await this.projectService.closeProject(project, new Date(), financialDetails, validatorEmails, validatorComments, quitusDoc, billDoc, ...triggeredProjects)
+
+    return project;
   }
 }
