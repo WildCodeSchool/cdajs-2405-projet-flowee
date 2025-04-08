@@ -12,6 +12,7 @@ import { Mutation, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ValidationError } from "class-validator";
 import type { MyContext } from "../types/MyContext";
 import { CompanyUser } from "../entities/CompanyUser";
+import { getProjectService } from "../services/projectService";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -115,5 +116,31 @@ export class ProjectMutations {
         },
       });
     }
+  }
+
+  private projectService = getProjectService();
+
+  @Authorized("ADMIN")
+  @Mutation(() => Project)
+  async closeProject(
+    @Arg("projectId") projectId: number,
+    @Arg("validatorEmails") validatorEmails: string[],
+    @Arg("validatorComments") validatorComments: string[],
+    @Arg("quitusDoc") quitusDocBase64: string,
+    @Ctx() ctx: MyContext,
+  ): Promise<Project> {
+    const project: Project | null = await dataSource.manager.findOne(Project, {
+      where: { id: projectId }
+    });
+    if (!project) {
+      throw new Error("project not found");
+    }
+
+    const financialDetails: number[][] = this.financialService.gatherFinancialDetails(project);
+    const billDoc: Uint8Array = this.financialService.generateBill(project);
+    const quitusDoc: Uint8Array = base64ToByteArray(quitusDocBase64);
+    const triggeredProjects: Project[] = this.projectService.getTriggeredProjects(project);
+
+    this.projectService.closeProject(project, new Date(), financialDetails, validatorEmails, validatorComments, quitusDoc, billDoc, ...triggeredProjects)
   }
 }
