@@ -136,13 +136,28 @@ export class ProjectMutations {
       throw new Error("project not found");
     }
 
+    const additionalValidators: { email: string, comment: string }[] = await this.projectService.getTopManagerValidations(project);
+    for (const additionalValidator of additionalValidators) {
+      validatorEmails.push(additionalValidator.email);
+      validatorComments.push(additionalValidator.comment);
+    }
+
     const financialDetails: number[][] = this.financialService.gatherFinancialDetails(project);
     const billDoc: Uint8Array = this.financialService.generateBill(project);
     const quitusDoc: Uint8Array = base64ToByteArray(quitusDocBase64);
-    const triggeredProjects: Project[] = this.projectService.getTriggeredProjects(project);
+    const triggeredProjects: Project[] = await this.projectService.getTriggeredProjects(project);
 
     await this.projectService.closeProject(project, new Date(), financialDetails, validatorEmails, validatorComments, quitusDoc, billDoc, ...triggeredProjects)
 
     return project;
   }
+
+  private financialService: any;
 }
+
+
+
+
+
+
+function base64ToByteArray(str: string): Uint8Array { return null as any; }

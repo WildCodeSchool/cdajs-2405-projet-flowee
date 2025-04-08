@@ -5,4 +5,5 @@ export enum ProjectStatus {
   MODIFY = "MODIFY",
   COMPLETED = "COMPLETED",
   PENDING = "PENDING",
+  CLOSED = "CLOSED",
 }

@@ -1,6 +1,7 @@
 import { EntityManager } from "typeorm";
 import { dataSource } from "../dataSource/dataSource";
 import { Project } from "../entities/Project";
+import { ProjectStatus } from "../enums/ProjectStatus";
 
 export class ProjectService {
 
@@ -60,6 +61,10 @@ export class ProjectService {
     async getTriggeredProjects(project: Project): Promise<Project[]> {
         return [];
     }
+    async getTopManagerValidations(project: Project): Promise<{ email: string, comment: string }[]> {
+        return [];
+    }
+    private logger: any;
 }
 
 const projectService = new ProjectService();

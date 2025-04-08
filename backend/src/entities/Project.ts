@@ -17,6 +17,7 @@ import { Deliverable } from "./Deliverable";
 @ObjectType()
 @Entity()
 export class Project extends BaseEntity {
+  [x: string]: any;
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id?: number;
