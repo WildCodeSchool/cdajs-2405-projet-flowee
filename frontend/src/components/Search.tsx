@@ -25,9 +25,9 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
         onChange={handleSearch}
         onKeyUp={sendData}
         placeholder="Looking for something?"
-        className="w-full py-2 px-4 border border-gray rounded-md"
+        className="w-full py-2 px-4 border border-theme-gray rounded-md focus:outline-theme-base"
       />
-      <SearchIcon className="absolute right-3" />
+      <SearchIcon className="absolute right-3 text-black" />
     </div>
   );
 }
