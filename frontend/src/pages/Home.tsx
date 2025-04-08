@@ -25,7 +25,7 @@ export default function Home() {
 
       {/* Content Section (Only Visible on Desktop) */}
       <section className=" md:flex   md:justify-start flex-col  w-full ">
-        <h1 className="font-quicksand text-3xl md:block font-bold hidden md:px-10">
+        <h1 className="text-3xl md:block font-bold hidden md:px-10">
           Welcome to Flowee, <br /> the best project management tool.
         </h1>
         <p className="text-lg max-w-2xl mt-4 text-center md:text-left md:px-10">

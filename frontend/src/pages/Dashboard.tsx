@@ -17,7 +17,7 @@ export default function Dashboard() {
         <Navigation />
       </aside>
 
-      <main className="flex-1 px-4 md:ml-4 h-full overflow-hidden w-full flex-col font-quicksand gap-6 flex">
+      <main className="flex-1 px-4 md:ml-4 h-full overflow-hidden w-full flex-col  gap-6 flex">
         <Tracker />
         <SearchBar setSearchFilter={setSearchFilter} />
 
