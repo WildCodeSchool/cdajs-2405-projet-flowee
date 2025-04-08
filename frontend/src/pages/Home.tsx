@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import LogoIcon from "../components/Icons/Logo";
 import Button from "../atoms/Button";
 
