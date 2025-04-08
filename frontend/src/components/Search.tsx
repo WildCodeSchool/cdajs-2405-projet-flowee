@@ -18,7 +18,7 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
   };
 
   return (
-    <div className="flex items-center justify-center flex-col mb-3 relative">
+    <div className="flex items-center justify-center flex-col  relative">
       <input
         type="text"
         value={search}
