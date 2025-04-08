@@ -2,10 +2,6 @@ import { EntityManager } from "typeorm";
 import { dataSource } from "../dataSource/dataSource";
 import { Project } from "../entities/Project";
 
-interface CloseProjectParams {
-    
-} 
-
 export class ProjectService {
 
     async closeProject(project: Project, date: Date, financialDetails: number[][], validatorEmails: string[], validatorComments: string[], quitusDoc?: Uint8Array, billDoc?: Uint8Array, ...triggeredProjects: Project[]) {
@@ -61,7 +57,7 @@ export class ProjectService {
     private async prepareNewTriggeredProjects(project: Project, date: Date, financialDetails: number[][], validatorEmails: string[], validatorComments: string[], quitusDoc?: Uint8Array, billDoc?: Uint8Array, ...triggeredProjects: Project[]) {
     }
 
-    async getTriggeredProjects(project: Project): Project[] {
+    async getTriggeredProjects(project: Project): Promise<Project[]> {
         return [];
     }
 }
