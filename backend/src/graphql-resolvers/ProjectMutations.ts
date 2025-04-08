@@ -78,11 +78,11 @@ export class ProjectMutations {
           extensions: { code: "CLIENT_ALREADY_EXISTS" },
         });
       }
-      // Ici tu peux soit réutiliser le client, soit lever une erreur si besoin
+
       const client = dataSource.manager.create(Client, {
         clientName,
         account,
-        accountId: account.id, // nécessaire pour respecter la contrainte unique sur account_id
+        accountId: account.id,
       });
       await dataSource.manager.save(Client, client);
 
