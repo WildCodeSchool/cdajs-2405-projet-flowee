@@ -225,6 +225,7 @@ export type Query = {
   getProjectsByName?: Maybe<Array<Project>>;
   getProjectsByUser: Array<Project>;
   getTask?: Maybe<Task>;
+  getTrackerStats: TrackerStats;
   me?: Maybe<Account>;
 };
 
@@ -269,6 +270,13 @@ export type Task = {
   status?: Maybe<Scalars['String']['output']>;
 };
 
+export type TrackerStats = {
+  __typename?: 'TrackerStats';
+  approvedDeliverables?: Maybe<Scalars['Float']['output']>;
+  lateProjects?: Maybe<Scalars['Float']['output']>;
+  needReview?: Maybe<Scalars['Float']['output']>;
+};
+
 export type CreateProjectMutationVariables = Exact<{
   newProject: CreateProjectInput;
 }>;
@@ -303,6 +311,11 @@ export type GetProjectsByUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetProjectsByUserQuery = { __typename?: 'Query', getProjectsByUser: Array<{ __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null, client: { __typename?: 'Client', id: string, clientName?: string | null }, deliverables?: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null }> | null }> | null }> };
+
+export type GetTrackerStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTrackerStatsQuery = { __typename?: 'Query', getTrackerStats: { __typename?: 'TrackerStats', approvedDeliverables?: number | null, lateProjects?: number | null, needReview?: number | null } };
 
 
 export const CreateProjectDocument = gql`
@@ -583,3 +596,44 @@ export type GetProjectsByUserQueryHookResult = ReturnType<typeof useGetProjectsB
 export type GetProjectsByUserLazyQueryHookResult = ReturnType<typeof useGetProjectsByUserLazyQuery>;
 export type GetProjectsByUserSuspenseQueryHookResult = ReturnType<typeof useGetProjectsByUserSuspenseQuery>;
 export type GetProjectsByUserQueryResult = Apollo.QueryResult<GetProjectsByUserQuery, GetProjectsByUserQueryVariables>;
+export const GetTrackerStatsDocument = gql`
+    query GetTrackerStats {
+  getTrackerStats {
+    approvedDeliverables
+    lateProjects
+    needReview
+  }
+}
+    `;
+
+/**
+ * __useGetTrackerStatsQuery__
+ *
+ * To run a query within a React component, call `useGetTrackerStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTrackerStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTrackerStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTrackerStatsQuery(baseOptions?: Apollo.QueryHookOptions<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>(GetTrackerStatsDocument, options);
+      }
+export function useGetTrackerStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>(GetTrackerStatsDocument, options);
+        }
+export function useGetTrackerStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>(GetTrackerStatsDocument, options);
+        }
+export type GetTrackerStatsQueryHookResult = ReturnType<typeof useGetTrackerStatsQuery>;
+export type GetTrackerStatsLazyQueryHookResult = ReturnType<typeof useGetTrackerStatsLazyQuery>;
+export type GetTrackerStatsSuspenseQueryHookResult = ReturnType<typeof useGetTrackerStatsSuspenseQuery>;
+export type GetTrackerStatsQueryResult = Apollo.QueryResult<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>;

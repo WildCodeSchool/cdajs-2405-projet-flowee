@@ -3,14 +3,13 @@ import Navigation from "../components/Navigation";
 import SearchBar from "../components/Search";
 import Tracker from "../organisms/Tracker";
 import { Section } from "../organisms/Section";
-import { useAuth } from "../context/authContext";
 import { useRoleTheme } from "../context/roleThemeContext";
 
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");
-  const { authUserData } = useAuth();
+
   const role = useRoleTheme();
-  if (!authUserData?.role) return null;
+  if (!role) return null;
 
   return (
     <div className="flex flex-col mt-4 md:flex-row h-full overflow-hidden">

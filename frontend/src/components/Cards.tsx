@@ -14,7 +14,7 @@ export const Card = ({ children, variant }: CardProps) => {
   if (!role) return null;
 
   return (
-    <div className="card relative h-[180px] w-full min-w-[250px] max-w-[330px] md:h-[160px] rounded-lg overflow-hidden bg-theme-cardBg">
+    <div className="card relative h-[180px] w-full min-w-[250px] md:w-[280px]  md:h-[160px] rounded-lg overflow-hidden bg-theme-cardBg">
       <CardBackground
         variant={variant}
         className="absolute h-full w-full inset-0 z-0"

@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Deliverable } from "../entities/Deliverable";
 import { DeliverableMutations } from "../graphql-resolvers/DeliverableMutations";
-import { ProjectStatus } from "../enums/ProjectStatus";
+import { DeliverableStatus } from "../enums/DeliverableStatus";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
@@ -15,7 +15,7 @@ describe("deliverable Mutations", () => {
       faker.company.buzzAdjective(), // name
       faker.lorem.sentence(), // perimeter
       faker.date.future().toISOString(), // date de livraison
-      ProjectStatus.IN_PROGRESS, // exemple de status
+      DeliverableStatus.IN_PROGRESS, // exemple de status
       faker.date.past().toISOString(), // createAt
       faker.number.int({ min: 1, max: 5 }) // ReviewTimes
     );

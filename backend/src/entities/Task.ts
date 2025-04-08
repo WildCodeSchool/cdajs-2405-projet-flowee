@@ -7,7 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Deliverable } from "./Deliverable";
-import type { ProjectStatus } from "../enums/ProjectStatus";
+
+import { TaskStatus } from "../enums/TaskStatus";
 
 @ObjectType()
 @Entity()
@@ -26,7 +27,7 @@ export class Task extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  status?: ProjectStatus;
+  status?: TaskStatus;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -49,7 +50,7 @@ export class Task extends BaseEntity {
     description: string,
     startDate?: string,
     endDate?: string,
-    status?: ProjectStatus
+    status?: TaskStatus
   ) {
     super();
 
