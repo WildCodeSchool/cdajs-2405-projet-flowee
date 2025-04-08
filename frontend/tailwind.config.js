@@ -18,7 +18,7 @@ module.exports = {
           gray: "var(--gray)",
           darkGray: "var(--dark-gray)",
           warning: "var(--base)",
-          visitorBtnBG: "var(--base)",
+          visitorBtnBG: "#d98d44",
           //role colors
           veryLight: "var(--very-light)",
           light: "var(--light)",
@@ -27,9 +27,12 @@ module.exports = {
           veryDark: "var(--very-dark)",
         },
         red: "#D9495B",
+        lightRed: "#FDF4F5",
         green: "#379C3B",
         lightgray: "#F3F3F3",
         gray: "#CFCFCF",
+        orangeLight: "#faf1e7",
+        blue: "#4a65be",
       },
       boxShadow: {
         "t-md":

@@ -7,7 +7,7 @@ const variantToStripesClass = {
   projects: "fill-theme-projectStripes",
   deliverables: "fill-theme-deliverableStripes",
   tasks: "fill-theme-taskStripes",
-  toReview: "fill-theme-taskStripes", // si le design est le même
+  toReview: "fill-theme-taskStripes",
 } as const;
 
 type Variant = keyof typeof variantToStripesClass;

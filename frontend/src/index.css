@@ -32,6 +32,7 @@
 }
 
 :root.visitor {
+  --very-light: #faf1e7;
   --base: #d98d44;
   --success: #379c3b;
   --error: #d9495b;

@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import LogoIcon from "../components/Icons/Logo";
 import Button from "../atoms/Button";
 
@@ -7,7 +6,7 @@ export default function Home() {
     <div className="flex flex-col h-full justify-center  items-center md:justify-between min-h-screen px-6 md:px-0 md:pt-10 md:pb-0 py-10">
       <div className="flex w-full md:justify-between justify-center md:px-10 ">
         <div className="md:w-1/3 flex justify-center md:justify-start ">
-          <LogoIcon />
+          <LogoIcon className="md:w-40" />
         </div>
 
         {/* Right Side (Sign-in Button) */}
@@ -16,7 +15,7 @@ export default function Home() {
             label="Sign in"
             role="visitor"
             variant="OUTLINE"
-            to="/login" // Assuming the role is visitor for the sign-in button
+            to="/login"
             className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base md:w-48  text-center"
           >
             Sign in

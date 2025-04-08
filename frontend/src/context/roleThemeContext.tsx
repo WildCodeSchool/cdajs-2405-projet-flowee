@@ -1,4 +1,3 @@
-// src/context/roleThemeContext.tsx
 import { createContext, useContext, ReactNode, useEffect } from "react";
 import { useAuth } from "./authContext";
 
