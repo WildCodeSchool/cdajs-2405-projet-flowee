@@ -15,7 +15,7 @@ export default function Home() {
             label="Sign in"
             role="visitor"
             variant="OUTLINE"
-            to="/login" // Assuming the role is visitor for the sign-in button
+            to="/login"
             className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base md:w-48  text-center"
           >
             Sign in
