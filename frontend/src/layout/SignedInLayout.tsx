@@ -1,4 +1,4 @@
-import Navigation from "../components/Navigation";
+import Navigation from "../components/organisms/Navigation";
 import { ReactNode } from "react";
 
 interface SignedInLayoutProps {

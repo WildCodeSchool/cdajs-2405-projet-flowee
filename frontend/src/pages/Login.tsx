@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
-import LogoIcon from "../atoms/Icons/Logo";
-import LogoMarkIcon from "../atoms/Icons/LogoMark";
-import AuthIllustration from "../atoms/illustrations/AuthIllus";
-import LoginForm from "../molecules/LoginForm";
+import LogoIcon from "../components/atoms/Icons/Logo";
+import LogoMarkIcon from "../components/atoms/Icons/LogoMark";
+import AuthIllustration from "../components/atoms/illustrations/AuthIllus";
+import LoginForm from "../components/organisms/LoginForm";
 export default function Login() {
   return (
     <div className="flex flex-row w-full ">

@@ -22,7 +22,7 @@ import Test from "./pages/Test";
 import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
-import { RequireAdmin } from "./components/RequireAdmin";
+import { RequireAdmin } from "./layout/RequireAdmin";
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -109,7 +109,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");

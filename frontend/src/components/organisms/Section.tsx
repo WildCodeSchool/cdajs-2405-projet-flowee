@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { Card, CardVariant } from "../components/organisms/Cards";
-import DisplayCards from "../components/organisms/DisplayCards";
-import Button from "../components/atoms/Button";
+import { Card, CardVariant } from "./Cards";
+import DisplayCards from "./DisplayCards";
+import Button from "../atoms/Button";
 import {
   useGetProjectsByUserQuery,
   Deliverable,
   Project,
   Task,
-} from "../__generated__/graphql-types";
-import { useRoleTheme } from "../context/roleThemeContext";
-import ArrowIcon from "../components/atoms/Icons/Arrow";
+} from "../../__generated__/graphql-types";
+import { useRoleTheme } from "../../context/roleThemeContext";
+import ArrowIcon from "../atoms/Icons/Arrow";
 import { NavLink } from "react-router-dom";
 export interface SectionProps {
   title: string;

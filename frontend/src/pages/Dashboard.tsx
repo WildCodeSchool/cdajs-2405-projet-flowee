@@ -1,7 +1,7 @@
 import { useState } from "react";
-import SearchBar from "../components/Search";
-import Tracker from "../organisms/Tracker";
-import { Section } from "../organisms/Section";
+import SearchBar from "../components/organisms/Search";
+import Tracker from "../components/organisms/Tracker";
+import { Section } from "../components/organisms/Section";
 import { useRoleTheme } from "../context/roleThemeContext";
 import SignedInLayout from "../layout/SignedInLayout";
 export default function Dashboard() {

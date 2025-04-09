@@ -2,13 +2,13 @@ import { useForm } from "react-hook-form";
 import {
   useLoginMutation,
   type LoginMutation,
-} from "../__generated__/graphql-types";
+} from "../../__generated__/graphql-types";
 import type { ApolloError } from "@apollo/client";
 import { useNavigate } from "react-router";
-import { useAuth } from "../context/authContext";
-import { Input } from "../components/atoms/Input";
+import { useAuth } from "../../context/authContext";
+import { Input } from "../atoms/Input";
 import { NavLink } from "react-router-dom";
-import ErrorBanner from "./ErrorBanner";
+import ErrorBanner from "../molecules/ErrorBanner";
 
 interface LoginFormData {
   email: string;

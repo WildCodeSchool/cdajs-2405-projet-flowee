@@ -1,8 +1,10 @@
 import { useState } from "react";
-import Navigation from "../components/Navigation";
-import SearchBar from "../components/Search";
-import DisplayClientsCard from "../components/DisplayClientsCard";
-import GenericFilter, { type SortOrder } from "../components/GenericFilter";
+import Navigation from "../components/organisms/Navigation";
+import SearchBar from "../components/organisms/Search";
+import DisplayClientsCard from "../components/organisms/DisplayClientsCard";
+import GenericFilter, {
+  type SortOrder,
+} from "../components/molecules/GenericFilter";
 import type { ClientStatus } from "../__generated__/graphql-types";
 
 export default function Clients() {

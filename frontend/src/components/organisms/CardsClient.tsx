@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ClientStatus } from "../__generated__/graphql-types";
+import { ClientStatus } from "../../__generated__/graphql-types";
 import EllipsesIcon from "../atoms/Icons/Ellipses";
 
 // Function for formatting status
