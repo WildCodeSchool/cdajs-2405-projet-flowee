@@ -1,5 +1,5 @@
-import LogoIcon from "../components/Icons/Logo";
-import Button from "../atoms/Button";
+import LogoIcon from "@icons/Logo";
+import Button from "@atoms/Button";
 
 export default function Home() {
   return (

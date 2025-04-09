@@ -21,6 +21,22 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@atoms/*": ["components/atoms/*"],
+      "@molecules/*": ["components/molecules/*"],
+      "@organisms/*": ["components/organisms/*"],
+      "@icons/*": ["components/atoms/Icons/*"],
+      "@illustrations/*": ["components/atoms/illustrations/*"],
+      "@pages/*": ["pages/*"],
+      "@context/*": ["context/*"],
+      "@queries/*": ["graphql-queries/*"],
+      "@mutations/*": ["graphql-mutations/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@layout/*": ["layout/*"],
+      "@generated/*": ["__generated__/*"]
+    }
   }
 }

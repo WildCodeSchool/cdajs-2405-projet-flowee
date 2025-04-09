@@ -1,5 +1,5 @@
-import { useRoleTheme } from "../context/roleThemeContext";
-import { useGetTrackerStatsQuery } from "../__generated__/graphql-types";
+import { useRoleTheme } from "@context/roleThemeContext";
+import { useGetTrackerStatsQuery } from "@generated/graphql-types";
 
 export default function Tracker() {
   const role = useRoleTheme();

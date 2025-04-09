@@ -1,7 +1,7 @@
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import LogoClientIcon from "../components/Icons/LogoClient";
-import LogoEntrepriseIcon from "../components/Icons/LogoEntreprise";
+import LogoClientIcon from "@icons/LogoClient";
+import LogoEntrepriseIcon from "@icons/LogoEntreprise";
 
 interface FormData {
   email: string;

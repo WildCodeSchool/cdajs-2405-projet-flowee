@@ -1,4 +1,4 @@
-import type { ClientStatus } from "../__generated__/graphql-types";
+import type { ClientStatus } from "@generated/graphql-types";
 
 export type SortOrder = "NONE" | "AZ" | "ZA";
 
@@ -19,7 +19,10 @@ export default function GenericFilter({
     <div className="flex flex-wrap items-center gap-6 mb-4">
       {/* Sorting zone*/}
       <div className="flex flex-col sm:flex-row sm:items-center">
-        <label htmlFor="sortSelect" className="text-sm  md:flex-row flex mr-2 font-medium">
+        <label
+          htmlFor="sortSelect"
+          className="text-sm  md:flex-row flex mr-2 font-medium"
+        >
           Sort
         </label>
         <select
@@ -36,14 +39,19 @@ export default function GenericFilter({
 
       {/* Filter by status */}
       <div className="flex flex-col sm:flex-row sm:items-center">
-        <label htmlFor="statusSelect" className="text-sm font-medium block mr-2">
+        <label
+          htmlFor="statusSelect"
+          className="text-sm font-medium block mr-2"
+        >
           Status
         </label>
         <select
           id="statusSelect"
           className="border border-theme-gray rounded px-3 py-0 text-sm w-[200px] h-[32px]"
           value={statusValue}
-          onChange={(e) => onStatusChange(e.target.value as ClientStatus | "ALL")}
+          onChange={(e) =>
+            onStatusChange(e.target.value as ClientStatus | "ALL")
+          }
         >
           <option value="ALL">All</option>
           <option value="ACTIVE">Active</option>

@@ -1,4 +1,4 @@
-import { useGetAllClientsQuery, ClientStatus } from "../__generated__/graphql-types";
+import { useGetAllClientsQuery, ClientStatus } from "@generated/graphql-types";
 import CardsClient from "./CardsClient";
 
 interface DisplayClientsProps {
@@ -18,7 +18,7 @@ export default function DisplayClientsCard({
   if (error) return <p>Error: {error.message}</p>;
 
   let filteredClients = data?.getAllClients ?? [];
-  console.info("filteredClients:",filteredClients)
+  console.info("filteredClients:", filteredClients);
   // Email and ame filter
   filteredClients = filteredClients.filter((client) => {
     const nameLower = client.clientName?.toLowerCase() ?? "";
@@ -29,14 +29,20 @@ export default function DisplayClientsCard({
 
   // Status filter
   if (statusFilter !== "ALL") {
-    filteredClients = filteredClients.filter((client) => client.status === statusFilter);
+    filteredClients = filteredClients.filter(
+      (client) => client.status === statusFilter
+    );
   }
 
   // Sorter by AZ
   if (sortOrder === "AZ") {
-    filteredClients.sort((a, b) => (a.clientName ?? "").localeCompare(b.clientName ?? ""));
+    filteredClients.sort((a, b) =>
+      (a.clientName ?? "").localeCompare(b.clientName ?? "")
+    );
   } else if (sortOrder === "ZA") {
-    filteredClients.sort((a, b) => (b.clientName ?? "").localeCompare(a.clientName ?? ""));
+    filteredClients.sort((a, b) =>
+      (b.clientName ?? "").localeCompare(a.clientName ?? "")
+    );
   }
 
   return (
