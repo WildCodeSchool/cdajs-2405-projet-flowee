@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import LogoIcon from "../atoms/Icons/Logo";
 import LogoMarkIcon from "../atoms/Icons/LogoMark";
-import AuthIllustration from "../components/illustrations/AuthIllus";
+import AuthIllustration from "../atoms/illustrations/AuthIllus";
 import LoginForm from "../molecules/LoginForm";
 export default function Login() {
   return (
