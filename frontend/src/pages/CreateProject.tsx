@@ -1,13 +1,13 @@
-import Navigation from "../components/organisms/Navigation";
+import Navigation from "@organisms/Navigation";
 import { useForm } from "react-hook-form";
 import {
   type CreateProjectInput,
   useCreateProjectMutation,
-} from "../__generated__/graphql-types";
-import { Input } from "../components/atoms/Input";
-import { Textarea } from "../components/atoms/TextArea";
+} from "@generated/graphql-types";
+import { Input } from "@atoms/Input";
+import { Textarea } from "@atoms/TextArea";
 import { NavLink } from "react-router-dom";
-import ArrowIcon from "../components/atoms/Icons/Arrow";
+import ArrowIcon from "@atoms/Icons/Arrow";
 
 export default function CreateProject() {
   const {

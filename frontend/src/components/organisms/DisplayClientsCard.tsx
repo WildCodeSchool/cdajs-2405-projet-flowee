@@ -1,7 +1,4 @@
-import {
-  useGetAllClientsQuery,
-  ClientStatus,
-} from "../../__generated__/graphql-types";
+import { useGetAllClientsQuery, ClientStatus } from "@generated/graphql-types";
 import CardsClient from "./CardsClient";
 
 interface DisplayClientsProps {

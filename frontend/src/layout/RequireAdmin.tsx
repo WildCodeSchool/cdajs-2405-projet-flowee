@@ -1,4 +1,4 @@
-import { useAuth } from "../context/authContext";
+import { useAuth } from "@context/authContext";
 import type { ReactNode } from "react";
 
 type Props = {

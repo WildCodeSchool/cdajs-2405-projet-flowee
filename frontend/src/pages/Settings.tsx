@@ -1,4 +1,4 @@
-import Navigation from "../components/organisms/Navigation";
+import Navigation from "@organisms/Navigation";
 
 export default function Settings() {
   return (
