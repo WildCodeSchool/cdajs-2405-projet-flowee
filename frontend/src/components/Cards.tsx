@@ -19,7 +19,7 @@ export const Card = ({ children, variant }: CardProps) => {
         variant={variant}
         className="absolute h-full w-full inset-0 z-0"
       />
-      <div className="relative z-10 p-5 flex flex-col justify-between h-full font-quicksand">
+      <div className="relative z-10 p-5 flex flex-col justify-between h-full ">
         <div className="text-3xl font-bold flex flex-col h-full justify-between ">
           {children}
         </div>

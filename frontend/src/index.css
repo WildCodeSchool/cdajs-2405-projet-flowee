@@ -45,6 +45,7 @@
 @layer base {
   html {
     @apply font-quicksand;
+    @apply text-black;
   }
 }
 html,

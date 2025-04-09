@@ -16,7 +16,7 @@ export default function Navigation() {
         <li className="hidden md:block md:w-full">
           <NavLink
             to="/"
-            className="flex flex-col items-center text-gray-500 hover:text-darkorange md:justify-center"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
           >
             {role === "admin" ? <LogoEntrepriseIcon /> : <LogoClientIcon />}
           </NavLink>
@@ -24,16 +24,16 @@ export default function Navigation() {
         <li className="md:w-full">
           <NavLink
             to="/dashboard"
-            className="flex flex-col items-center text-gray-500 hover:text-darkorange md:justify-center"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
           >
-            <DashboardIcon className="h-6 w-6 md:h-4 md:w-4" />
+            <DashboardIcon className="h-6 w-6 md:h-4 md:w-4 " />
             <span className="hidden md:block text-xs mt-2">Dashboard</span>
           </NavLink>
         </li>
         <li className="md:w-full">
           <NavLink
             to="/projects"
-            className="flex flex-col items-center text-gray-500 hover:text-darkorange md:justify-center"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
           >
             <ProjectsIcon className="h-6 w-6 md:h-4 md:w-4" />
             <span className="hidden md:block text-xs mt-2">Projects</span>
@@ -44,7 +44,7 @@ export default function Navigation() {
             to="/"
             className="flex flex-col items-center text-gray-500 md:justify-center"
           >
-            <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight">
+            <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-theme-veryDark">
               <PlusIcon className="h-6 w-6 md:h-4 md:w-4 text-white" />
             </div>
           </NavLink>
@@ -52,7 +52,7 @@ export default function Navigation() {
         <li className="md:w-full">
           <NavLink
             to="/clients"
-            className="flex flex-col items-center text-gray-500 hover:text-darkorange md:justify-center"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
           >
             <ClientsIcon className="h-6 w-6 md:h-5 md:w-5" />
             <span className="hidden md:block text-xs mt-2">Clients</span>
@@ -61,7 +61,7 @@ export default function Navigation() {
         <li className="md:w-full">
           <NavLink
             to="/settings"
-            className="flex flex-col items-center text-gray-500 hover:text-darkorange md:justify-center"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
           >
             <SettingsIcon className="h-6 w-6 md:h-4 md:w-4" />
             <span className="hidden md:block text-xs mt-2">Settings</span>

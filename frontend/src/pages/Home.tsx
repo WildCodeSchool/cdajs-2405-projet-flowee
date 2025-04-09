@@ -16,7 +16,7 @@ export default function Home() {
             role="visitor"
             variant="OUTLINE"
             to="/login"
-            className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base md:w-48  text-center"
+            className="bg-white border-black border rounded-lg px-12 py-2 text-base md:w-48  text-center"
           >
             Sign in
           </Button>
@@ -25,7 +25,7 @@ export default function Home() {
 
       {/* Content Section (Only Visible on Desktop) */}
       <section className=" md:flex   md:justify-start flex-col  w-full ">
-        <h1 className="font-quicksand text-3xl md:block font-bold hidden md:px-10">
+        <h1 className="text-3xl md:block font-bold hidden md:px-10">
           Welcome to Flowee, <br /> the best project management tool.
         </h1>
         <p className="text-lg max-w-2xl mt-4 text-center md:text-left md:px-10">
@@ -58,7 +58,7 @@ export default function Home() {
           label="Sign in"
           to="/login"
           variant="OUTLINE"
-          className="bg-white border-black border rounded-lg px-12 py-2 text-black text-base w-full text-center"
+          className="bg-white border-black border rounded-lg px-12 py-2 text-base w-full text-center"
         >
           Sign in
         </Button>

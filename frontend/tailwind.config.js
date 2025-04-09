@@ -26,6 +26,7 @@ module.exports = {
           dark: "var(--dark)",
           veryDark: "var(--very-dark)",
         },
+        black: "#1e1e1e",
         red: "#D9495B",
         lightRed: "#FDF4F5",
         green: "#379C3B",
