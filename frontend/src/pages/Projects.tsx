@@ -10,6 +10,7 @@ import { Card } from "../components/Cards";
 import { NavLink } from "react-router-dom";
 import ArrowIcon from "../components/Icons/Arrow";
 import SignedInLayout from "../layout/SignedInLayout";
+import FilterIcon from "../components/Icons/FilterIcon";
 export default function Projects() {
   const [searchFilter, setSearchFilter] = useState("");
   const role = useGetProjectsByUserQuery();
@@ -24,7 +25,13 @@ export default function Projects() {
 
   return (
     <SignedInLayout>
-      <h1 className="text-2xl font-semibold">Projects</h1>
+      <section className="flex flex-row justify-between items-center pr-5">
+        <h1 className="text-2xl font-semibold">Projects</h1>
+        <button>
+          <FilterIcon className="h-4 fill-black hover:fill-theme-dark" />
+        </button>
+      </section>
+
       <SearchBar setSearchFilter={setSearchFilter} />
       <div className="flex flex-col md:flex-row h-screen flex-wrap">
         <DisplayCards
