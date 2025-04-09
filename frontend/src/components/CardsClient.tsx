@@ -58,7 +58,7 @@ export default function CardsClient({
   return (
     <div
       className="box-border relative w-full md:w-[300px] lg:w-[320px] h-[180px] md:h-[160px] rounded-[5px] border border-gray
-      bg-white px-[13px] py-[7px] mr-1 flex flex-col justify-between font-quicksand"
+      bg-white px-[13px] py-[7px] flex flex-col justify-between mt-4 font-quicksand"
     >
       <div className="flex items-center justify-between">
         <input type="checkbox" className="w-3 h-3 cursor-pointer" />
