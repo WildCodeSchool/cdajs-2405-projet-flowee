@@ -39,25 +39,30 @@ export default function Navigation() {
             <span className="hidden md:block text-xs mt-2">Projects</span>
           </NavLink>
         </li>
-        <li className="md:w-full">
-          <NavLink
-            to="/"
-            className="flex flex-col items-center text-gray-500 md:justify-center"
-          >
-            <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-theme-veryDark">
-              <PlusIcon className="h-6 w-6 md:h-4 md:w-4 text-white" />
-            </div>
-          </NavLink>
-        </li>
-        <li className="md:w-full">
-          <NavLink
-            to="/clients"
-            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
-          >
-            <ClientsIcon className="h-6 w-6 md:h-5 md:w-5" />
-            <span className="hidden md:block text-xs mt-2">Clients</span>
-          </NavLink>
-        </li>
+
+        {role === "admin" && (
+          <li className="md:w-full">
+            <NavLink
+              to="/"
+              className="flex flex-col items-center text-gray-500 md:justify-center"
+            >
+              <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-theme-veryDark">
+                <PlusIcon className="h-6 w-6 md:h-4 md:w-4 text-white" />
+              </div>
+            </NavLink>
+          </li>
+        )}
+        {role === "admin" && (
+          <li className="md:w-full">
+            <NavLink
+              to="/clients"
+              className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+            >
+              <ClientsIcon className="h-6 w-6 md:h-5 md:w-5" />
+              <span className="hidden md:block text-xs mt-2">Clients</span>
+            </NavLink>
+          </li>
+        )}
         <li className="md:w-full">
           <NavLink
             to="/settings"
