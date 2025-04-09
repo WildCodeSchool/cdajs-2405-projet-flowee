@@ -9,7 +9,7 @@ import {
   Task,
 } from "../__generated__/graphql-types";
 import { useRoleTheme } from "../context/roleThemeContext";
-import ArrowIcon from "../components/Icons/Arrow";
+import ArrowIcon from "../atoms/Icons/Arrow";
 import { NavLink } from "react-router-dom";
 export interface SectionProps {
   title: string;
