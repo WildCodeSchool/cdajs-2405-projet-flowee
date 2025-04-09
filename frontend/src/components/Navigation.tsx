@@ -41,7 +41,7 @@ export default function Navigation() {
         </li>
         <li className="md:w-full">
           <NavLink
-            to="/"
+            to="/newproject"
             className="flex flex-col items-center text-gray-500 md:justify-center"
           >
             <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-theme-veryDark">

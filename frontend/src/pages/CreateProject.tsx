@@ -4,6 +4,10 @@ import {
   type CreateProjectInput,
   useCreateProjectMutation,
 } from "../__generated__/graphql-types";
+import { Input } from "../atoms/Input";
+import { Textarea } from "../atoms/TextArea";
+import { Link, NavLink } from "react-router-dom";
+import ArrowIcon from "../components/Icons/Arrow";
 
 export default function CreateProject() {
   const {
@@ -35,105 +39,88 @@ export default function CreateProject() {
       <div className="md:w-20 md:flex-shrink-0">
         <Navigation />
       </div>
-      <div className="flex-1 p-4 md:ml-4">
-        <h1>Welcome to the project creation page</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="">
+      <div className="flex-1 lg:flex lg:flex-col gap-4 p-4 md:ml-4 pt-4 ">
+        <NavLink to="/projects" className="">
+          Back to projects <ArrowIcon />
+        </NavLink>
+        <h1 className="text-2xl font-bold mb-4">New project</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
-            <label className="">
-              Project Name
-              <input
-                type="text"
-                {...register("projectName", {
-                  required: "Ce champ est requis.",
-                })}
-                className="w-full border rounded px-3 py-2"
-              />
-            </label>
+            <Input
+              label="Project Name"
+              type="text"
+              {...register("projectName", {
+                required: "Ce champ est requis.",
+              })}
+            />
             {errors.projectName && (
               <p className="text-red-500">{errors.projectName.message}</p>
             )}
-          </div>
 
-          <div>
-            <label className="">
-              Client Email
-              <input
-                type="email"
-                {...register("clientEmail", {
-                  required: "Ce champ est requis.",
-                  pattern: {
-                    value: /^\S+@\S+$/i,
-                    message: "Adresse email invalide.",
-                  },
-                })}
-                className="w-full border rounded px-3 py-2"
-              />
-            </label>
+            <Input
+              label=" Client Email"
+              type="email"
+              {...register("clientEmail", {
+                required: "Ce champ est requis.",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Adresse email invalide.",
+                },
+              })}
+            />
+
             {errors.clientEmail && (
               <p className="text-red-500">{errors.clientEmail.message}</p>
             )}
-          </div>
 
-          <div>
-            <label className="">
-              Client Name
-              <input
-                type="text"
-                {...register("clientName", {
-                  required: "Ce champ est requis.",
-                })}
-                className="w-full border rounded px-3 py-2"
-              />
-            </label>
+            <Input
+              label="Client Name"
+              type="text"
+              {...register("clientName", {
+                required: "Ce champ est requis.",
+              })}
+            />
+
             {errors.clientName && (
               <p className="text-red-500">{errors.clientName.message}</p>
             )}
-          </div>
 
-          <div>
-            <label className="">
-              End Date
-              <input
-                type="date"
-                {...register("endDate", { required: "Ce champ est requis." })}
-                className="w-full border rounded px-3 py-2"
-              />
-            </label>
+            <Input
+              label="End Date"
+              type="date"
+              {...register("endDate", { required: "Ce champ est requis." })}
+            />
+
             {errors.endDate && (
               <p className="text-red-500">{errors.endDate.message}</p>
             )}
-          </div>
 
-          <div>
-            <label className="">
-              Description
-              <textarea
-                {...register("description", {
-                  required: "Ce champ est requis.",
-                })}
-                className="w-full border rounded px-3 py-2"
-              />
-            </label>
+            <Textarea
+              label="Description"
+              {...register("description", { required: "Ce champ est requis." })}
+            />
+
             {errors.description && (
               <p className="text-red-500">{errors.description.message}</p>
             )}
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            {loading ? "Création en cours..." : "Créer le projet"}
-          </button>
-          {error && (
-            <p className="text-red-500 mt-2">Erreur : {error.message}</p>
-          )}
-          {data && (
-            <div className="text-green-600 mt-2">
-              Projet créé : {data.createProject.projectName}
-            </div>
-          )}
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-theme-base text-white px-4 py-2 rounded"
+            >
+              {loading ? "Création en cours..." : "Créer le projet"}
+            </button>
+            {error && (
+              <p className="text-red-500 mt-2">Erreur : {error.message}</p>
+            )}
+            {data && (
+              <div className="text-green-600 mt-2">
+                Projet créé : {data.createProject.projectName}
+              </div>
+            )}
+          </div>
         </form>
       </div>
     </div>
