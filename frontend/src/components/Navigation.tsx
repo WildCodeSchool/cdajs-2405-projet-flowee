@@ -15,7 +15,7 @@ export default function Navigation() {
       <ul className="flex justify-around items-center h-16 md:flex-col md:justify-between md:items-center md:h-full md:space-y-4">
         <li className="hidden md:block md:w-full">
           <NavLink
-            to="/"
+            to="/dashboard"
             className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
           >
             {role === "admin" ? <LogoEntrepriseIcon /> : <LogoClientIcon />}
