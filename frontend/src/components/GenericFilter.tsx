@@ -1,4 +1,4 @@
-import { ClientStatus } from "../__generated__/graphql-types";
+import type { ClientStatus } from "../__generated__/graphql-types";
 
 export type SortOrder = "NONE" | "AZ" | "ZA";
 
