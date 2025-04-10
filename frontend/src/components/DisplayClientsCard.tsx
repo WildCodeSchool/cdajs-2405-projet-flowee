@@ -40,7 +40,7 @@ export default function DisplayClientsCard({
   }
 
   return (
-    <div className="flex flex-row flex-wrap gap-x-5 gap-y-1 mt-3">
+    <div className="flex flex-row flex-wrap gap-x-4 mt-3">
       {filteredClients.map((client) => (
         <CardsClient
           key={client.id}
