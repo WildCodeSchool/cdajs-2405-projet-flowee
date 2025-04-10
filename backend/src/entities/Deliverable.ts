@@ -3,11 +3,14 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Task } from "./Task";
-import type { ProjectStatus } from "../enums/ProjectStatus";
+
+import { Project } from "./Project";
+import { DeliverableStatus } from "../enums/DeliverableStatus";
 
 @ObjectType()
 @Entity()
@@ -27,11 +30,11 @@ export class Deliverable extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  deliveryDate?: string;
+  endDate?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  status?: ProjectStatus;
+  status?: DeliverableStatus;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -42,26 +45,27 @@ export class Deliverable extends BaseEntity {
   reviewTimes?: number;
 
   //relations
-  @OneToMany(
-    () => Task,
-    (task) => task.deliverable,
-  )
-  @Field(() => [Task])
+  @ManyToOne(() => Project, (project) => project.deliverables)
+  @Field(() => Project, { nullable: true })
+  project?: Project;
+
+  @OneToMany(() => Task, (task) => task.deliverable)
+  @Field(() => [Task], { nullable: true })
   tasks?: Task[];
 
   constructor(
     name: string,
     perimeter?: string,
     deliveryDate?: string,
-    status?: ProjectStatus,
+    status?: DeliverableStatus,
     createdAt?: string,
-    reviewTimes?: number,
+    reviewTimes?: number
   ) {
     super();
 
     this.name = name;
     this.perimeter = perimeter;
-    this.deliveryDate = deliveryDate;
+    this.endDate = deliveryDate;
     this.status = status;
     this.createdAt = createdAt;
     this.reviewTimes = reviewTimes;

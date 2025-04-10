@@ -1,53 +1,41 @@
 import { useState } from "react";
-import Navigation from "../components/Navigation";
-import SearchBar from "../components/Search";
-import Tracker from "../organisms/Tracker";
-import { Section } from "../organisms/Section";
-import { useAuth } from "../context/authContext";
-import { useRoleTheme } from "../context/roleThemeContext";
-
+import SearchBar from "@organisms/Search";
+import Tracker from "@organisms/Tracker";
+import { Section } from "@organisms/Section";
+import { useRoleTheme } from "@context/roleThemeContext";
+import SignedInLayout from "@layout/SignedInLayout";
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");
-  const { authUserData } = useAuth();
+
   const role = useRoleTheme();
-  if (!authUserData?.role) return null;
+  if (!role) return null;
 
   return (
-    <div className="flex flex-col mt-4 md:flex-row h-full overflow-hidden">
-      <aside className="md:w-20 md:flex-shrink-0">
-        <Navigation />
-      </aside>
+    <SignedInLayout>
+      <Tracker />
+      <SearchBar setSearchFilter={setSearchFilter} />
 
-      <main className="flex-1 px-4 md:ml-4 h-full overflow-hidden w-full flex-col font-quicksand gap-6 flex">
-        <Tracker />
-        <SearchBar setSearchFilter={setSearchFilter} />
-
+      <Section
+        title="Projects"
+        type="projects"
+        variant="projects"
+        searchFilter={searchFilter}
+        showMore
+      />
+      <Section
+        title="Deliverables"
+        type="deliverable"
+        variant="deliverables"
+        searchFilter={searchFilter}
+      />
+      {role === "admin" && (
         <Section
-          title="Projects"
-          type="projects"
-          variant="projects"
+          title="Tasks"
+          type="task"
+          variant="tasks"
           searchFilter={searchFilter}
-          showMore
         />
-
-        <Section
-          title="Deliverables"
-          type="deliverable"
-          variant="deliverables"
-          searchFilter={searchFilter}
-          showMore
-        />
-
-        {role === "admin" && (
-          <Section
-            title="Tasks"
-            type="task"
-            variant="tasks"
-            searchFilter={searchFilter}
-            showMore
-          />
-        )}
-      </main>
-    </div>
+      )}
+    </SignedInLayout>
   );
 }

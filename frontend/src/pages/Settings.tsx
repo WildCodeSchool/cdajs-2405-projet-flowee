@@ -1,4 +1,4 @@
-import Navigation from "../components/Navigation";
+import Navigation from "@organisms/Navigation";
 
 export default function Settings() {
   return (
@@ -8,7 +8,7 @@ export default function Settings() {
       </div>
       <div className="flex-1 p-4 md:ml-4">
         <h1>Welcome to the Settings Page</h1>
-        {/* Add your page content here */}
+        {/* page content*/}
       </div>
     </div>
   );

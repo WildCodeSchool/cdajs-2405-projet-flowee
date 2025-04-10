@@ -28,6 +28,23 @@ export const GET_PROJECT_BY_USER = gql`
         id
         clientName
       }
+      deliverables {
+        id
+        name
+        perimeter
+        endDate
+        status
+        createdAt
+        reviewTimes
+        tasks {
+          id
+          name
+          description
+          status
+          startDate
+          endDate
+        }
+      }
     }
   }
 `;

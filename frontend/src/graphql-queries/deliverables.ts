@@ -6,7 +6,7 @@ export const GET_ALL_DELIVERABLES_QUERY = gql`
       id
       name
       perimeter
-      deliveryDate
+      endDate
       status
       createdAt
       reviewTimes

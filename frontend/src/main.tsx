@@ -22,6 +22,7 @@ import Test from "./pages/Test";
 import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
+import { RequireAdmin } from "./layout/RequireAdmin";
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -82,7 +83,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/newproject",
-        element: <CreateProject />,
+        element: (
+          <RequireAdmin>
+            <CreateProject />
+          </RequireAdmin>
+        ),
       },
       {
         path: "*",

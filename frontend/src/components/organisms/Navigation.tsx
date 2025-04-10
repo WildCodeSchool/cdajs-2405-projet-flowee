@@ -1,0 +1,78 @@
+import { NavLink } from "react-router-dom";
+import DashboardIcon from "@icons/DashboardIcon";
+import ProjectsIcon from "@icons/ProjectsIcon";
+import PlusIcon from "@icons/PlusIcon";
+import ClientsIcon from "@icons/ClientsIcon";
+import SettingsIcon from "@icons/SettingsIcon";
+import LogoEntrepriseIcon from "@icons/LogoEntreprise";
+import { useRoleTheme } from "@context/roleThemeContext";
+import LogoClientIcon from "@icons/LogoClient";
+
+export default function Navigation() {
+  const role = useRoleTheme();
+  return (
+    <nav className="fixed bottom-0 left-0 z-50 w-full bg-white shadow-t-md md:w-20 md:h-[calc(100%-24px)] md:shadow-lg  md:m-4 md:p-3 md:pt-4 md:pb-4 md:rounded-lg">
+      <ul className="flex justify-around items-center h-16 md:flex-col md:justify-between md:items-center md:h-full md:space-y-4">
+        <li className="hidden md:block md:w-full">
+          <NavLink
+            to="/dashboard"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+          >
+            {role === "admin" ? <LogoEntrepriseIcon /> : <LogoClientIcon />}
+          </NavLink>
+        </li>
+        <li className="md:w-full">
+          <NavLink
+            to="/dashboard"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+          >
+            <DashboardIcon className="h-6 w-6 md:h-4 md:w-4 " />
+            <span className="hidden md:block text-xs mt-2">Dashboard</span>
+          </NavLink>
+        </li>
+        <li className="md:w-full">
+          <NavLink
+            to="/projects"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+          >
+            <ProjectsIcon className="h-6 w-6 md:h-4 md:w-4" />
+            <span className="hidden md:block text-xs mt-2">Projects</span>
+          </NavLink>
+        </li>
+
+        {role === "admin" && (
+          <li className="md:w-full">
+            <NavLink
+              to="/newproject"
+              className="flex flex-col items-center text-gray-500 md:justify-center"
+            >
+              <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-theme-veryDark">
+                <PlusIcon className="h-6 w-6 md:h-4 md:w-4 text-white" />
+              </div>
+            </NavLink>
+          </li>
+        )}
+        {role === "admin" && (
+          <li className="md:w-full">
+            <NavLink
+              to="/clients"
+              className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+            >
+              <ClientsIcon className="h-6 w-6 md:h-5 md:w-5" />
+              <span className="hidden md:block text-xs mt-2">Clients</span>
+            </NavLink>
+          </li>
+        )}
+        <li className="md:w-full">
+          <NavLink
+            to="/settings"
+            className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+          >
+            <SettingsIcon className="h-6 w-6 md:h-4 md:w-4" />
+            <span className="hidden md:block text-xs mt-2">Settings</span>
+          </NavLink>
+        </li>
+      </ul>
+    </nav>
+  );
+}

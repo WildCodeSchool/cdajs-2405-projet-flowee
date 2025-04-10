@@ -1,15 +1,15 @@
 import { CardVariant } from "./Cards";
-import { Project, Deliverable } from "../__generated__/graphql-types";
+import { Project, Deliverable, Task } from "@generated/graphql-types";
 import { ReactNode } from "react";
 
 interface DisplayCardsProps {
-  items?: (Project | Deliverable)[];
+  items?: (Project | Deliverable | Task)[];
   loading: boolean;
   error?: Error;
   variant: CardVariant;
   searchFilter: string;
-  limit: number;
-  renderItem: (item: Project | Deliverable) => ReactNode;
+  limit?: number;
+  renderItem: (item: Project | Deliverable | Task) => ReactNode;
 }
 
 export default function DisplayCards({
@@ -24,7 +24,7 @@ export default function DisplayCards({
   if (error) return <p>Error: {error.message}</p>;
   if (!items) return <p>No data</p>;
 
-  const getItemTitle = (item: Project | Deliverable): string => {
+  const getItemTitle = (item: Project | Deliverable | Task): string => {
     return "projectName" in item ? item.projectName : item.name;
   };
 
@@ -35,7 +35,7 @@ export default function DisplayCards({
   const displayedItems = filtered.slice(0, limit);
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-col md:flex-row gap-4 ">
       {displayedItems.map((item) => renderItem(item))}
     </div>
   );

@@ -51,47 +51,50 @@ export class ProjectMutations {
         throw new Error("User not connected");
       }
 
-      //  Step 1 : account creation
-      let account: Account | null = await dataSource.manager.findOne(Account, {
-        where: { email: clientEmail },
-      });
-
-      if (!account) {
-        account = dataSource.manager.create(Account, {
-          email: clientEmail,
-          password: "changeme", // ENVOYER UN MAIL OU TOKEN POUR LA MISE A JOUR
-          role: Role.CLIENT,
-          status: AccountStatus.PENDING,
+      return await dataSource.transaction(async (manager) => {
+        //  Step 1 : account creation
+        let account: Account | null = await manager.findOne(Account, {
+          where: { email: clientEmail },
         });
-        await dataSource.manager.save(Account, account);
-      }
+        if (!account) {
+          account = manager.create(Account, {
+            email: clientEmail,
+            password: "changeme", // ENVOYER UN MAIL OU TOKEN POUR LA MISE A JOUR
+            role: Role.CLIENT,
+            status: AccountStatus.PENDING,
+          });
+          await manager.save(Account, account);
+        }
 
-      //STep 2 : Verify client or create client
+        const existingClient = await manager.findOne(Client, {
+          where: { account: { id: account?.id } },
+          relations: ["account"],
+        });
 
-      let client = await dataSource.manager.findOne(Client, {
-        where: { account: { id: account?.id } },
-        relations: ["account"],
-      });
-
-      if (!client) {
-        client = dataSource.manager.create(Client, {
-          clientName: clientName,
+        if (existingClient) {
+          throw new GraphQLError("A client already exists for this account", {
+            extensions: { code: "CLIENT_ALREADY_EXISTS" },
+          });
+        }
+        const client = manager.create(Client, {
+          clientName,
           account,
+          accountId: account.id,
         });
-        await dataSource.manager.save(Client, client);
-      }
+        await manager.save(Client, client);
 
-      const newproject: Project = await dataSource.manager.save(Project, {
-        projectName: projectName,
-        description,
-        startDate,
-        endDate,
-        status: ProjectStatus.NOT_STARTED,
-        client,
-        companyUserId,
+        const newproject: Project = await manager.save(Project, {
+          projectName: projectName,
+          description,
+          startDate,
+          endDate,
+          status: ProjectStatus.NOT_STARTED,
+          client,
+          companyUserId,
+        });
+
+        return newproject;
       });
-
-      return newproject;
     } catch (error) {
       if (error instanceof GraphQLError) {
         throw error;

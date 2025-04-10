@@ -1,0 +1,8 @@
+export enum DeliverableStatus {
+  APPROVED = "APPROVED",
+  BLOCKED = "BLOCKED",
+  IN_PROGRESS = "IN_PROGRESS",
+  IN_REVIEW = "IN_REVIEW",
+  LATE = "LATE",
+  NOT_STARTED = "NOT_STARTED",
+}

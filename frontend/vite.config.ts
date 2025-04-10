@@ -32,6 +32,19 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "/src",
+      "@components": "/src/components",
+      "@atoms": "/src/components/atoms",
+      "@molecules": "/src/components/molecules",
+      "@organisms": "/src/components/organisms",
+      "@icons": "/src/components/atoms/Icons",
+      "@illustrations": "/src/components/atoms/illustrations",
+      "@pages": "/src/pages",
+      "@context": "/src/context",
+      "@queries": "/src/graphql-queries",
+      "@mutations": "/src/graphql-mutations",
+      "@interfaces": "/src/interfaces",
+      "@layout": "/src/layout",
+      "@generated": "/src/__generated__",
     },
   },
 

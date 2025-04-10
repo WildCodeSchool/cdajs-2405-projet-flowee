@@ -4,6 +4,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   JoinColumn,
   OneToMany,
   OneToOne,
@@ -36,7 +37,8 @@ export class Client extends BaseEntity {
   projects?: Project[];
 
   @OneToOne(() => Account, { eager: true })
-  @JoinColumn({ name: "account_id" }) // la clé étrangère est ici
+  @JoinColumn({ name: "account_id" })
+  @Index({ unique: true })
   @Field(() => Account, { nullable: true })
   account?: Account;
 

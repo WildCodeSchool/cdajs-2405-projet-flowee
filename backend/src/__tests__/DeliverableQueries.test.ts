@@ -2,7 +2,8 @@ import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Deliverable } from "../entities/Deliverable";
 import { DeliverableQueries } from "../graphql-resolvers/DeliverableQueries";
-import { ProjectStatus } from "../enums/ProjectStatus";
+
+import { DeliverableStatus } from "../enums/DeliverableStatus";
 
 describe("Deliverable Queries", () => {
   let deliverableQueries: DeliverableQueries;
@@ -20,22 +21,18 @@ describe("Deliverable Queries", () => {
         new Deliverable(
           faker.lorem.word(), // name
           faker.lorem.sentence(), // perimeter
-          faker.date
-            .future()
-            .toISOString(), // deliveryDate
-          ProjectStatus.IN_PROGRESS, // status
-          faker.date
-            .past()
-            .toISOString(), // createdAt
-          faker.number.int({ min: 0, max: 3 }), // reviews
+          faker.date.future().toISOString(), // deliveryDate
+          DeliverableStatus.IN_PROGRESS, // status
+          faker.date.past().toISOString(), // createdAt
+          faker.number.int({ min: 0, max: 3 }) // reviews
         ),
         new Deliverable(
           faker.lorem.word(),
           faker.lorem.sentence(),
           faker.date.future().toISOString(),
-          ProjectStatus.COMPLETED,
+          DeliverableStatus.APPROVED,
           faker.date.past().toISOString(),
-          faker.number.int({ min: 0, max: 3 }),
+          faker.number.int({ min: 0, max: 3 })
         ),
       ];
 
@@ -68,9 +65,9 @@ describe("Deliverable Queries", () => {
         faker.lorem.word(),
         faker.lorem.sentence(),
         faker.date.future().toISOString(),
-        ProjectStatus.IN_PROGRESS,
+        DeliverableStatus.IN_PROGRESS,
         faker.date.past().toISOString(),
-        faker.number.int({ min: 0, max: 3 }),
+        faker.number.int({ min: 0, max: 3 })
       );
       existingDeliverable.id = 42;
 

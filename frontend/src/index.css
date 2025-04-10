@@ -12,6 +12,7 @@
   --very-dark: #25335f;
   --success: #379c3b;
   --error: #d9495b;
+  --warning: #d4711d;
   --light-gray: #f3f3f3;
   --gray: #cfcfcf;
   --dark-gray: #383838;
@@ -24,15 +25,18 @@
   --very-dark: #d16309;
   --success: #379c3b;
   --error: #d9495b;
+  --warning: #d4711d;
   --light-gray: #f3f3f3;
   --gray: #cfcfcf;
   --dark-gray: #383838;
 }
 
 :root.visitor {
+  --very-light: #faf1e7;
   --base: #d98d44;
   --success: #379c3b;
   --error: #d9495b;
+  --warning: #d4711d;
   --light-gray: #f3f3f3;
   --gray: #cfcfcf;
   --dark-gray: #383838;
@@ -41,6 +45,7 @@
 @layer base {
   html {
     @apply font-quicksand;
+    @apply text-black;
   }
 }
 html,
