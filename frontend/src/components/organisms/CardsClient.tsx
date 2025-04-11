@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ClientStatus } from "../__generated__/graphql-types";
-import EllipsesIcon from "./Icons/Ellipses";
-import ModalClient from "./ModalClient";
-
+import { ClientStatus } from "@generated/graphql-types";
+import EllipsesIcon from "@icons/Ellipses";
 
 // Function for formatting status
 function capitalize(str: string): string {

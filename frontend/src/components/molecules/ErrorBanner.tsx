@@ -1,4 +1,4 @@
-import WarningIcon from "../components/Icons/Warning";
+import WarningIcon from "@icons/Warning";
 
 export default function ErrorBanner({
   message,

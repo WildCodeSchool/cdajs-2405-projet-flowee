@@ -1,16 +1,13 @@
-import {
-  Project,
-  useGetProjectsByUserQuery,
-} from "../__generated__/graphql-types";
-import ErrorBanner from "../molecules/ErrorBanner";
-import DisplayCards from "../components/DisplayCards";
-import SearchBar from "../components/Search";
+import { Project, useGetProjectsByUserQuery } from "@generated/graphql-types";
+import ErrorBanner from "@molecules/ErrorBanner";
+import DisplayCards from "@organisms/DisplayCards";
+import SearchBar from "@organisms/Search";
 import { useState } from "react";
-import { Card } from "../components/Cards";
+import { Card } from "@organisms/Cards";
 import { NavLink } from "react-router-dom";
-import ArrowIcon from "../components/Icons/Arrow";
-import SignedInLayout from "../layout/SignedInLayout";
-import FilterIcon from "../components/Icons/FilterIcon";
+import ArrowIcon from "@icons/Arrow";
+import SignedInLayout from "@layout/SignedInLayout";
+import FilterIcon from "@icons/FilterIcon";
 export default function Projects() {
   const [searchFilter, setSearchFilter] = useState("");
   const role = useGetProjectsByUserQuery();

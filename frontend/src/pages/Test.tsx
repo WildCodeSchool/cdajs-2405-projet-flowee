@@ -1,6 +1,6 @@
+import { useGetProjectsByUserQuery } from "@generated/graphql-types";
+import { useAuth } from "@context/authContext";
 import { Link } from "react-router-dom";
-import { useGetProjectsByUserQuery } from "../__generated__/graphql-types";
-import { useAuth } from "../context/authContext";
 
 export default function Test() {
   const { authUserData } = useAuth();

@@ -1,5 +1,5 @@
 import { CardVariant } from "./Cards";
-import { Project, Deliverable, Task } from "../__generated__/graphql-types";
+import { Project, Deliverable, Task } from "@generated/graphql-types";
 import { ReactNode } from "react";
 
 interface DisplayCardsProps {

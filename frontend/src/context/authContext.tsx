@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import type { AuthContextType } from "../interfaces/AuthContextType";
-import type { AuthContextUserType } from "../interfaces/AuthContextUserType";
+import type { AuthContextType } from "@interfaces/AuthContextType";
+import type { AuthContextUserType } from "@interfaces/AuthContextUserType";
 
 function decodeContextData(token: string | null): Partial<AuthContextUserType> {
   if (!token || token.split(".").length !== 3) {
