@@ -2,9 +2,13 @@ interface AuthIllustrationProps {
   primary?: string;
   secondary?: string;
   className?: string;
+  title?: string;
 }
 
-export default function AuthIllustration({ className }: AuthIllustrationProps) {
+export default function AuthIllustration({
+  className,
+  title,
+}: AuthIllustrationProps) {
   return (
     <svg
       width="100%"
@@ -13,6 +17,8 @@ export default function AuthIllustration({ className }: AuthIllustrationProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label={title}
     >
       <g id="authIllus">
         <g id="screen">

@@ -1,4 +1,5 @@
-import { NavLink, NavLinkProps } from "react-router-dom";
+import type { NavLinkProps } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useRoleTheme } from "@context/roleThemeContext";
 
 export type ButtonVariant = "filled" | "DANGER" | "SUCCES" | "GRAY" | "OUTLINE";
@@ -15,8 +16,8 @@ export default function Button({
   className = "",
   ...rest
 }: ButtonProps) {
-  const role = useRoleTheme();
-  if (!role) return null;
+  const userRole = useRoleTheme();
+  if (!userRole) return null;
   const baseStyle = "px-6 py-2 rounded-lg font-medium text-sm transition-all";
 
   const roleBasedVariants = {
@@ -39,7 +40,7 @@ export default function Button({
   if (variant !== "filled") {
     colorStyle = staticVariants[variant];
   } else {
-    colorStyle = roleBasedVariants.filled[role];
+    colorStyle = roleBasedVariants.filled[userRole];
   }
 
   const fullClassName = `${baseStyle} ${colorStyle} ${className}`.trim();

@@ -34,7 +34,10 @@ export default function Tracker() {
   return (
     <section className="flex flex-row bg-white p-4 rounded-md md:mt-3 md:rounded-lg items-center justify-around shadow-soft w-full  mx-auto">
       {stats.map((item, index) => (
-        <div key={index} className="flex flex-row items-center gap-5">
+        <div
+          key={item.label.short}
+          className="flex flex-row items-center gap-5"
+        >
           <article className="flex flex-row gap-3 items-center text-start px-1">
             <span
               className={`${item.color} text-xl sm:text-lg md:text-3xl font-semibold`}

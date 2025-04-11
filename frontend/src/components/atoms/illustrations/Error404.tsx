@@ -2,12 +2,14 @@ interface ErrorIllustrationProps {
   primary?: string;
   secondary?: string;
   className?: string;
+  title?: string;
 }
 
 export default function Error404Illustration({
   primary,
   secondary,
   className,
+  title = "Error 404",
 }: ErrorIllustrationProps) {
   return (
     <svg
@@ -17,6 +19,8 @@ export default function Error404Illustration({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label={title}
     >
       <g id="Error404">
         <g id="bg">
