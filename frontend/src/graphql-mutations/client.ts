@@ -15,7 +15,6 @@ export const ARCHIVE_CLIENT_MUTATION = gql`
     }
   }
 `;
-
 export const UPDATE_CLIENT_MUTATION = gql`
   mutation UpdateClient(
     $id: Float!

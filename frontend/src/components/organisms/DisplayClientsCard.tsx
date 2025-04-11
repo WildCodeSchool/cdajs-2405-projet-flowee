@@ -67,6 +67,7 @@ export default function DisplayClientsCard({
     <div className="flex flex-row flex-wrap gap-x-4 mt-3">
       {filteredClients.map((client) => (
         <CardsClient
+        //donnée id, name, email, status, à mettre {const data du hook codegen}
           key={client.id}
           id={Number(client.id)} 
           name={client.clientName || "No name"}
