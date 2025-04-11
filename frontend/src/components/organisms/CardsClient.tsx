@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ClientStatus } from "@generated/graphql-types";
 import EllipsesIcon from "@icons/Ellipses";
+import ModalClient from "@components/ModalClient";
 
 // Function for formatting status
 function capitalize(str: string): string {
@@ -8,7 +9,9 @@ function capitalize(str: string): string {
 }
 
 interface CardsClientProps {
+  id: number;
   name: string;
+  email: string;
   status?: ClientStatus;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -16,7 +19,9 @@ interface CardsClientProps {
 }
 
 export default function CardsClient({
+  id,
   name,
+  email,
   status = ClientStatus.Active,
   onEdit,
   onDelete,
@@ -31,12 +36,15 @@ export default function CardsClient({
   let statusColor = "text-theme-success";
   if (status === ClientStatus.Inactive) statusColor = "text-theme-warning";
   if (status === ClientStatus.Archived) {
-    statusColor = "text-theme-darkGray line-through";
+    statusColor = "text-theme-darkGray";
   }
 
-  // Handler menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const containerBg = status === ClientStatus.Archived ? "bg-gray" : "bg-white";
+
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -57,10 +65,10 @@ export default function CardsClient({
 
   return (
     <div
-      className="box-border relative w-full md:w-[300px] lg:w-[320px] h-[180px] md:h-[160px] rounded-[5px] border border-gray
-      bg-white px-[13px] py-[7px] flex flex-col justify-between mt-4 font-quicksand"
+      className={`box-border relative w-full md:w-[360px] lg:w-[360px] h-[180px] md:h-[160px] rounded-[5px] border border-gray
+      ${containerBg} px-[13px] py-[7px] flex flex-col justify-between mt-4 font-quicksand`}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between border-gray">
         <input type="checkbox" className="w-3 h-3 cursor-pointer" />
         {(onEdit || onDelete || onArchive) && (
           <div className="relative" ref={menuRef}>
@@ -72,41 +80,41 @@ export default function CardsClient({
               <EllipsesIcon className="h-4 w-4 text-theme-darkGray" />
             </button>
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-28 bg-white border rounded shadow-lg z-10">
+              <div className=" absolute right-0 w-20 bg-white border rounded border-gray shadow-lg z-30">
                 {onEdit && (
                   <button
                     type="button"
-                    className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
+                    className="block w-full text-center px-2 pt-1 text-sm hover:bg-theme-gray"
                     onClick={() => {
-                      onEdit();
+                      setIsEditModalOpen(true);
                       setIsMenuOpen(false);
                     }}
                   >
-                    Modifier
+                    Edit
                   </button>
                 )}
                 {onDelete && (
                   <button
                     type="button"
-                    className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
+                    className="block w-full text-center px-2 pt-1 text-sm hover:bg-theme-gray"
                     onClick={() => {
                       onDelete();
                       setIsMenuOpen(false);
                     }}
                   >
-                    Supprimer
+                    Delete
                   </button>
                 )}
                 {onArchive && (
                   <button
                     type="button"
-                    className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100"
+                    className="block w-full text-center px-2 py-1 text-sm hover:bg-theme-gray"
                     onClick={() => {
                       onArchive();
                       setIsMenuOpen(false);
                     }}
                   >
-                    Archiver
+                    Archive
                   </button>
                 )}
               </div>
@@ -122,6 +130,15 @@ export default function CardsClient({
         <h2 className="text-lg font-semibold mt-3 text-center">{name}</h2>
         <p className={`text-sm ${statusColor}`}>{capitalize(status)}</p>
       </div>
+      {isEditModalOpen && (
+        <ModalClient
+          id={id}
+          name={name}
+          email={email}
+          status={status}
+          onClose={() => setIsEditModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

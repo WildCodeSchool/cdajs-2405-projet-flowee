@@ -46,8 +46,9 @@ registerEnumType(AccountStatus, {
 
 registerEnumType(ClientStatus, {
   name: "ClientStatus",
-  description: "Client status",
+  description: "Status of client",
 });
+
 
 export async function cleanDB() {
   await dataSource.manager.clear(Project);
