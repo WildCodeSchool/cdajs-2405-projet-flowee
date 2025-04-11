@@ -5,6 +5,14 @@ module.exports = {
     extend: {
       colors: {
         theme: {
+          tag: {
+            default: "var(--very-light)",
+
+            error: "var(--error)",
+            ongoing: "var(--warning)",
+            completed: "var(--success)",
+          },
+
           cardBg: "var(--very-light)",
           projectStripes: "var(--light)",
           deliverableStripes: "var(--dark)",
@@ -13,7 +21,7 @@ module.exports = {
           btnText: "#ffffff",
           success: "var(--success)",
           error: "var(--error)",
-          warning: "var(--warning)",
+
           lightGray: "var(--light-gray)",
           gray: "var(--gray)",
           darkGray: "var(--dark-gray)",

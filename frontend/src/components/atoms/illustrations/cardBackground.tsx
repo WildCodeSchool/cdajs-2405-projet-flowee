@@ -1,6 +1,7 @@
 interface CardBackgroundProps {
   className?: string;
   variant: Variant;
+  title?: string;
 }
 
 const variantToStripesClass = {
@@ -15,6 +16,7 @@ type Variant = keyof typeof variantToStripesClass;
 export const CardBackground: React.FC<CardBackgroundProps> = ({
   className,
   variant,
+  title = "Card background",
 }) => {
   const stripesClass = variantToStripesClass[variant];
   return (
@@ -26,6 +28,8 @@ export const CardBackground: React.FC<CardBackgroundProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label={title}
     >
       <g id="bg">
         <path

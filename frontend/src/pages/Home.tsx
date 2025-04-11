@@ -13,7 +13,6 @@ export default function Home() {
         <div className="hidden md:w-1/3 md:flex items-center justify-center md:justify-end">
           <Button
             label="Sign in"
-            role="visitor"
             variant="OUTLINE"
             to="/login"
             className="bg-white border-black border rounded-lg px-12 py-2 text-base md:w-48  text-center"
@@ -42,7 +41,7 @@ export default function Home() {
         <div
           style={{ backgroundImage: "url(/images/homeImage.png)" }}
           className="mt-8  md:w-full md:h-[50vh] md:bg-cover md:bg-center hidden  md:block"
-        ></div>
+        />
       </section>
 
       {/* Mobile Buttons (Stacked) */}

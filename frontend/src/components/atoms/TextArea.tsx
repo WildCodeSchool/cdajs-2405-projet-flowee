@@ -1,4 +1,5 @@
-import { forwardRef, TextareaHTMLAttributes } from "react";
+import { forwardRef } from "react";
+import type { TextareaHTMLAttributes } from "react";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
@@ -17,5 +18,5 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
       </div>
     );
-  },
+  }
 );
