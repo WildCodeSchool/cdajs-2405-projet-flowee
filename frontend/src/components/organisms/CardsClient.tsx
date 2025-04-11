@@ -65,7 +65,7 @@ export default function CardsClient({
 
   return (
     <div
-      className={`box-border relative w-full md:w-[360px] lg:w-[360px] h-[180px] md:h-[160px] rounded-[5px] border border-gray
+      className={`box-border relative w-full md:w-[330px] h-[160px] rounded-[5px] border border-theme-gray
       ${containerBg} px-[13px] py-[7px] flex flex-col justify-between mt-4 font-quicksand`}
     >
       <div className="flex items-center justify-between border-gray">
