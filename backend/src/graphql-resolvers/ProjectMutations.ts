@@ -12,7 +12,7 @@ import { Mutation, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ValidationError } from "class-validator";
 import type { MyContext } from "../types/MyContext";
 import { CompanyUser } from "../entities/CompanyUser";
-import { getProjectService } from "../services/projectService";
+import { CloseProjectParamsBuilder, getProjectService } from "../services/projectService";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -135,11 +135,13 @@ export class ProjectMutations {
     if (!project) {
       throw new Error("project not found");
     }
+    if (validatorComments.length != validatorEmails.length) {
+      throw new Error("missing validator comment or email - check lengths");
+    }
 
-    const additionalValidators: { email: string, comment: string }[] = await this.projectService.getTopManagerValidations(project);
-    for (const additionalValidator of additionalValidators) {
-      validatorEmails.push(additionalValidator.email);
-      validatorComments.push(additionalValidator.comment);
+    const allValidators: { email: string, comment: string }[] = Array.from(await this.projectService.getTopManagerValidations(project));
+    for (let i = 0; i < validatorEmails.length; i++) {
+      allValidators.push({ email: validatorEmails[i], comment: validatorComments[i] })
     }
 
     const financialDetails: number[][] = this.financialService.gatherFinancialDetails(project);
@@ -147,7 +149,17 @@ export class ProjectMutations {
     const quitusDoc: Uint8Array = base64ToByteArray(quitusDocBase64);
     const triggeredProjects: Project[] = await this.projectService.getTriggeredProjects(project);
 
-    await this.projectService.closeProject(project, new Date(), financialDetails, validatorEmails, validatorComments, quitusDoc, billDoc, ...triggeredProjects)
+    const builder = CloseProjectParamsBuilder
+      .start(/*...*/)
+      .setDate(new Date())
+      .setFinancialDetails(financialDetails)
+      .addValidators(allValidators)
+      .setQuitusDoc(quitusDoc)
+      .setBillDoc(billDoc);
+
+    triggeredProjects.forEach(triggeredProject => builder.addTriggeredProject(triggeredProject));
+
+    await this.projectService.closeProject(project, builder.build());
 
     return project;
   }
