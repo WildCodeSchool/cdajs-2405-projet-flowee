@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { Card, CardVariant } from "./Cards";
+import type { CardVariant } from "./Cards";
+import { Card } from "./Cards";
 import DisplayCards from "./DisplayCards";
 import Button from "@atoms/Button";
-import {
-  useGetProjectsByUserQuery,
-  Deliverable,
-  Project,
-  Task,
-} from "@generated/graphql-types";
+import { useGetProjectsByUserQuery } from "@generated/graphql-types";
+import type { Deliverable, Project, Task } from "@generated/graphql-types";
+
 import { useRoleTheme } from "@context/roleThemeContext";
 import ArrowIcon from "@icons/Arrow";
 import { NavLink } from "react-router-dom";
@@ -34,15 +32,19 @@ export const Section: React.FC<SectionProps> = ({
 
   useEffect(() => {
     const updateLimit = () => {
-      setLimit(window.innerWidth <= 1320 ? 4 : 5);
-      setLimit(window.innerWidth <= 768 ? 2 : limit);
+      if (window.innerWidth <= 768) {
+        setLimit(2);
+      } else if (window.innerWidth <= 1320) {
+        setLimit(4);
+      } else {
+        setLimit(5);
+      }
     };
 
     updateLimit();
     window.addEventListener("resize", updateLimit);
     return () => window.removeEventListener("resize", updateLimit);
   }, []);
-
   if (!role) return null;
 
   const { data, loading, error } = useGetProjectsByUserQuery();

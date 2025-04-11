@@ -3,7 +3,7 @@ import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Task } from "../entities/Task";
 
-import { TaskStatus } from "../enums/TaskStatus";
+import type { TaskStatus } from "../enums/TaskStatus";
 
 @Resolver(Task)
 export class TaskMutations {

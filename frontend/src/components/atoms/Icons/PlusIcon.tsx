@@ -7,6 +7,8 @@ export default function PlusIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label="Plus icon"
     >
       <path
         d="M6.5 8.83789H0.5V6.83789H6.5V0.837891H8.5V6.83789H14.5V8.83789H8.5V14.8379H6.5V8.83789Z"

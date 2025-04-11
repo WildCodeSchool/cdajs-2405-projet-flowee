@@ -7,6 +7,8 @@ export default function EllipsesIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label="Ellipses icon"
     >
       <path
         id="dots (Stroke)"
