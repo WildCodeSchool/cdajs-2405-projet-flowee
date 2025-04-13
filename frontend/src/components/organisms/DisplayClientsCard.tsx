@@ -1,5 +1,7 @@
-import {useDeleteClientMutation, useArchiveClientMutation, useGetAllClientsQuery, ClientStatus } from "@generated/graphql-types";
+import { useDeleteClientMutation, useArchiveClientMutation, useGetAllClientsQuery } from "@generated/graphql-types";
+import type { ClientStatus } from "@generated/graphql-types"; 
 import CardsClient from "./CardsClient";
+import type { ClientUI } from "@interfaces/client.types"
 
 interface DisplayClientsProps {
   searchFilter: string;
@@ -63,16 +65,21 @@ export default function DisplayClientsCard({
     }
   };
 
+const mappedClients: ClientUI[] = filteredClients.map(client => ({
+  id: client.id,
+  clientName: client.clientName,
+  status: client.status,
+  account: client.account ? {
+    email: client.account.email
+  } : undefined
+}));
+
  return (
-    <div className="flex flex-row flex-wrap gap-x-4 mt-3">
-      {filteredClients.map((client) => (
+     <div className="flex flex-row flex-wrap gap-x-4 mt-3">
+      {mappedClients.map((client) => (
         <CardsClient
-        //donnée id, name, email, status, à mettre {const data du hook codegen}
           key={client.id}
-          id={Number(client.id)} 
-          name={client.clientName || "No name"}
-          email={client.account?.email || "N/A"}
-          status={client.status || ClientStatus.Active}
+          client={client}
           onEdit={() => console.log("Edit", client.id)}
           onDelete={() => handleDelete(Number(client.id))}
           onArchive={() => handleArchive(Number(client.id))}

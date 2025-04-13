@@ -316,7 +316,7 @@ export type UpdateClientMutationVariables = Exact<{
   id: Scalars['Float']['input'];
   newName?: InputMaybe<Scalars['String']['input']>;
   newEmail?: InputMaybe<Scalars['String']['input']>;
-  newStatus?: InputMaybe<ClientStatus>;
+  newStatus?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -340,7 +340,7 @@ export type LoginMutation = { __typename?: 'Mutation', login: string };
 export type GetAllClientsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<{ __typename?: 'Client', id: string, clientName?: string | null, status?: ClientStatus | null, account?: { __typename?: 'Account', email: string, role: string } | null }> };
+export type GetAllClientsQuery = { __typename?: 'Query', getAllClients: Array<{ __typename?: 'Client', id: string, clientName?: string | null, status?: ClientStatus | null, account?: { __typename?: 'Account', email: string } | null }> };
 
 export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -430,8 +430,13 @@ export type ArchiveClientMutationHookResult = ReturnType<typeof useArchiveClient
 export type ArchiveClientMutationResult = Apollo.MutationResult<ArchiveClientMutation>;
 export type ArchiveClientMutationOptions = Apollo.BaseMutationOptions<ArchiveClientMutation, ArchiveClientMutationVariables>;
 export const UpdateClientDocument = gql`
-    mutation UpdateClient($id: Float!, $newName: String, $newEmail: String, $newStatus: ClientStatus) {
-  updateClient(id: $id, newName: $newName, newEmail: $newEmail) {
+    mutation UpdateClient($id: Float!, $newName: String, $newEmail: String, $newStatus: String) {
+  updateClient(
+    id: $id
+    newName: $newName
+    newEmail: $newEmail
+    newStatus: $newStatus
+  ) {
     id
     clientName
     status
@@ -548,7 +553,6 @@ export const GetAllClientsDocument = gql`
     clientName
     account {
       email
-      role
     }
     status
   }
