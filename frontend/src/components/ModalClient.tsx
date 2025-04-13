@@ -28,11 +28,9 @@ export default function ModalClient({
   const [updateClient, { loading }] = useUpdateClientMutation({
     onCompleted: () => {
       onClose();
-      // Vous pourriez ajouter une notification de succès ici
     },
     onError: (error) => {
       console.error("Update failed:", error);
-      // Vous pourriez ajouter une notification d'erreur ici
     },
   });
 
@@ -49,7 +47,6 @@ export default function ModalClient({
     });
   };
 
-   // Commentaires en dur
   const hardcodedComments = [
     { text: "I have a lot to say.." },
     { text: "This isn't a perfect world" }
