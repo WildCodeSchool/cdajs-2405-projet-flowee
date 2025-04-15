@@ -40,13 +40,12 @@ export class ClientMutations {
     @Arg("newEmail", { nullable: true }) newEmail: string,
     @Arg("newStatus", { nullable: true }) newStatus: ClientStatus,
   ): Promise<Client> {
-    console.info()
+    if (!newName && !newEmail && !newStatus) {
+      throw new Error("No fields to update");
+    }
     const client = await dataSource.manager.findOne(Client, {
       where: { id },
     });
-    //qu'est qui a été modifier 
-    //ex: si newName !== de name (en bdd) modifie le | fait rien 
-    //si ... modifier verifier en bdd et modifie le ou fait rien. 
     if (!client) {
       throw new Error("client not found");
     }
@@ -55,12 +54,14 @@ export class ClientMutations {
       client.clientName = newName;
     }
     if (newEmail) {
-      // client.account.email = newEmail;
+       if (!client.account) {
+      throw new Error("Account not found for the client");
+    }
+      client.account.email = newEmail;
       await dataSource.manager.save(client.account);
     }
     if (newStatus !== undefined) {
       client.status = newStatus;
-      //account doit passer en inactif également
     }
     await dataSource.manager.save(client);
     return client;
