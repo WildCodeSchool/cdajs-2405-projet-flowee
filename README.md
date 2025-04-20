@@ -1,4 +1,4 @@
-# Flowee # cdajs-2405-projet-flowee
+# Flowee "cdajs-2405-projet-flowee"
 
 ## La plateforme de gestion de projet qui fluidifie la collaboration entre entreprises et clients
 
@@ -9,6 +9,9 @@
 ![Apollo](https://img.shields.io/badge/Apollo-GraphQL-311C87?logo=apollo-graphql)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.x-4169E1?logo=postgresql)
 ![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)
+![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker)
+![Nginx](https://img.shields.io/badge/Nginx-1.21.x-009639?logo=nginx)
+
 
 ## 📋 Vue d'ensemble
 
@@ -16,7 +19,8 @@ Flowee est une application SaaS conçue pour centraliser et optimiser la gestion
 
 ## 💻 Aperçu de l'application
 
-![Page d'accueil de Flowee](.github/images/homepage-screenshot.png)
+
+<img src=".github/images/homepage-screenshot.png" alt="Page d'accueil de Flowee" width="900">
 
 ## ✨ Fonctionnalités clés
 
@@ -49,6 +53,7 @@ Flowee est une application SaaS conçue pour centraliser et optimiser la gestion
 - Node.js (v18 ou supérieur)
 - PostgreSQL (v15 ou supérieur)
 - npm ou yarn
+- Docker et Docker Compose (optionnel, mais recommandé)
 
 ### Installation
 
@@ -72,7 +77,7 @@ npm install
 
 4. Configurez les variables d'environnement
 ```bash
-# Dans le dossier racine, créez un fichier .env avec les informations avec les informations adaptées
+# Dans le dossier racine, créez un fichier .env avec les informations adaptées
 ```
 
 5. Démarrez l'application en mode développement
