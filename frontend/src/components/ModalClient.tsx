@@ -1,6 +1,10 @@
-import { useUpdateClientMutation } from "@generated/graphql-types";
+import {
+  ClientStatus,
+  useUpdateClientMutation,
+} from "@generated/graphql-types";
+import SuccessBanner from "@molecules/SuccesBanner";
 import { useState } from "react";
-import { ClientStatus } from "@generated/graphql-types";
+import ErrorBanner from "./molecules/ErrorBanner";
 
 interface ModalClientProps {
   id: number;
@@ -22,15 +26,22 @@ export default function ModalClient({
   const [name, setName] = useState(currentName || "");
   const [email, setEmail] = useState(currentEmail || "");
   const [status, setStatus] = useState<ClientStatus>(
-  currentStatus || ClientStatus.Active
-);
+    currentStatus || ClientStatus.Active,
+  );
+
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [updateClient, { loading }] = useUpdateClientMutation({
     onCompleted: () => {
-      onClose();
+      setSuccessMessage("Client updated successfully.");
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     },
     onError: (error) => {
       console.error("Update failed:", error);
+      setErrorMessage("Update failed. Please try again.");
     },
   });
 
@@ -39,19 +50,18 @@ export default function ModalClient({
 
     updateClient({
       variables: {
-      id: id,
-      newName: name,
-      newEmail: email,
-      newStatus: status.toString()
-      }
+        id: id,
+        newName: name,
+        newEmail: email,
+        newStatus: status.toString(),
+      },
     });
   };
 
   const hardcodedComments = [
     { text: "I have a lot to say.." },
-    { text: "This isn't a perfect world" }
+    { text: "This isn't a perfect world" },
   ];
-
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-end bg-black bg-opacity-20 backdrop-blur-sm">
@@ -101,26 +111,35 @@ export default function ModalClient({
           </div>
 
           <div>
-            <label htmlFor="projects" className="block text-lg font-semibold mb-1">
+            <label
+              htmlFor="projects"
+              className="block text-lg font-semibold mb-1"
+            >
               Projects
             </label>
             <div className="border border-theme-gray rounded px-3 p-2 bg-gray-50">
               {currentProjects && currentProjects.length > 0 ? (
                 currentProjects.map((project, index) => (
-                  <div key={index} className="bg-orange-100 text-orange-800 rounded px-3 py-1 inline-block mr-2 mb-2">
+                  <div
+                    key={index}
+                    className="bg-orange-100 text-orange-800 rounded px-3 py-1 inline-block mr-2 mb-2"
+                  >
                     {project}
                   </div>
                 ))
               ) : (
-                <span className="text-gray-500 italic">No projects assigned</span>
+                <span className="text-gray-500 italic">
+                  No projects assigned
+                </span>
               )}
             </div>
           </div>
-      
-       
 
           <div>
-            <label htmlFor="status" className="block text-lg font-semibold mb-1">
+            <label
+              htmlFor="status"
+              className="block text-lg font-semibold mb-1"
+            >
               Status
             </label>
             <select
@@ -142,12 +161,19 @@ export default function ModalClient({
                   <div className=" flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3 text-orange-500 text-sm">
                     CD
                   </div>
-                   <p className="mt-[6px] text-sm text-gray-700">{comment.text}</p>
+                  <p className="mt-[6px] text-sm text-gray-700">
+                    {comment.text}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="pt-12">
+          <div className="h-12 mt-2">
+            {successMessage && <SuccessBanner message={successMessage} />}
+            {errorMessage && <ErrorBanner message={errorMessage} />}
+          </div>
+
+          <div className="pt-0">
             <button
               type="submit"
               disabled={loading}
