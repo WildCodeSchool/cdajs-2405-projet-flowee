@@ -8,9 +8,9 @@ import ErrorBanner from "./molecules/ErrorBanner";
 
 interface ModalClientProps {
   id: number;
-  currentName?: string; 
+  currentName?: string | null;
   currentEmail: string;
-  currentStatus?: ClientStatus;
+  currentStatus?: ClientStatus | null;
   currentProjects?: string[];
   onClose: () => void;
 }
@@ -57,7 +57,7 @@ export default function ModalClient({
       },
     });
   };
-
+//TODO: les commentaires sont hardcodés et seront remplacés par une query dès que la fonctionnalité sera implémentée
   const hardcodedComments = [
     { text: "I have a lot to say.." },
     { text: "This isn't a perfect world" },
