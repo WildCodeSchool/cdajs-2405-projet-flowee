@@ -8,9 +8,9 @@ import ErrorBanner from "./molecules/ErrorBanner";
 
 interface ModalClientProps {
   id: number;
-  currentName?: string | null | undefined;
+  currentName?: string; 
   currentEmail: string;
-  currentStatus?: ClientStatus | null | undefined;
+  currentStatus?: ClientStatus;
   currentProjects?: string[];
   onClose: () => void;
 }
