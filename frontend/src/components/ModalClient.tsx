@@ -5,6 +5,7 @@ import {
 import SuccessBanner from "@molecules/SuccesBanner";
 import { useState } from "react";
 import ErrorBanner from "./molecules/ErrorBanner";
+import { Input } from "@atoms/Input"; 
 
 interface ModalClientProps {
   id: number;
@@ -23,7 +24,7 @@ export default function ModalClient({
   currentProjects = [],
   onClose,
 }: ModalClientProps) {
-  const [name, setName] = useState(currentName || "");
+  const [name, setName] = useState(currentName ?? "");
   const [email, setEmail] = useState(currentEmail || "");
   const [status, setStatus] = useState<ClientStatus>(
     currentStatus || ClientStatus.Active,
@@ -79,45 +80,37 @@ export default function ModalClient({
       />
 
       <div className="relative z-50 bg-white p-6 rounded-l-md w-[400px] max-w-full h-full">
-        <h2 className="text-xl font-bold mb-6">Edit Client</h2>
+        <h2 className="text-xl font-medium mb-6">Edit Client</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-lg font-semibold mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border border-theme-gray rounded px-3 py-2"
-              placeholder="Enter name"
-            />
-          </div>
+             <Input
+            label="Name"
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter name"
+          />
 
-          <div>
-            <label htmlFor="email" className="block text-lg font-semibold mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-theme-gray rounded px-3 py-2"
-              placeholder="Enter email"
-            />
-          </div>
+          <Input
+            label="Email"
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
+          />
 
           <div>
             <label
               htmlFor="projects"
-              className="block text-lg font-semibold mb-1"
+              className="block text-base mb-1"
             >
               Projects
             </label>
-            <div className="border border-theme-gray rounded px-3 p-2 bg-gray-50">
+            <div className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue focus:invalid:border-red focus:invalid:outline-red">
               {currentProjects && currentProjects.length > 0 ? (
                 currentProjects.map((project, index) => (
                   <div
@@ -138,7 +131,7 @@ export default function ModalClient({
           <div>
             <label
               htmlFor="status"
-              className="block text-lg font-semibold mb-1"
+              className="block text-base mb-1"
             >
               Status
             </label>
@@ -146,7 +139,7 @@ export default function ModalClient({
               id="status"
               value={status}
               onChange={(e) => setStatus(e.target.value as ClientStatus)}
-              className="w-full border border-theme-gray rounded px-3 py-2"
+              className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue"   
             >
               <option value={ClientStatus.Active}>Active</option>
               <option value={ClientStatus.Inactive}>Inactive</option>
@@ -154,7 +147,7 @@ export default function ModalClient({
             </select>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-3">Comments</h3>
+            <h3 className="text-base mb-3">Comments</h3>
             <div className="space-y-4">
               {hardcodedComments.map((comment, index) => (
                 <div key={index} className="flex items-start">
