@@ -45,6 +45,7 @@ export default defineConfig({
       "@interfaces": "/src/interfaces",
       "@layout": "/src/layout",
       "@generated": "/src/__generated__",
+      "@utils": "/src/utils",
     },
   },
 

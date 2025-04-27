@@ -1,3 +1,4 @@
+import { Input } from "@atoms/Input";
 import {
   ClientStatus,
   useUpdateClientMutation,
@@ -5,7 +6,7 @@ import {
 import SuccessBanner from "@molecules/SuccesBanner";
 import { useState } from "react";
 import ErrorBanner from "./molecules/ErrorBanner";
-import { Input } from "@atoms/Input"; 
+import { capitalize } from "@utils/stringUtils";
 
 interface ModalClientProps {
   id: number;
@@ -58,7 +59,7 @@ export default function ModalClient({
       },
     });
   };
-//TODO: les commentaires sont hardcodés et seront remplacés par une query dès que la fonctionnalité sera implémentée
+  //TODO: les commentaires sont hardcodés et seront remplacés par une query dès que la fonctionnalité sera implémentée
   const hardcodedComments = [
     { text: "I have a lot to say.." },
     { text: "This isn't a perfect world" },
@@ -83,7 +84,7 @@ export default function ModalClient({
         <h2 className="text-xl font-medium mb-6">Edit Client</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-             <Input
+          <Input
             label="Name"
             type="text"
             id="name"
@@ -104,10 +105,7 @@ export default function ModalClient({
           />
 
           <div>
-            <label
-              htmlFor="projects"
-              className="block text-base mb-1"
-            >
+            <label htmlFor="projects" className="block text-base mb-1">
               Projects
             </label>
             <div className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue focus:invalid:border-red focus:invalid:outline-red">
@@ -128,22 +126,19 @@ export default function ModalClient({
             </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="status"
-              className="block text-base mb-1"
-            >
-              Status
-            </label>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="status">Status</label>
             <select
               id="status"
               value={status}
               onChange={(e) => setStatus(e.target.value as ClientStatus)}
-              className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue"   
+              className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue"
             >
-              <option value={ClientStatus.Active}>Active</option>
-              <option value={ClientStatus.Inactive}>Inactive</option>
-              <option value={ClientStatus.Archived}>Archived</option>
+              {Object.values(ClientStatus).map((statusOption) => (
+                <option key={statusOption} value={statusOption}>
+                  {capitalize(statusOption)}
+                </option>
+              ))}
             </select>
           </div>
           <div>

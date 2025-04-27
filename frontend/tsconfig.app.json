@@ -36,7 +36,8 @@
       "@mutations/*": ["graphql-mutations/*"],
       "@interfaces/*": ["interfaces/*"],
       "@layout/*": ["layout/*"],
-      "@generated/*": ["__generated__/*"]
+      "@generated/*": ["__generated__/*"],
+      "@utils/*": ["utils/*"]
     }
   }
 }

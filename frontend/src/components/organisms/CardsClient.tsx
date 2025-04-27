@@ -3,11 +3,7 @@ import { ClientStatus } from "@generated/graphql-types";
 import EllipsesIcon from "@icons/Ellipses";
 import ModalClient from "@components/ModalClient";
 import type { ClientUI } from "@interfaces/client.types";
-
-// Function for formatting status
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+import { capitalize } from "@utils/stringUtils";
 
 interface CardsClientProps {
   client: ClientUI;
