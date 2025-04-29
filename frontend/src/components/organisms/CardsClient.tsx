@@ -2,32 +2,26 @@ import { useEffect, useRef, useState } from "react";
 import { ClientStatus } from "@generated/graphql-types";
 import EllipsesIcon from "@icons/Ellipses";
 import ModalClient from "@components/ModalClient";
-
-// Function for formatting status
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+import type { ClientUI } from "@interfaces/client.types";
+import { capitalize } from "@utils/stringUtils";
 
 interface CardsClientProps {
-  id: number;
-  name: string;
-  email: string;
-  status?: ClientStatus;
+  client: ClientUI;
   onEdit?: () => void;
   onDelete?: () => void;
   onArchive?: () => void;
 }
 
 export default function CardsClient({
-  id,
-  name,
-  email,
-  status = ClientStatus.Active,
+  client,
   onEdit,
   onDelete,
   onArchive,
 }: CardsClientProps) {
-  const initials = name
+  const { id, clientName, status, account } = client;
+  const email = account?.email || "N/A";
+
+  const initials = (clientName ?? "")
     .split(" ")
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("")
@@ -35,20 +29,15 @@ export default function CardsClient({
 
   let statusColor = "text-theme-success";
   if (status === ClientStatus.Inactive) statusColor = "text-theme-warning";
-  if (status === ClientStatus.Archived) {
-    statusColor = "text-theme-darkGray";
-  }
+  if (status === ClientStatus.Archived) statusColor = "text-theme-error";
+
+  const containerBg = status === ClientStatus.Archived ? "bg-lightgray" : "bg-white";
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const containerBg = status === ClientStatus.Archived ? "bg-gray" : "bg-white";
-
-
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   // Close menu when click upside
   useEffect(() => {
@@ -65,10 +54,10 @@ export default function CardsClient({
 
   return (
     <div
-      className={`box-border relative w-full md:w-[360px] lg:w-[360px] h-[180px] md:h-[160px] rounded-[5px] border border-gray
+      className={`box-border relative w-full md:w-[330px] h-[160px] rounded-[5px] border border-theme-gray
       ${containerBg} px-[13px] py-[7px] flex flex-col justify-between mt-4 font-quicksand`}
     >
-      <div className="flex items-center justify-between border-gray">
+      <div className="flex items-center justify-between">
         <input type="checkbox" className="w-3 h-3 cursor-pointer" />
         {(onEdit || onDelete || onArchive) && (
           <div className="relative" ref={menuRef}>
@@ -127,15 +116,15 @@ export default function CardsClient({
         <div className="w-[55px] h-[55px] rounded-full bg-theme-veryLight flex items-center justify-center text-orange-600  text-xl font-semibold">
           {initials}
         </div>
-        <h2 className="text-lg font-semibold mt-3 text-center">{name}</h2>
-        <p className={`text-sm ${statusColor}`}>{capitalize(status)}</p>
+        <h2 className="text-lg font-semibold mt-3 text-center">{clientName}</h2>
+        <p className={`text-sm ${statusColor}`}>{capitalize(status ?? "")}</p>
       </div>
       {isEditModalOpen && (
         <ModalClient
-          id={id}
-          name={name}
-          email={email}
-          status={status}
+          id={Number(id)}
+          currentName={clientName}
+          currentEmail={email}
+          currentStatus={status}
           onClose={() => setIsEditModalOpen(false)}
         />
       )}
