@@ -89,29 +89,32 @@ export function createRateLimiterPlugin(
 ): ApolloServerPlugin {
   const rateLimiter = new RateLimiter(options);
 
-  return {
-    async requestDidStart(requestContext: GraphQLRequestContext<BaseContext>) {
-      const now = Date.now();
-      const identifier = rateLimiter.getClientIdentifier(
-        requestContext as RequestContext,
+return {
+  async requestDidStart(requestContext: GraphQLRequestContext<BaseContext>) {
+    //console.log('[RateLimiter] Nouvelle requête à', new Date().toISOString());
+    
+    const now = Date.now();
+    const identifier = rateLimiter.getClientIdentifier(
+      requestContext as RequestContext,
+    );
+    const clientInfo = rateLimiter.getRateLimitInfo(identifier, now);
+    const { max } = options;
+
+    // D'abord on incrémente le compteur
+    rateLimiter.incrementCount(identifier, clientInfo);
+
+    // et apres on test si la limite est dépassée
+    if (clientInfo.count > max) {
+      console.warn(
+        `[RateLimiter] Client "${identifier}" exceeded the rate limit.`,
       );
-      const clientInfo = rateLimiter.getRateLimitInfo(identifier, now);
-      const { max } = options;
-
-      // Check if client exceeds limit
-      if (clientInfo.count > max) {
-        console.warn(
-          `[RateLimiter] Client "${identifier}" exceeded the rate limit.`,
-        );
-        throw new GraphQLError(
-          "Trop de requêtes. Veuillez réessayer plus tard.",
-          {
-            extensions: { code: "RATE_LIMITED", http: { status: 429 } },
-          },
-        );
-      }
-
-      rateLimiter.incrementCount(identifier, clientInfo);
+      throw new GraphQLError(
+        "Trop de requêtes. Veuillez réessayer plus tard.",
+        {
+          extensions: { code: "RATE_LIMITED", http: { status: 429 } },
+        },
+      );
+    }
 
       return {
         async willSendResponse(responseContext) {
