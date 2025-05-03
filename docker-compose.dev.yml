@@ -18,12 +18,15 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    env_file:
+      - .env  
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      NODE_ENV: development
 
   db:
     image: postgres:16
