@@ -48,7 +48,7 @@ class RateLimiter {
       if (purged > 0) {
         console.log(`[RateLimiter] Purged ${purged} expired entries.`);
       }
-    }, 60_000); // toutes les minutes
+    }, options.windowMs);
   }
 
   getClientIdentifier(requestContext: RequestContext): string {
@@ -91,8 +91,6 @@ export function createRateLimiterPlugin(
 
 return {
   async requestDidStart(requestContext: GraphQLRequestContext<BaseContext>) {
-    //console.log('[RateLimiter] Nouvelle requête à', new Date().toISOString());
-    
     const now = Date.now();
     const identifier = rateLimiter.getClientIdentifier(
       requestContext as RequestContext,
@@ -100,23 +98,24 @@ return {
     const clientInfo = rateLimiter.getRateLimitInfo(identifier, now);
     const { max } = options;
 
-    // D'abord on incrémente le compteur
+      // We increment the counter
     rateLimiter.incrementCount(identifier, clientInfo);
 
-    // et apres on test si la limite est dépassée
-    if (clientInfo.count > max) {
-      console.warn(
-        `[RateLimiter] Client "${identifier}" exceeded the rate limit.`,
-      );
-      throw new GraphQLError(
-        "Trop de requêtes. Veuillez réessayer plus tard.",
-        {
-          extensions: { code: "RATE_LIMITED", http: { status: 429 } },
-        },
-      );
-    }
-
       return {
+        // we test whether the limit has been exceeded
+           async didResolveOperation() {
+          if (clientInfo.count > max) {
+            console.warn(
+              `[RateLimiter] Client "${identifier}" exceeded the rate limit.`,
+            );
+            throw new GraphQLError(
+              "Too many requests. Please try again later.",
+              {
+                extensions: { code: "RATE_LIMITED", http: { status: 429 } },
+              }
+            );
+          }
+        },
         async willSendResponse(responseContext) {
           const remaining = Math.max(0, max - clientInfo.count);
           const resetTime = clientInfo.resetTime;

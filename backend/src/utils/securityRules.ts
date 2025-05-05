@@ -1,4 +1,4 @@
-import type { ASTVisitor, ValidationContext } from "graphql";
+import type { ASTVisitor, ValidationContext, ValidationRule } from "graphql";
 import { GraphQLError } from "graphql";
 import type {
   FieldNode,
@@ -13,7 +13,7 @@ interface ComplexityConfig {
   maxCost: number;
 }
 
-export function createMaxDepthRule(maxDepth: number) {
+export function createMaxDepthRule(maxDepth: number): ValidationRule {
   return (context: ValidationContext): ASTVisitor => ({
     OperationDefinition: {
       enter(node: OperationDefinitionNode) {
@@ -31,7 +31,7 @@ export function createMaxDepthRule(maxDepth: number) {
   });
 }
 
-export function createNoIntrospectionRule() {
+export function createNoIntrospectionRule(): ValidationRule {
   return (context: ValidationContext): ASTVisitor => ({
     Field: {
       enter(node: FieldNode) {
@@ -47,7 +47,7 @@ export function createNoIntrospectionRule() {
   });
 }
 
-export function createComplexityRule(config: ComplexityConfig) {
+export function createComplexityRule(config: ComplexityConfig): ValidationRule {
   return (context: ValidationContext): ASTVisitor => ({
     OperationDefinition: {
       enter(node: OperationDefinitionNode) {

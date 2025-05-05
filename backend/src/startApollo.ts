@@ -85,27 +85,27 @@ async function startServerApollo() {
       authChecker,
     });
     const server = new ApolloServer<MyContext>({ 
-      schema, // Autorise l’introspection en dehors de la prod
+      schema, // Allows introspection outside of the prod
       introspection: process.env.NODE_ENV !== 'production', 
       // règles de validation
       validationRules: [
-        createMaxDepthRule(10),              // profondeurs max = 10
-        createComplexityRule({               // complexité max = 1000
+        createMaxDepthRule(10),              // max depth = 10
+        createComplexityRule({               // max complexity = 1000
         scalarCost: 1,
         objectCost: 2,
         listFactor: 10,
         maxCost: 1000,
     }),
-    // Désactive l’introspection en prod
+    // Disable introspection in prod
     ...(process.env.NODE_ENV === 'production'
       ? [createNoIntrospectionRule()]
       : []),
   ],
-  // plugins — on y met notre rate-limiter in-memory
+  // we put our rate-limiter in-memory
   plugins: [
     createRateLimiterPlugin({
       windowMs: 60_000, // 1 minute
-      max: 100,         // 100 requêtes max par fenêtre
+      max: 100,         // 100 requests per minute
     }),
   ],
 });
@@ -132,7 +132,7 @@ async function startServerApollo() {
     console.info(`🚀  Server ready at: ${url}`);
   } catch (error) {
     console.error("Error starting server:", error);
-    process.exit(1); // Quitter en cas d'erreur critique
+    process.exit(1); // Quit on a critical error
   }
 }
 
