@@ -9,6 +9,7 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
+    "sib-api-v3-sdk": "^8.5.0",
     "ts-node-dev": "^2.0.0",
     "type-graphql": "^2.0.0-rc.2",
     "typeorm": "^0.3.20"

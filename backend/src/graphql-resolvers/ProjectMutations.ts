@@ -12,6 +12,8 @@ import { Mutation, Arg, Resolver, Authorized, Ctx } from "type-graphql";
 import { ValidationError } from "class-validator";
 import type { MyContext } from "../types/MyContext";
 import { CompanyUser } from "../entities/CompanyUser";
+import { generateActivationToken } from "../utils/accesstoken";
+import { sendActivationEmail } from "../services/sendActivationEmail";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -21,45 +23,51 @@ export class ProjectMutations {
     @Arg("newProject", () => CreateProjectInput) newProject: CreateProjectInput,
     @Ctx() ctx: MyContext,
   ): Promise<Project> {
-    try {
-      const user = ctx.user;
+    const user = ctx.user;
 
-      if (!user || user.role !== Role.ADMIN) {
-        throw new GraphQLError("Unauthorized  : admin required", {
-          extensions: { code: "FORBIDDEN" },
-        });
-      }
-
-      const companyUser = await dataSource.manager.findOne(CompanyUser, {
-        where: { account: { id: user.id } },
+    if (!user || user.role !== Role.ADMIN) {
+      throw new GraphQLError("Unauthorized : admin required", {
+        extensions: { code: "FORBIDDEN" },
       });
+    }
 
-      if (!companyUser) {
-        throw new GraphQLError("Unauthorized : user not registered", {
-          extensions: { code: "FORBIDDEN" },
-        });
-      }
+    const companyUser = await dataSource.manager.findOne(CompanyUser, {
+      where: { account: { id: user.id } },
+    });
 
-      const companyUserId = companyUser.id;
+    if (!companyUser) {
+      throw new GraphQLError("Unauthorized : user not registered", {
+        extensions: { code: "FORBIDDEN" },
+      });
+    }
 
-      const startDate = new Date().toISOString();
+    const companyUserId = companyUser.id;
+    const startDate = new Date().toISOString();
+    const { projectName, clientEmail, clientName, description, endDate } =
+      newProject;
 
-      const { projectName, clientEmail, clientName, description, endDate } =
-        newProject;
+    if (!companyUserId) {
+      throw new Error("User not connected");
+    }
 
-      if (!companyUserId) {
-        throw new Error("User not connected");
-      }
+    let result: {
+      newproject: Project;
+      account: Account;
+      clientName?: string;
+      token: string;
+    };
 
-      return await dataSource.transaction(async (manager) => {
-        //  Step 1 : account creation
+    // Transaction
+    try {
+      result = await dataSource.transaction(async (manager) => {
         let account: Account | null = await manager.findOne(Account, {
           where: { email: clientEmail },
         });
+
         if (!account) {
           account = manager.create(Account, {
             email: clientEmail,
-            password: "changeme", // ENVOYER UN MAIL OU TOKEN POUR LA MISE A JOUR
+            password: "changeme",
             role: Role.CLIENT,
             status: AccountStatus.PENDING,
           });
@@ -76,6 +84,7 @@ export class ProjectMutations {
             extensions: { code: "CLIENT_ALREADY_EXISTS" },
           });
         }
+
         const client = manager.create(Client, {
           clientName,
           account,
@@ -84,7 +93,7 @@ export class ProjectMutations {
         await manager.save(Client, client);
 
         const newproject: Project = await manager.save(Project, {
-          projectName: projectName,
+          projectName,
           description,
           startDate,
           endDate,
@@ -93,7 +102,12 @@ export class ProjectMutations {
           companyUserId,
         });
 
-        return newproject;
+        const { token, expiresAt } = generateActivationToken(24);
+        account.activationToken = token;
+        account.tokenExpiresAt = expiresAt;
+        await manager.save(Account, account);
+
+        return { newproject, account, clientName, token };
       });
     } catch (error) {
       if (error instanceof GraphQLError) {
@@ -118,5 +132,27 @@ export class ProjectMutations {
         },
       });
     }
+
+    // Envoi du mail après transaction
+    try {
+      await sendActivationEmail(
+        result.account.email,
+        result.clientName,
+        result.token,
+      );
+    } catch (err) {
+      console.error("Erreur lors de l'envoi du mail :", err);
+      throw new GraphQLError(
+        "Project created but failed to send activation email",
+        {
+          extensions: {
+            code: "EMAIL_SEND_ERROR",
+            originalError: (err as Error).message || "Unknown email error",
+          },
+        },
+      );
+    }
+
+    return result.newproject;
   }
 }
