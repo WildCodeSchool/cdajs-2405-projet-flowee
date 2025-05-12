@@ -51,6 +51,13 @@ export const Section: React.FC<SectionProps> = ({
   const projects = data?.getProjectsByUser ?? [];
   let items: (Project | Deliverable | Task)[] = [];
 
+  function getItemPath(item: Project | Deliverable | Task): string {
+    if ("projectName" in item) {
+      return `/projects/${item.projectName?.toLowerCase()}-${item.id}`;
+    }
+    return `/${item.name?.toLowerCase()}-${item.id}`;
+  }
+
   switch (variant) {
     case "projects":
       items = projects;
@@ -97,11 +104,7 @@ export const Section: React.FC<SectionProps> = ({
               </p>
 
               <NavLink
-                to={
-                  "projectName" in item
-                    ? `/projects/${item.projectName?.toLowerCase()}-${item.id}`
-                    : `/${item.name?.toLowerCase()}-${item.id}`
-                }
+                to={getItemPath(item)}
                 className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight "
               >
                 <ArrowIcon />
