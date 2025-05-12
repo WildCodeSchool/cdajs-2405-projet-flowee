@@ -10,8 +10,13 @@ import {
 } from "../middlewares/auth";
 import { Client } from "../entities/Client";
 import { CompanyUser } from "../entities/CompanyUser";
+import {
+  clearActivationToken,
+  isActivationTokenExpired,
+} from "../utils/accesstoken";
 @Resolver(Account)
 export class AccountMutation {
+  //Account  creation
   @Mutation(() => Account)
   async createAccount(
     @Arg("email") email: string,
@@ -42,6 +47,39 @@ export class AccountMutation {
     } catch (error) {
       console.error("Error creating account:", error);
       throw new Error("Failed to create account");
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async activateAccount(@Arg("token") token: string): Promise<boolean> {
+    console.info("token dans le back", token);
+    try {
+      const account = await dataSource.manager.findOne(Account, {
+        where: { activationToken: token },
+      });
+
+      console.info(account);
+
+      if (!account) {
+        throw new Error("invalid access code");
+      }
+
+      if (isActivationTokenExpired(account.tokenExpiresAt)) {
+        throw new Error("Link expired");
+      }
+
+      if (account.status !== AccountStatus.PENDING) {
+        throw new Error("This account is already activated");
+      }
+
+      account.status = AccountStatus.ACTIVE;
+      clearActivationToken(account);
+
+      await dataSource.manager.save(account);
+      return true;
+    } catch (err) {
+      console.error("Activation error :", err);
+      throw new Error("Failed to activate the account");
     }
   }
 }

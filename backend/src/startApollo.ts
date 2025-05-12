@@ -88,6 +88,7 @@ async function startServerApollo() {
       context: async ({ req }) => {
         // Get the user token from the headers.
         const token = req.headers.authorization || "";
+        console.info("token dans la connexion BDD", token);
 
         // Try to retrieve a user with the token
         const user = await getAccount(token);
