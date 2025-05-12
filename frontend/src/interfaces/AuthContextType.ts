@@ -1,4 +1,4 @@
-import { AuthContextUserType } from "./AuthContextUserType";
+import type { AuthContextUserType } from "./AuthContextUserType";
 
 export interface AuthContextType {
   authUserData: Partial<AuthContextUserType>;

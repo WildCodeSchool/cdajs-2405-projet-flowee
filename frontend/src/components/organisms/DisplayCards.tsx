@@ -1,6 +1,6 @@
-import { CardVariant } from "./Cards";
-import { Project, Deliverable, Task } from "@generated/graphql-types";
-import { ReactNode } from "react";
+import type { CardVariant } from "./Cards";
+import type { Project, Deliverable, Task } from "@generated/graphql-types";
+import type { ReactNode } from "react";
 
 interface DisplayCardsProps {
   items?: (Project | Deliverable | Task)[];

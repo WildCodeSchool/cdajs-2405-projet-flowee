@@ -1,4 +1,5 @@
-import { Project, useGetProjectsByUserQuery } from "@generated/graphql-types";
+import type { Project } from "@generated/graphql-types";
+import { useGetProjectsByUserQuery } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
 import DisplayCards from "@organisms/DisplayCards";
 import SearchBar from "@organisms/Search";
@@ -24,7 +25,7 @@ export default function Projects() {
     <SignedInLayout>
       <section className="flex flex-row justify-between items-center pr-5">
         <h1 className="text-2xl font-semibold">Projects</h1>
-        <button>
+        <button type="button">
           <FilterIcon className="h-4 fill-black hover:fill-theme-dark" />
         </button>
       </section>
@@ -51,8 +52,9 @@ export default function Projects() {
                 <NavLink
                   to={
                     "projectName" in project
-                      ? `/${project.projectName?.toLowerCase()}-${project.id}`
-                      : `/${project.name?.toLowerCase()}-${project.id}`
+                      ? `/${project.projectName?.toLowerCase()}-${project.id}
+                        `
+                      : "/error"
                   }
                   className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight "
                 >

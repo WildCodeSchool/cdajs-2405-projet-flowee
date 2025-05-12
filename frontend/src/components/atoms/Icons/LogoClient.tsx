@@ -7,6 +7,8 @@ export default function LogoClientIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label="Blue logo icon"
     >
       <path
         d="M5.76331 9.17548C5.68245 9.22614 5.60894 9.27681 5.53543 9.33471C5.60894 9.26957 5.68245 9.2189 5.76331 9.17548Z"

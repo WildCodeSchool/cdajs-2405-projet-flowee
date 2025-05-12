@@ -7,6 +7,8 @@ export default function ArrowIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label="Arrow icon"
     >
       <path
         id="icon"

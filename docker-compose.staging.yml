@@ -9,8 +9,10 @@ services:
     restart: unless-stopped
     volumes:
       - web-client-build:/app/dist
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=production
+      NODE_ENV: staging 
    
     # restart: always
   backend:
@@ -24,7 +26,9 @@ services:
     depends_on:
       - db
     env_file : 
-    - .env   
+      - .env
+    environment:
+      NODE_ENV: staging
  
 
   db:

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { CardBackground } from "@atoms/illustrations/cardBackground";
 import { useRoleTheme } from "@context/roleThemeContext";
 

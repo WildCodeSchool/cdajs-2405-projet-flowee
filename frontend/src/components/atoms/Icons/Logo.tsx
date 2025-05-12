@@ -1,6 +1,5 @@
 export default function LogoIcon({ className }: { className?: string }) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg
       width="208"
       height="48"
@@ -8,6 +7,8 @@ export default function LogoIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label="Logo icon"
     >
       <path
         d="M49.5197 18.2754C49.4347 18.3286 49.3575 18.3819 49.2802 18.4427C49.3575 18.3743 49.4347 18.321 49.5197 18.2754Z"

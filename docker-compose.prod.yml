@@ -9,7 +9,7 @@ services:
     volumes:
       - web-client-build:/app/dist
     environment:
-      - NODE_ENV=production  
+      NODE_ENV: production  
 
   backend:
     # build: ./backend
@@ -18,14 +18,15 @@ services:
     command: sh -c "npm run build && npm run prod"
     expose:
       - 4000
+    env_file:
+      - .env      
     environment:
-      - NODE_ENV=production
-      - SERVER_PORT=4000
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
+      NODE_ENV: production
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - db
 
