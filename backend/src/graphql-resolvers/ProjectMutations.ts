@@ -24,7 +24,6 @@ export class ProjectMutations {
     @Ctx() ctx: MyContext,
   ): Promise<Project> {
     const user = ctx.user;
-    console.info("user dans project mutation", user);
 
     if (!user || user.role !== Role.ADMIN) {
       throw new GraphQLError("Unauthorized : admin required", {

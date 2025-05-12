@@ -10,9 +10,7 @@ export async function sendActivationEmail(
   token: string,
 ) {
   try {
-    console.info("API KEY", process.env.BREVO_API_KEY);
     const api = new SibApiV3Sdk.TransactionalEmailsApi();
-    console.info("Sending activation email to:", to, name, token);
 
     await api.sendTransacEmail({
       to: [{ email: to, name }],
@@ -28,8 +26,6 @@ export async function sendActivationEmail(
         email: "appflowee@gmail.com",
       },
     });
-
-    console.info("Email envoyé avec succès !");
   } catch (error) {
     console.error("Erreur lors de l'envoi du mail d'activation :", error);
     throw error;

@@ -52,13 +52,10 @@ export class AccountMutation {
 
   @Mutation(() => Boolean)
   async activateAccount(@Arg("token") token: string): Promise<boolean> {
-    console.info("token dans le back", token);
     try {
       const account = await dataSource.manager.findOne(Account, {
         where: { activationToken: token },
       });
-
-      console.info(account);
 
       if (!account) {
         throw new Error("invalid access code");

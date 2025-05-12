@@ -11,8 +11,6 @@ export function ActivateAccountPage() {
   useEffect(() => {
     const token = searchParams.get("token");
 
-    console.info(token);
-
     if (!token) {
       navigate("/activation-error?reason=missing", { replace: true });
       return;
