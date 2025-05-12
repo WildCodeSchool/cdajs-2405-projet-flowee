@@ -99,7 +99,7 @@ export const Section: React.FC<SectionProps> = ({
               <NavLink
                 to={
                   "projectName" in item
-                    ? `/${item.projectName?.toLowerCase()}-${item.id}`
+                    ? `/projects/${item.projectName?.toLowerCase()}-${item.id}`
                     : `/${item.name?.toLowerCase()}-${item.id}`
                 }
                 className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight "

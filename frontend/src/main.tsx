@@ -24,6 +24,7 @@ import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
 import { ActivateAccountPage } from "@components/organisms/ActivateAccountPage";
+import ProjectDetails from "@pages/ProjectDetails";
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
         element: <Projects />,
       },
       {
+        path: "/projects/:slug",
+        element: <ProjectDetails />,
+      },
+      {
         path: "/clients",
         element: <Clients />,
       },
@@ -114,7 +119,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");
