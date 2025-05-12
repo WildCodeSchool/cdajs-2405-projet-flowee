@@ -31,7 +31,8 @@ export default function CardsClient({
   if (status === ClientStatus.Inactive) statusColor = "text-theme-warning";
   if (status === ClientStatus.Archived) statusColor = "text-theme-error";
 
-  const containerBg = status === ClientStatus.Archived ? "bg-lightgray" : "bg-white";
+  const containerBg =
+    status === ClientStatus.Archived ? "bg-lightgray" : "bg-white";
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -55,10 +56,19 @@ export default function CardsClient({
   return (
     <div
       className={`box-border relative w-full md:w-[330px] h-[160px] rounded-[5px] border border-theme-gray
-      ${containerBg} px-[13px] py-[7px] flex flex-col justify-between mt-4 font-quicksand`}
+      ${containerBg} px-[13px] py-[7px] flex flex-col justify-between  font-quicksand`}
     >
       <div className="flex items-center justify-between">
-        <input type="checkbox" className="w-3 h-3 cursor-pointer" />
+        <input
+          type="checkbox"
+          className="w-3 h-3 appearance-none 
+    border bordertheme-gray
+    rounded-sm
+    checked:bg-theme-light
+    checked:border-theme-light
+    transition duration-150 
+    cursor-pointer"
+        />
         {(onEdit || onDelete || onArchive) && (
           <div className="relative" ref={menuRef}>
             <button
@@ -117,7 +127,9 @@ export default function CardsClient({
           {initials}
         </div>
         <h2 className="text-lg font-semibold mt-3 text-center">{clientName}</h2>
-        <p className={`text-sm ${statusColor}`}>{capitalize(status ?? "")}</p>
+        <p className={`text-sm ${statusColor} font-semibold`}>
+          {capitalize(status ?? "")}
+        </p>
       </div>
       {isEditModalOpen && (
         <ModalClient
