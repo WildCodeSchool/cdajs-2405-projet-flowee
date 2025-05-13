@@ -65,7 +65,7 @@ export function SetPasswordPage() {
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 max-w-md mx-auto p-4"
     >
-      <h2 className="text-xl font-bold">Définir ton mot de passe</h2>
+      <h2 className="text-xl font-bold">Définis ton mot de passe</h2>
 
       <div>
         <label>
