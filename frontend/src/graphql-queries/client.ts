@@ -7,7 +7,6 @@ export const GET_ALL_CLIENTS_QUERY = gql`
       clientName
       account {
         email
-        role
       }
       status
     }

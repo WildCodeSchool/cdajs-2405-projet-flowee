@@ -10,8 +10,19 @@ import {
 } from "../middlewares/auth";
 import { Client } from "../entities/Client";
 import { CompanyUser } from "../entities/CompanyUser";
+import {
+  clearActivationToken,
+  isActivationTokenExpired,
+} from "../utils/accesstoken";
+import { GraphQLError } from "graphql";
+import {
+  generateActivationJWT,
+  verifyActivationJWT,
+} from "../utils/generateactivationtoken";
+
 @Resolver(Account)
 export class AccountMutation {
+  //Account  creation
   @Mutation(() => Account)
   async createAccount(
     @Arg("email") email: string,
@@ -43,6 +54,48 @@ export class AccountMutation {
       console.error("Error creating account:", error);
       throw new Error("Failed to create account");
     }
+  }
+
+  @Mutation(() => String)
+  async activateAccountAndReturnToken(
+    @Arg("token") token: string,
+  ): Promise<string> {
+    const account = await dataSource.manager.findOne(Account, {
+      where: { activationToken: token },
+      relations: ["client"],
+    });
+
+    if (!account) throw new GraphQLError("Token invalide.");
+    if (isActivationTokenExpired(account.tokenExpiresAt))
+      throw new GraphQLError("Lien expiré.");
+    if (account.status !== AccountStatus.PENDING)
+      throw new GraphQLError("Compte déjà activé.");
+
+    const jwtToken = generateActivationJWT(account, account.client?.clientName);
+    return jwtToken;
+  }
+
+  @Mutation(() => Boolean)
+  async setPasswordFromActivation(
+    @Arg("token") token: string,
+    @Arg("password") password: string,
+  ): Promise<boolean> {
+    const { accountId } = verifyActivationJWT(token);
+
+    const account = await dataSource.manager.findOne(Account, {
+      where: { id: Number.parseInt(accountId) },
+    });
+
+    if (!account || account.status !== AccountStatus.PENDING) {
+      throw new GraphQLError("Enable to activate the account.");
+    }
+
+    account.password = await argon2.hash(password);
+    account.status = AccountStatus.ACTIVE;
+    clearActivationToken(account);
+
+    await dataSource.manager.save(account);
+    return true;
   }
 }
 

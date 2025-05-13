@@ -1,6 +1,6 @@
 import FilterIcon from "@components/atoms/Icons/FilterIcon";
 import PlusIcon from "@components/atoms/Icons/PlusIcon";
-import Tag from "@components/atoms/Tag";
+
 import { useGetProjectByIdQuery } from "@generated/graphql-types";
 import { NavLink, useParams } from "react-router-dom";
 
@@ -30,7 +30,7 @@ const ProjectDetails = () => {
       <div>
         <h1>Project Details : {project?.projectName}</h1>
         <p>{project?.endDate}</p>
-        <Tag>{project?.client.clientName}</Tag>
+
         <div>
           <h3>About the project</h3>
           <p>{project?.description}</p>

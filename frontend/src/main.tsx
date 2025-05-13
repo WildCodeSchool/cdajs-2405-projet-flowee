@@ -23,6 +23,11 @@ import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
+import { ActivateAccountPage } from "@pages/ActivateAccountPage";
+import { SetPasswordPage } from "@pages/SetPasswordPage";
+import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
+import ProjectDetails from "@pages/ProjectDetails";
+
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -70,6 +75,10 @@ const router = createBrowserRouter([
         element: <Projects />,
       },
       {
+        path: "/projects/:slug",
+        element: <ProjectDetails />,
+      },
+      {
         path: "/clients",
         element: <Clients />,
       },
@@ -82,12 +91,28 @@ const router = createBrowserRouter([
         element: <Test />,
       },
       {
+        path: "/activate",
+        element: <ActivateAccountPage />,
+      },
+      {
+        path: "/set-password",
+        element: <SetPasswordPage />,
+      },
+      {
+        path: "/activation-error",
+        element: <ActivationErrorPage />,
+      },
+      {
         path: "/newproject",
         element: (
           <RequireAdmin>
             <CreateProject />
           </RequireAdmin>
         ),
+      },
+      {
+        path: "/activate",
+        element: <ActivateAccountPage />,
       },
       {
         path: "*",
@@ -109,7 +134,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
   console.error("Root element not found");

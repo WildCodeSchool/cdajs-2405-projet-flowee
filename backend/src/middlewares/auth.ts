@@ -5,7 +5,11 @@ import { dataSource } from "../dataSource/dataSource";
 import type { AuthChecker } from "type-graphql";
 import type { MyContext } from "../types/MyContext";
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key";
+
+if (!JWT_SECRET) {
+  throw new Error("Error with JWT");
+}
 
 export function generateToken(account: Account): string {
   return jwt.sign(
@@ -13,7 +17,7 @@ export function generateToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -36,7 +40,7 @@ export function generateClientToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -60,7 +64,7 @@ export function generateCompanyUserToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -93,7 +97,7 @@ export async function getAccount(token: string): Promise<Account | null> {
 
 export const authChecker: AuthChecker<MyContext> = (
   { context: { user } },
-  roles
+  roles,
 ) => {
   // Check user
   if (!user) {

@@ -29,6 +29,12 @@ export class Account extends BaseEntity {
   @Field()
   role: Role;
 
+  @Column({ nullable: true })
+  activationToken?: string;
+
+  @Column({ nullable: true })
+  tokenExpiresAt?: Date;
+
   @Column({ type: "enum", enum: AccountStatus, default: AccountStatus.PENDING })
   @Field(() => AccountStatus)
   status: AccountStatus;

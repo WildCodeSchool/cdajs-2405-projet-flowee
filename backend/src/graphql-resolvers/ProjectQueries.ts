@@ -16,7 +16,17 @@ export class ProjectQueries {
   async getProjectById(@Arg("id") id: number): Promise<Project | null> {
     const project: Project | null = await dataSource.manager.findOne(Project, {
       where: { id },
+      relations: [
+        "client",
+        "deliverables",
+        "deliverables.tasks",
+        "companyUser",
+      ],
     });
+
+    if (!project?.client) {
+      throw new Error("Client not found for this project");
+    }
     return project;
   }
 
@@ -36,7 +46,6 @@ export class ProjectQueries {
   @Query(() => [Project])
   async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
     const user = context.user;
-    console.info("user dans queries", user);
 
     if (!user) {
       throw new Error("Not connected");
