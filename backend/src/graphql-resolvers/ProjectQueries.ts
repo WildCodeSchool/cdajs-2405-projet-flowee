@@ -16,13 +16,23 @@ export class ProjectQueries {
   async getProjectById(@Arg("id") id: number): Promise<Project | null> {
     const project: Project | null = await dataSource.manager.findOne(Project, {
       where: { id },
+      relations: [
+        "client",
+        "deliverables",
+        "deliverables.tasks",
+        "companyUser",
+      ],
     });
+
+    if (!project?.client) {
+      throw new Error("Client not found for this project");
+    }
     return project;
   }
 
   @Query(() => [Project], { nullable: true })
   async getProjectsByName(
-    @Arg("name") name: string,
+    @Arg("name") name: string
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
       where: { projectName: ILike(`%${name}%`) },

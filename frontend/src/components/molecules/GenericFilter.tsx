@@ -16,18 +16,18 @@ export default function GenericFilter({
   onStatusChange,
 }: GenericFilterProps) {
   return (
-    <div className="flex flex-wrap items-center gap-6 mb-4">
+    <div className="flex flex-wrap items-center gap-6">
       {/* Sorting zone*/}
       <div className="flex flex-col sm:flex-row sm:items-center">
         <label
           htmlFor="sortSelect"
-          className="text-sm  md:flex-row flex mr-2 font-medium"
+          className=" md:flex-row flex mr-2 font-semibold"
         >
           Sort
         </label>
         <select
           id="sortSelect"
-          className="border border-theme-gray rounded px-3 py-0 text-sm w-[200px] h-[32px]"
+          className="border border-theme-gray hover:border-theme-darkGray rounded px-3 py-0 text-sm w-[200px] h-[32px]"
           value={sortOrder}
           onChange={(e) => onSortOrderChange(e.target.value as SortOrder)}
         >
@@ -39,15 +39,12 @@ export default function GenericFilter({
 
       {/* Filter by status */}
       <div className="flex flex-col sm:flex-row sm:items-center">
-        <label
-          htmlFor="statusSelect"
-          className="text-sm font-medium block mr-2"
-        >
+        <label htmlFor="statusSelect" className="font-semibold block mr-2">
           Status
         </label>
         <select
           id="statusSelect"
-          className="border border-theme-gray rounded px-3 py-0 text-sm w-[200px] h-[32px]"
+          className="border border-theme-gray hover:border-theme-darkGray rounded px-3 py-0 text-sm w-[200px] h-[32px]"
           value={statusValue}
           onChange={(e) =>
             onStatusChange(e.target.value as ClientStatus | "ALL")
