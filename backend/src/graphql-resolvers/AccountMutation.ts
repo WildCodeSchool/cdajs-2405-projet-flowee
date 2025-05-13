@@ -14,6 +14,12 @@ import {
   clearActivationToken,
   isActivationTokenExpired,
 } from "../utils/accesstoken";
+import { GraphQLError } from "graphql";
+import {
+  generateActivationJWT,
+  verifyActivationJWT,
+} from "../utils/generateactivationtoken";
+
 @Resolver(Account)
 export class AccountMutation {
   //Account  creation
@@ -50,34 +56,46 @@ export class AccountMutation {
     }
   }
 
+  @Mutation(() => String)
+  async activateAccountAndReturnToken(
+    @Arg("token") token: string,
+  ): Promise<string> {
+    const account = await dataSource.manager.findOne(Account, {
+      where: { activationToken: token },
+      relations: ["client"],
+    });
+
+    if (!account) throw new GraphQLError("Token invalide.");
+    if (isActivationTokenExpired(account.tokenExpiresAt))
+      throw new GraphQLError("Lien expiré.");
+    if (account.status !== AccountStatus.PENDING)
+      throw new GraphQLError("Compte déjà activé.");
+
+    const jwtToken = generateActivationJWT(account, account.client?.clientName);
+    return jwtToken;
+  }
+
   @Mutation(() => Boolean)
-  async activateAccount(@Arg("token") token: string): Promise<boolean> {
-    try {
-      const account = await dataSource.manager.findOne(Account, {
-        where: { activationToken: token },
-      });
+  async setPasswordFromActivation(
+    @Arg("token") token: string,
+    @Arg("password") password: string,
+  ): Promise<boolean> {
+    const { accountId } = verifyActivationJWT(token);
 
-      if (!account) {
-        throw new Error("invalid access code");
-      }
+    const account = await dataSource.manager.findOne(Account, {
+      where: { id: Number.parseInt(accountId) },
+    });
 
-      if (isActivationTokenExpired(account.tokenExpiresAt)) {
-        throw new Error("Link expired");
-      }
-
-      if (account.status !== AccountStatus.PENDING) {
-        throw new Error("This account is already activated");
-      }
-
-      account.status = AccountStatus.ACTIVE;
-      clearActivationToken(account);
-
-      await dataSource.manager.save(account);
-      return true;
-    } catch (err) {
-      console.error("Activation error :", err);
-      throw new Error("Failed to activate the account");
+    if (!account || account.status !== AccountStatus.PENDING) {
+      throw new GraphQLError("Enable to activate the account.");
     }
+
+    account.password = await argon2.hash(password);
+    account.status = AccountStatus.ACTIVE;
+    clearActivationToken(account);
+
+    await dataSource.manager.save(account);
+    return true;
   }
 }
 
