@@ -90,11 +90,11 @@ async function startServerApollo() {
       // règles de validation
       validationRules: [
         createMaxDepthRule(10),              // max depth = 10
-        createComplexityRule({               // max complexity = 1000
+        createComplexityRule({               // max complexity = 500
         scalarCost: 1,
         objectCost: 2,
         listFactor: 10,
-        maxCost: 1000,
+        maxCost: 500,
     }),
     // Disable introspection in prod
     ...(process.env.NODE_ENV === 'production'
