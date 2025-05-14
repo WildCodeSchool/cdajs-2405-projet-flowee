@@ -18,7 +18,7 @@ export default function Settings() {
       <div className="w-full max-w-full mx-auto flex flex-col md:flex-row items-start">
         <div className="w-full md:w-auto mb-8 md:mb-0 flex-shrink-0">
           <div
-            className="relative inline-block px-3 py-2 bg-orangeLight text-black font-semibold
+            className="relative inline-block px-3 py-2 bg-theme-veryLight text-black font-semibold
               before:content-[''] before:absolute before:right-0 before:top-0 before:bottom-0 before:w-1 before:bg-theme-light"
             style={{ minWidth: 140 }}
           >
