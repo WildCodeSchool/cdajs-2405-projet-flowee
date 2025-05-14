@@ -10,7 +10,7 @@ import {
 import { Task } from "./Task";
 
 import { Project } from "./Project";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
+import type { DeliverableStatus } from "../enums/DeliverableStatus";
 
 @ObjectType()
 @Entity()

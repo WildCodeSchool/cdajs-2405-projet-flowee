@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Deliverable } from "./Deliverable";
 
-import { TaskStatus } from "../enums/TaskStatus";
+import type { TaskStatus } from "../enums/TaskStatus";
 
 @ObjectType()
 @Entity()
