@@ -1,26 +1,12 @@
+import type { Deliverable } from "@generated/graphql-types";
 import { Accordion, AccordionItem } from "@szhsin/react-accordion";
-import {
-  TASK_STATUS,
-  TASK_STATUS_META,
-  type TaskStatus,
-} from "@interfaces/Status";
-import type { Task, Deliverable } from "@generated/graphql-types";
-import { useMemo } from "react";
+import { NavLink } from "react-router-dom";
+
 interface Props {
   deliverables: Deliverable[];
 }
 
 export const TasksByDeliverable = ({ deliverables }: Props) => {
-  //   const grouped = useMemo(() => {
-  //     const g: Partial<Record<TaskStatus, Task[]>> = {};
-  //     for (const t of tasks) {
-  //       const status = t.status as TaskStatus;
-  //       if (!g[status]) g[status] = [];
-  //       g[status]?.push(t);
-  //     }
-  //     return g;
-  //   }, [tasks]);
-
   return (
     <Accordion className="w-full" allowMultiple>
       {deliverables.map((deliverable) => (
@@ -40,7 +26,9 @@ export const TasksByDeliverable = ({ deliverables }: Props) => {
                   key={task.id}
                   className="bg-white roundedshadow-sm flex justify-between"
                 >
-                  <p className="font-medium">{task.name}</p>
+                  <NavLink to={`/tasks/${task.id}`} className="font-medium">
+                    {task.name}
+                  </NavLink>
 
                   {task.endDate && (
                     <p className="text-xs text-gray-400">
