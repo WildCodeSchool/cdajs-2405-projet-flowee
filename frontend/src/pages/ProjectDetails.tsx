@@ -7,6 +7,7 @@ import SignedInLayout from "@layout/SignedInLayout";
 import { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
+import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -27,6 +28,7 @@ const ProjectDetails = () => {
   });
 
   const project = data?.getProjectById;
+  const deliverables = project?.deliverables ?? [];
   const [searchFilter, setSearchFilter] = useState("");
 
   return (
@@ -70,6 +72,11 @@ const ProjectDetails = () => {
               </span>
             </div>
           </aside>
+          <SearchBar setSearchFilter={setSearchFilter} />
+
+          <section className="mb-4">
+            <TasksByDeliverable deliverables={deliverables} />
+          </section>
         </section>
       </section>
     </SignedInLayout>
