@@ -1,12 +1,12 @@
 import SignedInLayout from "@layout/SignedInLayout";
-import { useQuery } from "@apollo/client";
-import { GET_ME_COMPANY } from "@queries/meCompany";
+import { useMeCompanyQuery } from "@generated/graphql-types";
 
 export default function Settings() {
-  const { data, loading, error } = useQuery(GET_ME_COMPANY);
+  const { data, loading, error } = useMeCompanyQuery();
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
+  if (!data?.me) return <div>User not found.</div>;
 
   const user = data?.me.companyUser;
   const account = data?.me;
