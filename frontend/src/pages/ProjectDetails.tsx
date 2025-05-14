@@ -5,7 +5,7 @@ import SearchBar from "@components/organisms/Search";
 import { useGetProjectByIdQuery } from "@generated/graphql-types";
 import SignedInLayout from "@layout/SignedInLayout";
 import { useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
 import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
 
@@ -75,10 +75,14 @@ const ProjectDetails = () => {
           <SearchBar setSearchFilter={setSearchFilter} />
 
           <section className="mb-4">
-            <TasksByDeliverable deliverables={deliverables} />
+            <TasksByDeliverable
+              deliverables={deliverables}
+              projectSlug={slug}
+            />
           </section>
         </section>
       </section>
+      <Outlet />
     </SignedInLayout>
   );
 };
