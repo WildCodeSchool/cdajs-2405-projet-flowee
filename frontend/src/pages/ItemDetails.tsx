@@ -1,75 +1,100 @@
 import { useParams } from "react-router-dom";
-// import {
-//   useGetDeliverableByIdQuery,
-//   useGetTaskByIdQuery,
-// } from "@generated/graphql-types";
+import {
+  useGetDeliverableByIdQuery,
+  useGetTaskByIdQuery,
+} from "@generated/graphql-types";
+import { Tag } from "@components/atoms/Tag";
 
 const ItemDetails = () => {
-  //   const { slug, type } = useParams();
-  //   const id = Number(slug?.split("-").pop());
+  const { type, id } = useParams();
+  const parseId = Number(id);
 
-  //   if (!id || (type !== "deliverables" && type !== "tasks")) {
-  //     return <p>Not found</p>;
-  //   }
+  const isDeliverable = type === "deliverables";
+  const { data: deliverableData } = useGetDeliverableByIdQuery({
+    skip: !isDeliverable || !id,
+    variables: { id: parseId ?? 0 },
+  });
 
-  //   const { data: deliverableData } = useGetDeliverableByIdQuery({
-  //     skip: type !== "deliverables",
-  //     variables: { id },
-  //   });
+  const { data: taskData } = useGetTaskByIdQuery({
+    skip: isDeliverable || !id,
+    variables: { id: parseId ?? 0 },
+  });
+  const item = isDeliverable
+    ? deliverableData?.getDeliverable
+    : taskData?.getTask;
+  const deliverable = deliverableData?.getDeliverable;
+  console.log("item", item);
+  console.log("deliverable", deliverable);
 
-  //   const { data: taskData } = useGetTaskByIdQuery({
-  //     skip: type !== "tasks",
-  //     variables: { id },
-  //   });
-
-  //   const item =
-  //     type === "deliverables"
-  //       ? deliverableData?.getDeliverableById
-  //       : taskData?.getTaskById;
-
-  //   if (!item) return <p>Loading...</p>;
-
-  return (
-    <section className="p-4 max-w-md mx-auto bg-white rounded shadow">
-      <h1 className="text-xl font-bold mb-2">item details</h1>
-      {/*
-      <p className="text-sm text-gray-500 capitalize mb-4">
-        {type.slice(0, -1)}
-      </p>
-
-      <div className="grid grid-cols-2 gap-2 text-sm bg-gray-100 p-2 rounded">
-        {item.status && (
-          <p>
-            <strong>Status:</strong> {item.status}
-          </p>
-        )}
-        {"endDate" in item && item.endDate && (
-          <p>
-            <strong>Deadline:</strong>{" "}
-            {new Date(item.endDate).toLocaleDateString("fr-FR")}
-          </p>
-        )}
-        {"reviewTimes" in item && (
-          <p>
-            <strong>Review #:</strong> {item.reviewTimes}
-          </p>
-        )}
+  const task = taskData?.getTask;
+  console.log("task", task);
+  if (!item) {
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end h-full">
+        <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative">
+          <p className="text-center text-gray-600">Chargement...</p>
+        </div>
       </div>
+    );
+  }
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end h-full">
+      <div className="bg-white shadow-xl w-full h-full max-w-lg p-8 relative">
+        <h1 className="text-xl font-bold mb-2">{item?.name}</h1>
+        <section className="flex gap-4">
+          <Tag text={item?.status ?? ""} />
+          <Tag text={isDeliverable ? "DELIVERABLE" : "TASK"} />
+        </section>
 
-      {"perimeter" in item && (
-        <>
+        <section className="flex flex-col gap-4 mt-4 bg-theme-lightGray p-6 rounded-md text-sm font-medium text-gray-800">
+          {isDeliverable ? (
+            <>
+              {deliverable?.status && (
+                <p className="flex justify-between">
+                  <strong>Statut :</strong> {deliverable?.status}
+                </p>
+              )}
+              {deliverable?.endDate && (
+                <p>
+                  <strong>Date de fin :</strong>{" "}
+                  {new Date(deliverable?.endDate).toLocaleDateString("fr-FR")}|
+                  "No date"
+                </p>
+              )}
+
+              <p>
+                <strong>Review :</strong> {deliverable?.reviewTimes}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="flex justify-between">
+                <strong>Statut :</strong>{" "}
+                {task?.status ? task?.status : "No status"}
+              </p>
+
+              <p className="flex justify-between">
+                <strong>Deadline:</strong>
+                {task?.endDate
+                  ? new Date(task?.endDate).toLocaleDateString("fr-FR")
+                  : "No date"}
+              </p>
+              <p className="flex justify-between">
+                <strong>Deliverable: </strong>
+                {task?.deliverable?.name ?? "Can't find deliverable"}
+              </p>
+            </>
+          )}
+        </section>
+
+        <section>
           <h2 className="mt-4 font-semibold">Perimeter</h2>
-          <p className="text-sm text-gray-600">{item.perimeter}</p>
-        </>
-      )}
-
-      {"description" in item && (
-        <>
-          <h2 className="mt-4 font-semibold">Description</h2>
-          <p className="text-sm text-gray-600">{item.description}</p>
-        </>
-      )} */}
-    </section>
+          <p className="text-sm text-gray-600">
+            {deliverable?.perimeter ?? task?.description ?? "No Permter added"}
+          </p>
+        </section>
+      </div>
+    </div>
   );
 };
 
