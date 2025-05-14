@@ -360,6 +360,13 @@ export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null }> | null }> };
 
+export type GetDeliverableByIdQueryVariables = Exact<{
+  id: Scalars['Float']['input'];
+}>;
+
+
+export type GetDeliverableByIdQuery = { __typename?: 'Query', getDeliverable?: { __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null }> | null } | null };
+
 export type GetAllProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -376,6 +383,18 @@ export type GetProjectByIdQueryVariables = Exact<{
 
 
 export type GetProjectByIdQuery = { __typename?: 'Query', getProjectById?: { __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null, client: { __typename?: 'Client', id: string, clientName?: string | null }, deliverables?: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null }> | null }> | null } | null };
+
+export type GetAllTasksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTasksQuery = { __typename?: 'Query', getAllTasks: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null }> };
+
+export type GetTaskByIdQueryVariables = Exact<{
+  id: Scalars['Float']['input'];
+}>;
+
+
+export type GetTaskByIdQuery = { __typename?: 'Query', getTask?: { __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null, deliverable?: { __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null } | null } | null };
 
 export type GetTrackerStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -692,6 +711,60 @@ export type GetAllDeliverablesQueryHookResult = ReturnType<typeof useGetAllDeliv
 export type GetAllDeliverablesLazyQueryHookResult = ReturnType<typeof useGetAllDeliverablesLazyQuery>;
 export type GetAllDeliverablesSuspenseQueryHookResult = ReturnType<typeof useGetAllDeliverablesSuspenseQuery>;
 export type GetAllDeliverablesQueryResult = Apollo.QueryResult<GetAllDeliverablesQuery, GetAllDeliverablesQueryVariables>;
+export const GetDeliverableByIdDocument = gql`
+    query GetDeliverableById($id: Float!) {
+  getDeliverable(id: $id) {
+    id
+    name
+    perimeter
+    endDate
+    status
+    createdAt
+    reviewTimes
+    tasks {
+      id
+      name
+      description
+      status
+      startDate
+      endDate
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDeliverableByIdQuery__
+ *
+ * To run a query within a React component, call `useGetDeliverableByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDeliverableByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDeliverableByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetDeliverableByIdQuery(baseOptions: Apollo.QueryHookOptions<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables> & ({ variables: GetDeliverableByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables>(GetDeliverableByIdDocument, options);
+      }
+export function useGetDeliverableByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables>(GetDeliverableByIdDocument, options);
+        }
+export function useGetDeliverableByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables>(GetDeliverableByIdDocument, options);
+        }
+export type GetDeliverableByIdQueryHookResult = ReturnType<typeof useGetDeliverableByIdQuery>;
+export type GetDeliverableByIdLazyQueryHookResult = ReturnType<typeof useGetDeliverableByIdLazyQuery>;
+export type GetDeliverableByIdSuspenseQueryHookResult = ReturnType<typeof useGetDeliverableByIdSuspenseQuery>;
+export type GetDeliverableByIdQueryResult = Apollo.QueryResult<GetDeliverableByIdQuery, GetDeliverableByIdQueryVariables>;
 export const GetAllProjectsDocument = gql`
     query GetAllProjects {
   getAllProjects {
@@ -870,6 +943,104 @@ export type GetProjectByIdQueryHookResult = ReturnType<typeof useGetProjectByIdQ
 export type GetProjectByIdLazyQueryHookResult = ReturnType<typeof useGetProjectByIdLazyQuery>;
 export type GetProjectByIdSuspenseQueryHookResult = ReturnType<typeof useGetProjectByIdSuspenseQuery>;
 export type GetProjectByIdQueryResult = Apollo.QueryResult<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
+export const GetAllTasksDocument = gql`
+    query GetAllTasks {
+  getAllTasks {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+  }
+}
+    `;
+
+/**
+ * __useGetAllTasksQuery__
+ *
+ * To run a query within a React component, call `useGetAllTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTasksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTasksQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTasksQuery, GetAllTasksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllTasksQuery, GetAllTasksQueryVariables>(GetAllTasksDocument, options);
+      }
+export function useGetAllTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTasksQuery, GetAllTasksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllTasksQuery, GetAllTasksQueryVariables>(GetAllTasksDocument, options);
+        }
+export function useGetAllTasksSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllTasksQuery, GetAllTasksQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllTasksQuery, GetAllTasksQueryVariables>(GetAllTasksDocument, options);
+        }
+export type GetAllTasksQueryHookResult = ReturnType<typeof useGetAllTasksQuery>;
+export type GetAllTasksLazyQueryHookResult = ReturnType<typeof useGetAllTasksLazyQuery>;
+export type GetAllTasksSuspenseQueryHookResult = ReturnType<typeof useGetAllTasksSuspenseQuery>;
+export type GetAllTasksQueryResult = Apollo.QueryResult<GetAllTasksQuery, GetAllTasksQueryVariables>;
+export const GetTaskByIdDocument = gql`
+    query GetTaskById($id: Float!) {
+  getTask(id: $id) {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+    deliverable {
+      id
+      name
+      perimeter
+      endDate
+      status
+      createdAt
+      reviewTimes
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTaskByIdQuery__
+ *
+ * To run a query within a React component, call `useGetTaskByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTaskByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTaskByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTaskByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTaskByIdQuery, GetTaskByIdQueryVariables> & ({ variables: GetTaskByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(GetTaskByIdDocument, options);
+      }
+export function useGetTaskByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTaskByIdQuery, GetTaskByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(GetTaskByIdDocument, options);
+        }
+export function useGetTaskByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTaskByIdQuery, GetTaskByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(GetTaskByIdDocument, options);
+        }
+export type GetTaskByIdQueryHookResult = ReturnType<typeof useGetTaskByIdQuery>;
+export type GetTaskByIdLazyQueryHookResult = ReturnType<typeof useGetTaskByIdLazyQuery>;
+export type GetTaskByIdSuspenseQueryHookResult = ReturnType<typeof useGetTaskByIdSuspenseQuery>;
+export type GetTaskByIdQueryResult = Apollo.QueryResult<GetTaskByIdQuery, GetTaskByIdQueryVariables>;
 export const GetTrackerStatsDocument = gql`
     query GetTrackerStats {
   getTrackerStats {
