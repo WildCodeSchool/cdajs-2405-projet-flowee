@@ -18,6 +18,7 @@ export class DeliverableQueries {
       Deliverable,
       {
         where: { id },
+        relations: ["tasks"],
       }
     );
     return deliverable;
