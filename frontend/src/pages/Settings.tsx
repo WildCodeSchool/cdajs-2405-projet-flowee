@@ -1,6 +1,17 @@
 import SignedInLayout from "@layout/SignedInLayout";
+import { useQuery } from "@apollo/client";
+import { GET_ME_COMPANY } from "@queries/meCompany";
 
 export default function Settings() {
+  const { data, loading, error } = useQuery(GET_ME_COMPANY);
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+
+  const user = data?.me.companyUser;
+  const account = data?.me;
+  const company = user?.company;
+
   return (
     <SignedInLayout>
       <h1 className="text-2xl font-bold">Settings</h1>
@@ -32,9 +43,9 @@ export default function Settings() {
                   id="company"
                   name="company"
                   type="text"
-                  className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-theme-light"
-                  defaultValue="Scythe inc"
-                  autoComplete="organization"
+                  className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
+                  value={company?.name || ''}
+                  readOnly
                 />
               </div>
               <div>
@@ -48,9 +59,9 @@ export default function Settings() {
                   id="role"
                   name="role"
                   type="text"
-                  className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-theme-light"
-                  defaultValue="Project manager"
-                  autoComplete="organization-title"
+                  className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
+                  value={account?.role || ''}
+                  readOnly
                 />
               </div>
               <div>
@@ -64,9 +75,9 @@ export default function Settings() {
                   id="firstName"
                   name="firstName"
                   type="text"
-                  className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-theme-light"
-                  defaultValue="Azraël"
-                  autoComplete="given-name"
+                  className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
+                  value={user?.firstname || ''}
+                  readOnly
                 />
               </div>
               <div>
@@ -80,9 +91,9 @@ export default function Settings() {
                   id="lastName"
                   name="lastName"
                   type="text"
-                  className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-theme-light"
-                  defaultValue="Landres"
-                  autoComplete="family-name"
+                  className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
+                  value={user?.lastname || ''}
+                  readOnly
                 />
               </div>
               <div className="md:col-span-2">
@@ -96,15 +107,15 @@ export default function Settings() {
                   id="email"
                   name="email"
                   type="email"
-                  className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-theme-light"
-                  defaultValue="azraellandres@scythe.com"
-                  autoComplete="email"
+                  className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
+                  value={account?.email || ''}
+                  readOnly
                 />
               </div>
             </form>
           </section>
 
-          <section aria-labelledby="notifications-heading" className="mb-14">
+          <section aria-labelledby="notifications-heading" className="mb-16">
             <h2 id="notifications-heading" className="text-xl font-bold mb-6">
               Notifications
             </h2>
@@ -157,7 +168,7 @@ export default function Settings() {
             </div>
           </section>
 
-          <div className="flex justify-start mt-6">
+          <div className="flex justify-start">
             <button
               type="button"
               className="w-[208px] h-[40px] bg-red hover:bg-rose-700 text-white rounded-lg py-2 font-medium mb-8"

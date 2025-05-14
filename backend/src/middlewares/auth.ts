@@ -76,6 +76,7 @@ export async function getAccount(token: string): Promise<Account | null> {
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },
+      relations: ["compagnyUser", "companyUser.company"],
     });
 
     if (!account) return null;
