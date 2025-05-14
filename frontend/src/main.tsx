@@ -24,7 +24,8 @@ import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
 import { ActivateAccountPage } from "@components/organisms/ActivateAccountPage";
-import ProjectDetails from "@pages/ProjectDetails";
+import ItemDetails from "@pages/ItemDetails";
+import ProjectDetails from "./pages/ProjectDetails";
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -75,6 +76,8 @@ const router = createBrowserRouter([
         path: "/projects/:slug",
         element: <ProjectDetails />,
       },
+      { path: "/:type/:slug", element: <ItemDetails /> },
+
       {
         path: "/clients",
         element: <Clients />,
