@@ -4,9 +4,10 @@ import { NavLink } from "react-router-dom";
 
 interface Props {
   deliverables: Deliverable[];
+  projectSlug: string | undefined;
 }
 
-export const TasksByDeliverable = ({ deliverables }: Props) => {
+export const TasksByDeliverable = ({ deliverables, projectSlug }: Props) => {
   return (
     <Accordion className="w-full" allowMultiple>
       {deliverables.map((deliverable) => (
@@ -26,7 +27,10 @@ export const TasksByDeliverable = ({ deliverables }: Props) => {
                   key={task.id}
                   className="bg-white roundedshadow-sm flex justify-between"
                 >
-                  <NavLink to={`/tasks/${task.id}`} className="font-medium">
+                  <NavLink
+                    to={`/projects/${projectSlug}/tasks/${task.id}`}
+                    className="font-medium"
+                  >
                     {task.name}
                   </NavLink>
 
