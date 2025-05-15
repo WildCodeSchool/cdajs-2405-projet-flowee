@@ -392,6 +392,11 @@ export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null }> | null }> };
 
+export type MeCompanyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeCompanyQuery = { __typename?: 'Query', me?: { __typename?: 'Account', id: string, email: string, role: string, companyUser?: { __typename?: 'CompanyUser', id: string, firstname: string, lastname: string, company?: { __typename?: 'Compagny', id: string, name: string, address?: string | null, contactInfo?: string | null } | null } | null } | null };
+
 export type GetAllProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -826,6 +831,58 @@ export type GetAllDeliverablesQueryHookResult = ReturnType<typeof useGetAllDeliv
 export type GetAllDeliverablesLazyQueryHookResult = ReturnType<typeof useGetAllDeliverablesLazyQuery>;
 export type GetAllDeliverablesSuspenseQueryHookResult = ReturnType<typeof useGetAllDeliverablesSuspenseQuery>;
 export type GetAllDeliverablesQueryResult = Apollo.QueryResult<GetAllDeliverablesQuery, GetAllDeliverablesQueryVariables>;
+export const MeCompanyDocument = gql`
+    query MeCompany {
+  me {
+    id
+    email
+    role
+    companyUser {
+      id
+      firstname
+      lastname
+      company {
+        id
+        name
+        address
+        contactInfo
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMeCompanyQuery__
+ *
+ * To run a query within a React component, call `useMeCompanyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeCompanyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeCompanyQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeCompanyQuery(baseOptions?: Apollo.QueryHookOptions<MeCompanyQuery, MeCompanyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeCompanyQuery, MeCompanyQueryVariables>(MeCompanyDocument, options);
+      }
+export function useMeCompanyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeCompanyQuery, MeCompanyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeCompanyQuery, MeCompanyQueryVariables>(MeCompanyDocument, options);
+        }
+export function useMeCompanySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeCompanyQuery, MeCompanyQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MeCompanyQuery, MeCompanyQueryVariables>(MeCompanyDocument, options);
+        }
+export type MeCompanyQueryHookResult = ReturnType<typeof useMeCompanyQuery>;
+export type MeCompanyLazyQueryHookResult = ReturnType<typeof useMeCompanyLazyQuery>;
+export type MeCompanySuspenseQueryHookResult = ReturnType<typeof useMeCompanySuspenseQuery>;
+export type MeCompanyQueryResult = Apollo.QueryResult<MeCompanyQuery, MeCompanyQueryVariables>;
 export const GetAllProjectsDocument = gql`
     query GetAllProjects {
   getAllProjects {
