@@ -7,6 +7,7 @@ import SettingsIcon from "@icons/SettingsIcon";
 import LogoEntrepriseIcon from "@icons/LogoEntreprise";
 import { useRoleTheme } from "@context/roleThemeContext";
 import LogoClientIcon from "@icons/LogoClient";
+import Logout from "@components/molecules/Logout";
 
 export default function Navigation() {
   const role = useRoleTheme();
@@ -72,6 +73,7 @@ export default function Navigation() {
             <span className="hidden md:block text-xs mt-2">Settings</span>
           </NavLink>
         </li>
+        <Logout />
       </ul>
     </nav>
   );

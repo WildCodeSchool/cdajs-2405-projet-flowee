@@ -5,7 +5,7 @@ import { dataSource } from "../dataSource/dataSource";
 import type { AuthChecker } from "type-graphql";
 import type { MyContext } from "../types/MyContext";
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key";
 
 export function generateToken(account: Account): string {
   return jwt.sign(
@@ -76,6 +76,7 @@ export async function getAccount(token: string): Promise<Account | null> {
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },
+      relations: ["compagnyUser", "companyUser.company"],
     });
 
     if (!account) return null;
@@ -110,3 +111,4 @@ export const authChecker: AuthChecker<MyContext> = (
   // Check '@Authorized(...)' roles overlap
   return roles.includes(user.role as string); // @Authorized() attend une string mais notre user.role est une enum donc comparé à une string => on le convertit en string
 };
+

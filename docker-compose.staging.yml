@@ -1,7 +1,7 @@
 services:
   frontend:
-    build: ./frontend
-    # image: cyriellethomas/flowee-deploy-client:staging-latest
+    # build: ./frontend
+    image: cyriellethomas/flowee-deploy-client:staging-latest
     platform: linux/x86_64
     ports:
     - "5173:5173"
@@ -16,8 +16,8 @@ services:
    
     # restart: always
   backend:
-    build: ./backend
-    # image: cyriellethomas/flowee-deploy-server:staging-latest
+    # build: ./backend
+    image: cyriellethomas/flowee-deploy-server:staging-latest
     platform: linux/x86_64
     # command: sh -c "npm run prod"  
     restart: unless-stopped
