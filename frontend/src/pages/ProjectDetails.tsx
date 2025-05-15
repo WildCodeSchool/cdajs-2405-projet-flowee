@@ -58,7 +58,10 @@ const ProjectDetails = () => {
           </aside>
           <SearchBar setSearchFilter={setSearchFilter} />
           {project?.deliverables && (
-            <DeliverablesByStatus deliverables={project.deliverables} />
+            <DeliverablesByStatus
+              deliverables={project.deliverables}
+              projectSlug={slug}
+            />
           )}
         </section>
 

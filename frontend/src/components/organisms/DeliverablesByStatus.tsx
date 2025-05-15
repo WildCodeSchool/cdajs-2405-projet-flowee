@@ -6,12 +6,14 @@ import {
 } from "@interfaces/Status";
 import type { Deliverable } from "@generated/graphql-types";
 import { useMemo } from "react";
+import { NavLink } from "react-router-dom";
 
 interface Props {
   deliverables: Deliverable[];
+  projectSlug: string | undefined;
 }
 
-export const DeliverablesByStatus = ({ deliverables }: Props) => {
+export const DeliverablesByStatus = ({ deliverables, projectSlug }: Props) => {
   const grouped = useMemo(() => {
     const g: Partial<Record<DeliverableStatus, Deliverable[]>> = {};
     for (const d of deliverables) {
@@ -21,6 +23,7 @@ export const DeliverablesByStatus = ({ deliverables }: Props) => {
     }
     return g;
   }, [deliverables]);
+  console.log("deliverables list:", deliverables);
 
   return (
     <Accordion className="w-full" allowMultiple>
@@ -41,16 +44,23 @@ export const DeliverablesByStatus = ({ deliverables }: Props) => {
             }}
           >
             <ul className="flex flex-col  p-3 gap-3">
-              {list.map((d) => (
+              {list.map((deliverable) => (
                 <li
-                  key={d.id}
+                  key={deliverable.id}
                   className="bg-white roundedshadow-sm flex justify-between"
                 >
-                  <p className="font-medium">{d.name}</p>
+                  <NavLink
+                    to={`/projects/${projectSlug}/deliverables/${deliverable.id}`}
+                    className="font-medium"
+                  >
+                    {deliverable.name}
+                  </NavLink>
 
-                  {d.endDate && (
+                  {deliverable.endDate && (
                     <p className="text-xs text-gray-400">
-                      {new Date(d.endDate).toLocaleDateString("fr-FR")}
+                      {new Date(deliverable.endDate).toLocaleDateString(
+                        "fr-FR"
+                      )}
                     </p>
                   )}
                 </li>
