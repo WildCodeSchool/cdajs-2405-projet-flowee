@@ -3,9 +3,9 @@ import { useMeCompanyQuery } from "@generated/graphql-types";
 
 export default function Settings() {
   const { data, loading, error } = useMeCompanyQuery();
-
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error.message}</div>
+  console.info("settings", data);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   if (!data?.me) return <div>User not found.</div>;
 
   const user = data?.me.companyUser;
@@ -26,7 +26,6 @@ export default function Settings() {
           </div>
         </div>
         <div className="flex-1 w-full max-w-4xl md:ml-12">
-
           <section aria-labelledby="profile-heading" className="mb-10">
             <h2 id="profile-heading" className="text-xl font-bold mb-6">
               Profile
@@ -44,7 +43,7 @@ export default function Settings() {
                   name="company"
                   type="text"
                   className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
-                  value={company?.name || ''}
+                  value={company?.name || ""}
                   readOnly
                 />
               </div>
@@ -60,7 +59,7 @@ export default function Settings() {
                   name="role"
                   type="text"
                   className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
-                  value={account?.role || ''}
+                  value={account?.role || ""}
                   readOnly
                 />
               </div>
@@ -76,7 +75,7 @@ export default function Settings() {
                   name="firstName"
                   type="text"
                   className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
-                  value={user?.firstname || ''}
+                  value={user?.firstname || ""}
                   readOnly
                 />
               </div>
@@ -92,7 +91,7 @@ export default function Settings() {
                   name="lastName"
                   type="text"
                   className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
-                  value={user?.lastname || ''}
+                  value={user?.lastname || ""}
                   readOnly
                 />
               </div>
@@ -108,7 +107,7 @@ export default function Settings() {
                   name="email"
                   type="email"
                   className="w-full rounded border border-theme-gray px-3 py-1 focus:outline-theme-base  focus:ring-2 focus:ring-orange-300"
-                  value={account?.email || ''}
+                  value={account?.email || ""}
                   readOnly
                 />
               </div>
