@@ -33,7 +33,8 @@ import {
   createComplexityRule,
   createMaxDepthRule,
   createNoIntrospectionRule,
-} from './utils/securityRules';
+} from "./utils/securityRules";
+import { createClient } from "redis";
 
 registerEnumType(Role, {
   name: "Role",
@@ -55,15 +56,25 @@ registerEnumType(ClientStatus, {
   description: "Status of client",
 });
 
-
 export async function cleanDB() {
   await dataSource.manager.clear(Project);
 }
 
 const port = 4000;
 
+export const redisClient = createClient({
+  url: "redis://redis:6379",
+});
 async function startServerApollo() {
   try {
+    // Initialize Redis client
+    try {
+      await redisClient.connect();
+      console.info("Redis client connected");
+    } catch (redisError) {
+      console.error("Error connecting to Redis client:", redisError);
+    }
+
     const schema = await buildSchema({
       resolvers: [
         ProjectQueries,
@@ -84,31 +95,32 @@ async function startServerApollo() {
       ],
       authChecker,
     });
-    const server = new ApolloServer<MyContext>({ 
+    const server = new ApolloServer<MyContext>({
       schema, // Allows introspection outside of the prod
-      introspection: process.env.NODE_ENV !== 'production', 
+      introspection: process.env.NODE_ENV !== "production",
       // règles de validation
       validationRules: [
-        createMaxDepthRule(10),              // max depth = 10
-        createComplexityRule({               // max complexity = 500
-        scalarCost: 1,
-        objectCost: 2,
-        listFactor: 10,
-        maxCost: 500,
-    }),
-    // Disable introspection in prod
-    ...(process.env.NODE_ENV === 'production'
-      ? [createNoIntrospectionRule()]
-      : []),
-  ],
-  // we put our rate-limiter in-memory
-  plugins: [
-    createRateLimiterPlugin({
-      windowMs: 60_000, // 1 minute
-      max: 100,         // 100 requests per minute
-    }),
-  ],
-});
+        createMaxDepthRule(10), // max depth = 10
+        createComplexityRule({
+          // max complexity = 500
+          scalarCost: 1,
+          objectCost: 2,
+          listFactor: 10,
+          maxCost: 500,
+        }),
+        // Disable introspection in prod
+        ...(process.env.NODE_ENV === "production"
+          ? [createNoIntrospectionRule()]
+          : []),
+      ],
+      // we put our rate-limiter in-memory
+      plugins: [
+        createRateLimiterPlugin({
+          windowMs: 60_000, // 1 minute
+          max: 100, // 100 requests per minute
+        }),
+      ],
+    });
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");

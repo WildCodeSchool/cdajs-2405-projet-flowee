@@ -1,10 +1,8 @@
 import { DataSource } from "typeorm";
 import { Project } from "../entities/Project";
 import dotenv from "dotenv";
-// import type { Client } from "../entities/Client";
 import { Deliverable } from "../entities/Deliverable";
-
-import { DeliverableStatus } from "../enums/DeliverableStatus";
+import type { DeliverableStatus } from "../enums/DeliverableStatus";
 dotenv.config();
 
 const dbHost: string = process.env.DB_HOST || "";
@@ -37,7 +35,7 @@ export async function CreateDeliverableTestData(
   deliveryDate?: string,
   status?: DeliverableStatus,
   createdAt?: string,
-  reviewTimes?: number
+  reviewTimes?: number,
 ) {
   const deliverable = new Deliverable(
     name,
@@ -45,7 +43,7 @@ export async function CreateDeliverableTestData(
     deliveryDate,
     status,
     createdAt,
-    reviewTimes
+    reviewTimes,
   );
   console.info("new deliverable: ", deliverable);
   await dataSource.manager.save(deliverable);
