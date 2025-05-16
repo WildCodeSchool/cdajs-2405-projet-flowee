@@ -13,7 +13,7 @@ export function generateToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -36,7 +36,7 @@ export function generateClientToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -60,7 +60,7 @@ export function generateCompanyUserToken(account: Account): string {
     JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 }
 
@@ -76,7 +76,6 @@ export async function getAccount(token: string): Promise<Account | null> {
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },
-      relations: ["compagnyUser", "companyUser.company"],
     });
 
     if (!account) return null;
@@ -92,9 +91,52 @@ export async function getAccount(token: string): Promise<Account | null> {
   }
 }
 
+//Pour avoir un token enrichi pour les settings
+export async function getAccountWithRelations(
+  token: string,
+): Promise<Account | null> {
+  try {
+    if (!token || token.trim() === "") return null;
+
+    const cleanToken = token.replace(/^Bearer\s/, "");
+    const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: number };
+
+    const account = await dataSource.manager.findOne(Account, {
+      where: { id: payload.accountId },
+      relations: ["companyUser", "companyUser.company", "client"],
+    });
+
+    if (!account || account.status !== AccountStatus.ACTIVE) return null;
+
+    return account;
+  } catch (error) {
+    console.error("Unable to retrieve informations :", error);
+    return null;
+  }
+}
+
+//Charge du contexte basé sur le rôle de l'utilisateur
+export async function getFullAccountFromContext(
+  ctx: MyContext,
+): Promise<Account | null> {
+  if (!ctx.user?.id) return null;
+  console.info("ctx.user", ctx.user);
+  const relations =
+    ctx.user.role === "ADMIN"
+      ? ["companyUser", "companyUser.company"]
+      : ["client"];
+
+  const result = await dataSource.manager.findOne(Account, {
+    where: { id: ctx.user.id },
+    relations,
+  });
+  console.info("result", result);
+  return result;
+}
+
 export const authChecker: AuthChecker<MyContext> = (
   { context: { user } },
-  roles
+  roles,
 ) => {
   // Check user
   if (!user) {
@@ -111,4 +153,3 @@ export const authChecker: AuthChecker<MyContext> = (
   // Check '@Authorized(...)' roles overlap
   return roles.includes(user.role as string); // @Authorized() attend une string mais notre user.role est une enum donc comparé à une string => on le convertit en string
 };
-
