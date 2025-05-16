@@ -2,6 +2,7 @@ import { Query, Resolver, Arg, Ctx } from "type-graphql";
 import { Account } from "../entities/Account";
 import { dataSource } from "../dataSource/dataSource";
 import type { MyContext } from "../types/MyContext";
+import { getFullAccountFromContext } from "../middlewares/auth";
 
 @Resolver(Account)
 export class AccountQueries {
@@ -20,7 +21,7 @@ export class AccountQueries {
   }
 
   @Query(() => Account, { nullable: true })
-  me(@Ctx() context: MyContext): Account | null {
-    return context.user;
+  async me(@Ctx() context: MyContext): Promise<Account | null> {
+    return await getFullAccountFromContext(context);
   }
 }
