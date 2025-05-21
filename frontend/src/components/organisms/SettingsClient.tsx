@@ -51,7 +51,7 @@ export default function SettingsClient() {
             </div>
           </div>
           <section aria-labelledby="profile-heading" className="mb-4">
-            <h2 id="profile-heading" className="text-xl font-bold mb-6">
+            <h2 id="profile-heading" className="text-xl font-semibold mb-6">
               Profile
             </h2>
             <form className="space-y-6 md:ml-6">
@@ -59,7 +59,7 @@ export default function SettingsClient() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-base font-semibold mb-1"
+                    className="block text-base font-medium mb-1"
                   >
                     Email
                   </label>
@@ -75,7 +75,7 @@ export default function SettingsClient() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-base font-semibold mb-1"
+                    className="block text-base font-medium mb-1"
                   >
                     Password
                   </label>
@@ -103,7 +103,7 @@ export default function SettingsClient() {
           <section aria-labelledby="project-heading" className="mb-12">
             <h2
               id="project-heading"
-              className="md:ml-6 text-base font-semibold "
+              className="md:ml-6 text-base font-medium "
             >
               Projects
             </h2>
@@ -123,7 +123,7 @@ export default function SettingsClient() {
             </div>
           </section>
           <section aria-labelledby="notifications-heading" className="mb-12">
-            <h2 id="notifications-heading" className="text-xl font-bold mb-6">
+            <h2 id="notifications-heading" className="text-xl font-semibold mb-6">
               Notifications
             </h2>
             <div className="flex flex-col space-y-4 md:ml-6">

@@ -26,14 +26,14 @@ export default function Settings() {
         </div>
         <div className="flex-1 w-full max-w-4xl md:ml-12">
           <section aria-labelledby="profile-heading" className="mb-10">
-            <h2 id="profile-heading" className="text-xl font-bold mb-6">
+            <h2 id="profile-heading" className="text-xl font-semibold mb-6">
               Profile
             </h2>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+            <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 md:ml-6">
               <div>
                 <label
                   htmlFor="company"
-                  className="block text-sm font-medium mb-1"
+                  className="block text-base font-medium mb-1"
                 >
                   Company name
                 </label>
@@ -49,7 +49,7 @@ export default function Settings() {
               <div>
                 <label
                   htmlFor="role"
-                  className="block text-sm font-medium mb-1"
+                  className="block text-base font-medium mb-1"
                 >
                   Role
                 </label>
@@ -65,7 +65,7 @@ export default function Settings() {
               <div>
                 <label
                   htmlFor="firstName"
-                  className="block text-sm font-medium mb-1"
+                  className="block text-base font-medium mb-1"
                 >
                   First name
                 </label>
@@ -81,7 +81,7 @@ export default function Settings() {
               <div>
                 <label
                   htmlFor="lastName"
-                  className="block text-sm font-medium mb-1"
+                  className="block text-base font-medium mb-1"
                 >
                   Last name
                 </label>
@@ -97,7 +97,7 @@ export default function Settings() {
               <div className="md:col-span-2">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium mb-1"
+                  className="block text-base font-medium mb-1"
                 >
                   Email
                 </label>
@@ -114,10 +114,10 @@ export default function Settings() {
           </section>
 
           <section aria-labelledby="notifications-heading" className="mb-16">
-            <h2 id="notifications-heading" className="text-xl font-bold mb-6">
+            <h2 id="notifications-heading" className="text-xl font-semibold mb-6">
               Notifications
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 md:ml-6">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
