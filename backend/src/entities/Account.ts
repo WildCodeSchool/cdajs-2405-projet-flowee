@@ -43,9 +43,9 @@ export class Account extends BaseEntity {
     () => Client,
     (client) => client.account,
   )
+  @Field(() => Client, { nullable: true })
   client?: Client;
 
-  //Beosin d'ajouter la relation avec Company User
   @OneToOne(
     () => CompanyUser,
     (companyUser) => companyUser.account,
