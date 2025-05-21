@@ -113,7 +113,7 @@ export default function Settings() {
             </form>
           </section>
 
-          <section aria-labelledby="notifications-heading" className="mb-16">
+          <section aria-labelledby="notifications-heading" className="mb-12">
             <h2 id="notifications-heading" className="text-xl font-semibold mb-6">
               Notifications
             </h2>
@@ -166,7 +166,7 @@ export default function Settings() {
             </div>
           </section>
 
-          <div className="flex justify-start">
+          <div className="flex justify-start mb-2">
             <button
               type="button"
               className="w-[208px] h-[40px] bg-red hover:bg-rose-700 text-white rounded-lg py-2 font-medium mb-8"

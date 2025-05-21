@@ -38,7 +38,7 @@ export default function SettingsClient() {
           </div>
         </div>
         <div className="flex-1 w-full max-w-4xl md:ml-12">
-          <div className="flex items-center gap-6 mb-12">
+          <div className="flex items-center gap-6 mb-10">
             <Avatar name={`${client?.clientName || ""}`} size="lg" />
             <div>
               <h3 className="text-lg font-semibold">{client?.clientName}</h3>
@@ -100,7 +100,7 @@ export default function SettingsClient() {
               </div>
             </form>
           </section>
-          <section aria-labelledby="project-heading" className="mb-12">
+          <section aria-labelledby="project-heading" className="mb-10">
             <h2
               id="project-heading"
               className="md:ml-6 text-base font-medium "
