@@ -1,6 +1,5 @@
 import argon2 from "argon2";
 import { GraphQLError } from "graphql";
-import jwt from "jsonwebtoken";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Account } from "../entities/Account";
@@ -109,83 +108,51 @@ export class AccountMutation {
     @Ctx() context: MyContext,
   ): Promise<boolean> {
     try {
-      // Check if user is authenticated
       if (!context.user) {
         throw new GraphQLError("Not authenticated");
       }
 
-      // Extract token from Authorization header
-      const authHeader = context.req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new GraphQLError("Not authorized");
+      const account = await dataSource.manager.findOne(Account, {
+        where: { id: context.user.id },
+      });
+
+      if (!account) {
+        throw new GraphQLError("Account not found");
       }
 
-      const token = authHeader.split(" ")[1];
-
-      if (!process.env.JWT_SECRET) {
-        throw new GraphQLError(
-          "Configuration error: JWT_SECRET is not defined",
-        );
+      // Verify current password
+      const isValid = await argon2.verify(account.password, currentPassword);
+      if (!isValid) {
+        throw new GraphQLError("Current password is incorrect");
       }
 
+      // Validate new password
+      const validationResult = validatePasswordChange(
+        currentPassword,
+        newPassword,
+      );
+
+      if (!validationResult.isValid) {
+        throw new GraphQLError(validationResult.errors.join(", "));
+      }
+
+      // Hash and save new password
+      account.password = await argon2.hash(newPassword);
+      await dataSource.manager.save(account);
+
+      // Send notification email
       try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
-          accountId: number;
-        };
-
-        // Check if user is modifying their own account
-        if (decoded.accountId !== context.user.id) {
-          throw new GraphQLError("Not authorized to modify this account");
-        }
-
-        // Get account
-        const account = await dataSource.manager.findOne(Account, {
-          where: { id: decoded.accountId },
-        });
-
-        if (!account) {
-          throw new GraphQLError("Account not found");
-        }
-
-        // Verify current password
-        const isValid = await argon2.verify(account.password, currentPassword);
-        if (!isValid) {
-          throw new GraphQLError("Current password is incorrect");
-        }
-
-        // Validate new password
-        const validationResult = validatePasswordChange(
-          currentPassword,
-          newPassword,
-        );
-
-        if (!validationResult.isValid) {
-          throw new GraphQLError(validationResult.errors.join(", "));
-        }
-
-        // Hash and save new password
-        account.password = await argon2.hash(newPassword);
-        await dataSource.manager.save(account);
-
-        // Send notification email
-        try {
-          const userName =
-            account.client?.clientName ||
-            account.companyUser?.firstname ||
-            account.email;
-          await sendPasswordChangeNotification(account.email, userName);
-        } catch (emailError) {
-          // Don't block the process if email fails
-        }
-
-        return true;
-      } catch (jwtError) {
-        throw new GraphQLError("Invalid token");
+        const userName =
+          account.client?.clientName ||
+          account.companyUser?.firstname ||
+          account.email;
+        await sendPasswordChangeNotification(account.email, userName);
+      } catch (emailError) {
+        // Don't block the process if email fails
       }
+
+      return true;
     } catch (error) {
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new GraphQLError("Invalid token");
-      }
       if (error instanceof GraphQLError) {
         throw error;
       }
