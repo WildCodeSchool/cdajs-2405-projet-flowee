@@ -87,7 +87,6 @@ async function startServerApollo() {
     const server = new ApolloServer<MyContext>({ 
       schema, // Allows introspection outside of the prod
       introspection: process.env.NODE_ENV !== 'production', 
-      // règles de validation
       validationRules: [
         createMaxDepthRule(10),              // max depth = 10
         createComplexityRule({               // max complexity = 500
@@ -125,7 +124,7 @@ async function startServerApollo() {
         const user = await getAccount(token);
 
         // Add the user to the context
-        return { user };
+        return { user, req };
       },
       listen: { port, host: "0.0.0.0" },
     });

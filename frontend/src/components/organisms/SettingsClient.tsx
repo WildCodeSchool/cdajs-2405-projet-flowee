@@ -4,8 +4,11 @@ import {
   useGetProjectsByUserQuery,
   useMeQuery,
 } from "@generated/graphql-types";
+import { useState } from "react";
+import PasswordModal from "@molecules/PasswordModal";
 
 export default function SettingsClient() {
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const { data, loading, error } = useMeQuery();
   const {
     data: projectsData,
@@ -92,6 +95,7 @@ export default function SettingsClient() {
                       type="button"
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-theme-light hover:text-theme-dark font-medium"
                       aria-label="Edit password"
+                      onClick={() => setIsPasswordModalOpen(true)}
                     >
                       <EditBtn className="w-6 h-6" />
                     </button>
@@ -155,6 +159,10 @@ export default function SettingsClient() {
           </div>
         </div>
       </main>
+      <PasswordModal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => setIsPasswordModalOpen(false)} 
+      />
     </div>
   );
 }
