@@ -244,13 +244,13 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 border border-theme-gray rounded-md hover:bg-gray-50"
+              className="px-6 py-2 rounded-lg font-medium text-sm transition-all border border-theme-gray hover:bg-theme-lightGray"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-3 py-1 bg-theme-light text-white rounded-md hover:bg-theme-dark"
+              className="px-6 py-2 rounded-lg font-medium text-sm transition-all bg-theme-base text-white hover:bg-blueDark"
             >
               Update
             </button>
