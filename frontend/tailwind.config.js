@@ -42,6 +42,7 @@ module.exports = {
         gray: "#CFCFCF",
         orangeLight: "#faf1e7",
         blue: "#4a65be",
+        blueDark: "#2b3a8e",
       },
       boxShadow: {
         "t-md":

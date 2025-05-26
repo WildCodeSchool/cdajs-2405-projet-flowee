@@ -1,8 +1,7 @@
-import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { buildSchema } from "type-graphql";
-import { registerEnumType } from "type-graphql";
+import "reflect-metadata";
+import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
 // import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
@@ -34,7 +33,7 @@ import {
   createMaxDepthRule,
   createNoIntrospectionRule,
 } from "./utils/securityRules";
-import { createClient, RedisClientType } from "redis";
+import { createClient, type RedisClientType } from "redis";
 
 registerEnumType(Role, {
   name: "Role",
@@ -98,7 +97,6 @@ async function startServerApollo() {
     const server = new ApolloServer<MyContext>({
       schema, // Allows introspection outside of the prod
       introspection: process.env.NODE_ENV !== "production",
-      // règles de validation
       validationRules: [
         createMaxDepthRule(10), // max depth = 10
         createComplexityRule({
@@ -129,14 +127,10 @@ async function startServerApollo() {
 
     const { url } = await startStandaloneServer<MyContext>(server, {
       context: async ({ req }) => {
-        // Get the user token from the headers.
         const token = req.headers.authorization || "";
-        console.info("token dans la connexion BDD", token);
-
-        // Try to retrieve a user with the token
         const user = await getAccount(token);
 
-        // Add the user to the context
+        // Add redis to the context
         return { user, redis: redisClient };
       },
       listen: { port, host: "0.0.0.0" },

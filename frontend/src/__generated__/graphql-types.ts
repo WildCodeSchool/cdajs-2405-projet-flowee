@@ -20,6 +20,7 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  client?: Maybe<Client>;
   companyUser?: Maybe<CompanyUser>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -108,6 +109,7 @@ export type Mutation = {
   updateClient: Client;
   updateCompagny: Compagny;
   updateDeliverable: Deliverable;
+  updatePassword: Scalars['Boolean']['output'];
   updateTask: Task;
 };
 
@@ -218,6 +220,12 @@ export type MutationUpdateDeliverableArgs = {
   id: Scalars['Float']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   perimeter?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
 };
 
 
@@ -392,6 +400,11 @@ export type GetAllDeliverablesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllDeliverablesQuery = { __typename?: 'Query', getAllDeliverables: Array<{ __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, tasks?: Array<{ __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null }> | null }> };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Account', id: string, email: string, role: string, companyUser?: { __typename?: 'CompanyUser', id: string, firstname: string, lastname: string, company?: { __typename?: 'Compagny', id: string, name: string, address?: string | null, contactInfo?: string | null } | null } | null, client?: { __typename?: 'Client', id: string, clientName?: string | null } | null } | null };
+
 export type MeCompanyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -418,6 +431,14 @@ export type GetTrackerStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTrackerStatsQuery = { __typename?: 'Query', getTrackerStats: { __typename?: 'TrackerStats', approvedDeliverables?: number | null, lateProjects?: number | null, needReview?: number | null } };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: boolean };
 
 
 export const CreateAccountDocument = gql`
@@ -831,6 +852,62 @@ export type GetAllDeliverablesQueryHookResult = ReturnType<typeof useGetAllDeliv
 export type GetAllDeliverablesLazyQueryHookResult = ReturnType<typeof useGetAllDeliverablesLazyQuery>;
 export type GetAllDeliverablesSuspenseQueryHookResult = ReturnType<typeof useGetAllDeliverablesSuspenseQuery>;
 export type GetAllDeliverablesQueryResult = Apollo.QueryResult<GetAllDeliverablesQuery, GetAllDeliverablesQueryVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+    email
+    role
+    companyUser {
+      id
+      firstname
+      lastname
+      company {
+        id
+        name
+        address
+        contactInfo
+      }
+    }
+    client {
+      id
+      clientName
+    }
+  }
+}
+    `;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MeCompanyDocument = gql`
     query MeCompany {
   me {
@@ -1102,3 +1179,35 @@ export type GetTrackerStatsQueryHookResult = ReturnType<typeof useGetTrackerStat
 export type GetTrackerStatsLazyQueryHookResult = ReturnType<typeof useGetTrackerStatsLazyQuery>;
 export type GetTrackerStatsSuspenseQueryHookResult = ReturnType<typeof useGetTrackerStatsSuspenseQuery>;
 export type GetTrackerStatsQueryResult = Apollo.QueryResult<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>;
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($currentPassword: String!, $newPassword: String!) {
+  updatePassword(currentPassword: $currentPassword, newPassword: $newPassword)
+}
+    `;
+export type UpdatePasswordMutationFn = Apollo.MutationFunction<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+
+/**
+ * __useUpdatePasswordMutation__
+ *
+ * To run a mutation, you first call `useUpdatePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePasswordMutation, { data, loading, error }] = useUpdatePasswordMutation({
+ *   variables: {
+ *      currentPassword: // value for 'currentPassword'
+ *      newPassword: // value for 'newPassword'
+ *   },
+ * });
+ */
+export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
+      }
+export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
+export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
+export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
