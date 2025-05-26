@@ -34,7 +34,7 @@ import {
   createMaxDepthRule,
   createNoIntrospectionRule,
 } from "./utils/securityRules";
-import { createClient } from "redis";
+import { createClient, RedisClientType } from "redis";
 
 registerEnumType(Role, {
   name: "Role",
@@ -62,7 +62,7 @@ export async function cleanDB() {
 
 const port = 4000;
 
-export const redisClient = createClient({
+export const redisClient: RedisClientType = createClient({
   url: "redis://redis:6379",
 });
 async function startServerApollo() {
@@ -137,7 +137,7 @@ async function startServerApollo() {
         const user = await getAccount(token);
 
         // Add the user to the context
-        return { user };
+        return { user, redis: redisClient };
       },
       listen: { port, host: "0.0.0.0" },
     });
