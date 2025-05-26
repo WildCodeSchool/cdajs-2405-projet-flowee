@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -6,9 +6,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Client } from "./Client";
-import type { Role } from "../enums/Role";
 import { AccountStatus } from "../enums/AccountStatus";
+import type { Role } from "../enums/Role";
+import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
 
 @ObjectType()
@@ -43,9 +43,9 @@ export class Account extends BaseEntity {
     () => Client,
     (client) => client.account,
   )
-  client?: Client;
+  @Field(() => Client)
+  client!: Client;
 
-  //Beosin d'ajouter la relation avec Company User
   @OneToOne(
     () => CompanyUser,
     (companyUser) => companyUser.account,

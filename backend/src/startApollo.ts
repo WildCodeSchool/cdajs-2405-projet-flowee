@@ -1,8 +1,7 @@
-import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { buildSchema } from "type-graphql";
-import { registerEnumType } from "type-graphql";
+import "reflect-metadata";
+import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
 // import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
@@ -33,7 +32,7 @@ import {
   createComplexityRule,
   createMaxDepthRule,
   createNoIntrospectionRule,
-} from './utils/securityRules';
+} from "./utils/securityRules";
 
 registerEnumType(Role, {
   name: "Role",
@@ -54,7 +53,6 @@ registerEnumType(ClientStatus, {
   name: "ClientStatus",
   description: "Status of client",
 });
-
 
 export async function cleanDB() {
   await dataSource.manager.clear(Project);
@@ -84,31 +82,31 @@ async function startServerApollo() {
       ],
       authChecker,
     });
-    const server = new ApolloServer<MyContext>({ 
+    const server = new ApolloServer<MyContext>({
       schema, // Allows introspection outside of the prod
-      introspection: process.env.NODE_ENV !== 'production', 
-      // règles de validation
+      introspection: process.env.NODE_ENV !== "production",
       validationRules: [
-        createMaxDepthRule(10),              // max depth = 10
-        createComplexityRule({               // max complexity = 500
-        scalarCost: 1,
-        objectCost: 2,
-        listFactor: 10,
-        maxCost: 500,
-    }),
-    // Disable introspection in prod
-    ...(process.env.NODE_ENV === 'production'
-      ? [createNoIntrospectionRule()]
-      : []),
-  ],
-  // we put our rate-limiter in-memory
-  plugins: [
-    createRateLimiterPlugin({
-      windowMs: 60_000, // 1 minute
-      max: 100,         // 100 requests per minute
-    }),
-  ],
-});
+        createMaxDepthRule(10), // max depth = 10
+        createComplexityRule({
+          // max complexity = 500
+          scalarCost: 1,
+          objectCost: 2,
+          listFactor: 10,
+          maxCost: 500,
+        }),
+        // Disable introspection in prod
+        ...(process.env.NODE_ENV === "production"
+          ? [createNoIntrospectionRule()]
+          : []),
+      ],
+      // we put our rate-limiter in-memory
+      plugins: [
+        createRateLimiterPlugin({
+          windowMs: 60_000, // 1 minute
+          max: 100, // 100 requests per minute
+        }),
+      ],
+    });
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
@@ -117,14 +115,8 @@ async function startServerApollo() {
 
     const { url } = await startStandaloneServer<MyContext>(server, {
       context: async ({ req }) => {
-        // Get the user token from the headers.
         const token = req.headers.authorization || "";
-        console.info("token dans la connexion BDD", token);
-
-        // Try to retrieve a user with the token
         const user = await getAccount(token);
-
-        // Add the user to the context
         return { user };
       },
       listen: { port, host: "0.0.0.0" },
