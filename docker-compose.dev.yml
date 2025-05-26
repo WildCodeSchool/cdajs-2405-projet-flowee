@@ -63,3 +63,18 @@ services:
     restart: always
     ports:
       - 8080:8080
+  redis:
+    hostname: redis
+    image: redis
+
+  redis-commander:
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    platform: linux/x86_64
+    restart: always
+    depends_on:
+      - redis
+    environment:
+    - REDIS_HOSTS=redis 
+    ports:
+    - "8881:8081"

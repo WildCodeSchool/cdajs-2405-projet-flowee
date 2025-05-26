@@ -33,6 +33,7 @@ import {
   createMaxDepthRule,
   createNoIntrospectionRule,
 } from "./utils/securityRules";
+import { createClient, type RedisClientType } from "redis";
 
 registerEnumType(Role, {
   name: "Role",
@@ -60,8 +61,19 @@ export async function cleanDB() {
 
 const port = 4000;
 
+export const redisClient: RedisClientType = createClient({
+  url: "redis://redis:6379",
+});
 async function startServerApollo() {
   try {
+    // Initialize Redis client
+    try {
+      await redisClient.connect();
+      console.info("Redis client connected");
+    } catch (redisError) {
+      console.error("Error connecting to Redis client:", redisError);
+    }
+
     const schema = await buildSchema({
       resolvers: [
         ProjectQueries,
@@ -117,7 +129,9 @@ async function startServerApollo() {
       context: async ({ req }) => {
         const token = req.headers.authorization || "";
         const user = await getAccount(token);
-        return { user };
+
+        // Add redis to the context
+        return { user, redis: redisClient };
       },
       listen: { port, host: "0.0.0.0" },
     });
