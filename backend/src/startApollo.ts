@@ -1,9 +1,8 @@
+import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import "reflect-metadata";
 import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
-// import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
 import { AccountStatus } from "./enums/AccountStatus";
 import { ClientStatus } from "./enums/ClientStatus";
@@ -122,8 +121,6 @@ async function startServerApollo() {
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
-    // cleanDB();
-    // initTestData();
 
     const { url } = await startStandaloneServer<MyContext>(server, {
       context: async ({ req }) => {

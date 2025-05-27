@@ -30,7 +30,7 @@ export class CompanyMutations {
       // Sinon, on l’enveloppe dans un message plus général
       throw new GraphQLError("Failed to create company", {
         extensions: {
-          code: "CREATE_COMPAGNY_ERROR",
+          code: "CREATE_COMPANY_ERROR",
           originalError: (error as Error).message || "Unknown error",
         },
       });
@@ -51,7 +51,7 @@ export class CompanyMutations {
 
       if (!company) {
         throw new GraphQLError(`Company with ID ${id} not found`, {
-          extensions: { code: "COMPAGNY_NOT_FOUND" },
+          extensions: { code: "COMPANY_NOT_FOUND" },
         });
       }
 
@@ -65,7 +65,7 @@ export class CompanyMutations {
       const err = error as Error;
       throw new GraphQLError(`Company with ID ${id} not found`, {
         extensions: {
-          code: "UPDATE_COMPAGNY_ERROR",
+          code: "UPDATE_COMPANY_ERROR",
           originalError: err.message || "Unknown error",
         },
       });
@@ -82,7 +82,7 @@ export class CompanyMutations {
       if (!company) {
         console.info(`no company found with is id: ${id}!!`);
         throw new GraphQLError(`Company with ID ${id} not found`, {
-          extensions: { code: "COMPAGNY_NOT_FOUND" },
+          extensions: { code: "COMPANY_NOT_FOUND" },
         });
       }
 
@@ -92,7 +92,7 @@ export class CompanyMutations {
       const err = error as Error;
       throw new GraphQLError("Failed to delete company", {
         extensions: {
-          code: "DELETE_COMPAGNY_ERROR",
+          code: "DELETE_COMPANY_ERROR",
           originalError: err.message || "Unknown error",
         },
       });

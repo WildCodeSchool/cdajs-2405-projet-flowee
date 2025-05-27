@@ -23,7 +23,10 @@
     "testWatch": "jest --watchAll",
     "start": "ts-node-dev --respawn ./src/index.ts",
     "build": "tsc",
-    "prod": "node build/index.js"
+    "prod": "node build/index.js",
+    "init:db": "ts-node src/scripts/init_db_user.ts",
+    "migration:generate": "typeorm migration:generate ./src/migration/InitialSchema -d ./src/dataSource/dataSource.ts",
+    "migration:run": "typeorm migration:run -d ./src/dataSource/dataSource.ts"
   },
   "author": "",
   "license": "ISC",
@@ -39,6 +42,7 @@
     "mock-typeorm": "^1.0.1",
     "sinon": "^19.0.2",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }
 }
