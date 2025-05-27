@@ -1,14 +1,16 @@
 # ===============================
 # Variables (adapte au besoin)
 # ===============================
+include .env
+
 DB_CONTAINER = flowee-db
 BACKEND_CONTAINER = flowee-backend
 MIGRATION_PATH = src/migration/
 DATASOURCE_PATH = src/dataSource/dataSource.ts
 SEED_SCRIPT = src/scripts/seedAdmin.ts
 CONTAINER = flowee-db
-POSTGRES_USER = postgres
-POSTGRES_DB = flowee
+DB_SUPERUSER = postgres
+DB_NAME = flowee
 OS := $(shell uname)
 
 # ===============================
@@ -28,6 +30,9 @@ env:
 	fi
 
 
+.PHONY: init-db-user
+init-db-user:
+	npx ts-node backend/src/scripts/init_db_user.ts
 
 
 # Mode développement

@@ -7,6 +7,7 @@ const dbPort = Number.parseInt(process.env.DB_PORT ?? "5432", 10);
 const dbName = process.env.DB_NAME ?? "flowee";
 const dbUser = process.env.DB_USER ?? "postgres";
 const dbPassword = process.env.DB_PASSWORD ?? "passwordadminer";
+console.info("dbPassword", dbPassword, dbUser, dbName, dbHost, dbPort);
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -17,6 +18,7 @@ export const dataSource = new DataSource({
   database: dbName,
   username: dbUser,
   password: dbPassword,
+  schema: "public",
   entities: ["src/entities/*.ts"],
   migrations: ["src/migration/*.ts"],
   migrationsTableName: "migrations",

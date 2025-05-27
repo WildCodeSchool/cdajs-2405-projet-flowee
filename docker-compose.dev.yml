@@ -23,11 +23,6 @@ services:
     env_file:
       - .env  
     environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
       NODE_ENV: development
 
   db:
@@ -43,9 +38,9 @@ services:
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DB_SUPERUSER}
+      POSTGRES_PASSWORD: ${DB_SUPERUSER_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - 5432:5432
     volumes:
@@ -55,7 +50,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+          "sh -c 'pg_isready -U ${DB_SUPERUSER} -d ${DB_NAME}'",
         ]
       interval: 10s
       timeout: 3s

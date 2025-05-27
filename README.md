@@ -89,6 +89,15 @@ You get a ready-to-use environment with:
 
 ⚠️ Dependencies are automatically installed via the Dockerfiles.
 
+🛠 Environment Variables
+DB_SUPERUSER, DB_SUPERUSER_PASSWORD: the PostgreSQL superadmin (default: postgres)
+
+DB_USER, DB_PASSWORD: the application user created by the init-db-user script
+
+DB_NAME: name of the database used
+
+💡 The superadmin is only used to create the application user and initialize the database. Afterwards, only DB_USER is used.
+
 ## 🏗️ Architecture
 
 Flowee est conçu selon une architecture 3-tiers moderne et modulaire :
