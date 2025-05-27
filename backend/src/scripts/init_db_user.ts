@@ -37,15 +37,15 @@ function executeCommand(command: string): Promise<void> {
     exec(command, (error, _stdout, stderr) => {
       if (error) {
         if (stderr.includes("already exists")) {
-          console.warn(`⚠️ (ignoré) : ${stderr.trim()}`);
+          console.warn(`ignored : ${stderr.trim()}`);
           resolve();
         } else {
-          console.error(`❌ Échec : ${command}`);
+          console.error(`Failed : ${command}`);
           console.error(stderr);
           reject(error);
         }
       } else {
-        console.log(`✅ ${command}`);
+        console.log(`OK: ${command}`);
         resolve();
       }
     });
@@ -61,11 +61,11 @@ function waitForPostgres(): Promise<void> {
       exec(checkCommand, (error) => {
         if (error && retries > 0) {
           retries--;
-          console.log("⏳ PostgreSQL non prêt, nouvelle tentative...");
+          console.log("PostgreSQL not ready , new try...");
           setTimeout(check, 2000);
         } else if (retries === 0) {
           reject(
-            new Error("PostgreSQL toujours indisponible après 10 essais."),
+            new Error("PostgreSQL failed to start after multiple attempts."),
           );
         } else {
           resolve();
@@ -110,9 +110,9 @@ async function init() {
       await executeCommand(stopDbCommand);
     }
 
-    console.log("🎉 Base de données initialisée avec succès.");
+    console.log("Database successfully initialized!");
   } catch (err) {
-    console.error("❌ Échec de l'initialisation :", err);
+    console.error("Failed to initialize teh database", err);
   }
 }
 

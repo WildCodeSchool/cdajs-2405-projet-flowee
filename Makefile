@@ -8,9 +8,8 @@ BACKEND_CONTAINER = flowee-backend
 MIGRATION_PATH = src/migration/
 DATASOURCE_PATH = src/dataSource/dataSource.ts
 SEED_SCRIPT = src/scripts/seedAdmin.ts
-CONTAINER = flowee-db
-DB_SUPERUSER = postgres
-DB_NAME = flowee
+POSTGRES_USER = $(DB_SUPERUSER)
+POSTGRES_DB = ${DB_NAME}
 OS := $(shell uname)
 
 # ===============================
@@ -30,9 +29,20 @@ env:
 	fi
 
 
+# ===============================
+# Gestion utilisateurs
+# ===============================
+
+# Création d'un utilisateur de base de données
 .PHONY: init-db-user
 init-db-user:
 	npx ts-node backend/src/scripts/init_db_user.ts
+
+# Supprimer un utilisateur de base de données
+.PHONY: clean-test-users
+clean-test-users:
+	npx ts-node backend/src/scripts/clean_test_users.ts
+
 
 
 # Mode développement
@@ -144,4 +154,8 @@ first-launch: env run
 test:
 	docker exec -it flowee-backend sh -c "echo 'Contenu de /app:' && ls -al /app && \
 	echo '\nContenu de /app/src:' && ls -al /app/src || echo '/app/src non trouvé'"
-	
+
+.PHONY: whoami
+whoami:
+	docker exec -it $(BACKEND_CONTAINER) \
+	npx ts-node -e "import { dataSource } from './src/dataSource/dataSource'; dataSource.initialize().then(async () => { const result = await dataSource.query('SELECT current_user'); console.log('➡️ current_user:', result); process.exit(0); });"
