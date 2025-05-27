@@ -1,5 +1,6 @@
 services:
   frontend:
+    container_name: flowee-frontend
     # build: ./frontend
     image: cyriellethomas/flowee-deploy-client:staging-latest
     platform: linux/x86_64
@@ -16,6 +17,7 @@ services:
    
     # restart: always
   backend:
+    container_name: flowee-backend
     # build: ./backend
     image: cyriellethomas/flowee-deploy-server:staging-latest
     platform: linux/x86_64
@@ -32,6 +34,7 @@ services:
  
 
   db:
+    container_name: flowee-db
     image: postgres:16
     restart: unless-stopped
     shm_size: 128mb
@@ -43,12 +46,14 @@ services:
       - 5432:5432 #Port exposed to access Adminer also locally
 
   adminer:
+    container_name: flowee-adminer
     image: adminer
     restart: always
     ports:
       - 8080:8080
   
   nginx:
+    container_name: flowee-nginx
     image: nginx:1.21.3
     depends_on:
       - backend

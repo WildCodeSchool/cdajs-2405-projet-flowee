@@ -3,7 +3,7 @@ import { Arg, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
+import type { DeliverableStatus } from "../enums/DeliverableStatus";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
@@ -14,7 +14,7 @@ export class DeliverableMutations {
     @Arg("deliveryDate", { nullable: true }) deliveryDate?: string,
     @Arg("status", { nullable: true }) status?: DeliverableStatus,
     @Arg("createdAt", { nullable: true }) createdAt?: string,
-    @Arg("reviewTimes", { nullable: true }) reviewTimes?: number
+    @Arg("reviewTimes", { nullable: true }) reviewTimes?: number,
   ): Promise<Deliverable> {
     if (!name) {
       throw new GraphQLError("Name is required", {
@@ -28,7 +28,7 @@ export class DeliverableMutations {
         deliveryDate,
         status,
         createdAt,
-        reviewTimes
+        reviewTimes,
       );
       await dataSource.manager.save(newDeliverable);
       console.info("Deliverable created:", newDeliverable);
@@ -51,7 +51,7 @@ export class DeliverableMutations {
   async updateDeliverable(
     @Arg("id") id: number,
     @Arg("name", { nullable: true }) name?: string,
-    @Arg("perimeter", { nullable: true }) perimeter?: string
+    @Arg("perimeter", { nullable: true }) perimeter?: string,
   ): Promise<Deliverable> {
     try {
       const deliverable = await dataSource.manager.findOne(Deliverable, {

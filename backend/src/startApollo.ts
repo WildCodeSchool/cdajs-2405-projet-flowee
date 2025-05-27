@@ -1,9 +1,8 @@
+import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import "reflect-metadata";
 import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
-// import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
 import { AccountStatus } from "./enums/AccountStatus";
 import { ClientStatus } from "./enums/ClientStatus";
@@ -16,8 +15,8 @@ import {
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
 import { ClientQueries } from "./graphql-resolvers/ClientQueries";
-import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
-import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
+import { CompanyMutations } from "./graphql-resolvers/CompanyMutations";
+import { CompanyQueries } from "./graphql-resolvers/CompanyQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
@@ -78,15 +77,15 @@ async function startServerApollo() {
       resolvers: [
         ProjectQueries,
         ProjectMutations,
-        CompagnyQueries,
-        CompagnyMutations,
+        CompanyQueries,
+        CompanyMutations,
         TaskQueries,
         TaskMutations,
         DeliverableQueries,
         DeliverableMutations,
         ClientQueries,
         ClientMutations,
-        CompagnyMutations,
+        CompanyMutations,
         AccountMutation,
         AccountQueries,
         AuthMutation,
@@ -122,8 +121,6 @@ async function startServerApollo() {
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
-    // cleanDB();
-    // initTestData();
 
     const { url } = await startStandaloneServer<MyContext>(server, {
       context: async ({ req }) => {
