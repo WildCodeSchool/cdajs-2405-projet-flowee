@@ -16,8 +16,8 @@ import {
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
 import { ClientQueries } from "./graphql-resolvers/ClientQueries";
-import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
-import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
+import { CompanyMutations } from "./graphql-resolvers/CompanyMutations";
+import { CompanyQueries } from "./graphql-resolvers/CompanyQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
@@ -78,15 +78,15 @@ async function startServerApollo() {
       resolvers: [
         ProjectQueries,
         ProjectMutations,
-        CompagnyQueries,
-        CompagnyMutations,
+        CompanyQueries,
+        CompanyMutations,
         TaskQueries,
         TaskMutations,
         DeliverableQueries,
         DeliverableMutations,
         ClientQueries,
         ClientMutations,
-        CompagnyMutations,
+        CompanyMutations,
         AccountMutation,
         AccountQueries,
         AuthMutation,

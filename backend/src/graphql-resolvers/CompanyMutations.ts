@@ -1,26 +1,26 @@
 import { GraphQLError } from "graphql";
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
-import { Compagny } from "../entities/Compagny";
+import { Company } from "../entities/Company";
 
-@Resolver(Compagny)
-export class CompagnyMutations {
-  @Mutation(() => Compagny)
-  async createCompagny(
+@Resolver(Company)
+export class CompanyMutations {
+  @Mutation(() => Company)
+  async createCompany(
     @Arg("name") name: string,
     @Arg("address") address: string,
     @Arg("contactInfo") contactInfo: string,
-  ): Promise<Compagny> {
+  ): Promise<Company> {
     if (!name || !address || !contactInfo) {
       throw new GraphQLError("All fields are required", {
         extensions: { code: "VALIDATION_ERROR" },
       });
     }
     try {
-      const newCompagny = new Compagny(name, address, contactInfo);
-      await dataSource.manager.save(newCompagny);
+      const newCompany = new Company(name, address, contactInfo);
+      await dataSource.manager.save(newCompany);
 
-      return newCompagny;
+      return newCompany;
     } catch (error) {
       // Si l’erreur est déjà un GraphQLError
       if (error instanceof GraphQLError) {
@@ -28,7 +28,7 @@ export class CompagnyMutations {
       }
 
       // Sinon, on l’enveloppe dans un message plus général
-      throw new GraphQLError("Failed to create compagny", {
+      throw new GraphQLError("Failed to create company", {
         extensions: {
           code: "CREATE_COMPAGNY_ERROR",
           originalError: (error as Error).message || "Unknown error",
@@ -37,20 +37,20 @@ export class CompagnyMutations {
     }
   }
 
-  @Mutation(() => Compagny)
-  async updateCompagny(
+  @Mutation(() => Company)
+  async updateCompany(
     @Arg("id") id: number,
     @Arg("name", { nullable: true }) name?: string,
     @Arg("address", { nullable: true }) address?: string,
     @Arg("contactInfo", { nullable: true }) contactInfo?: string,
-  ): Promise<Compagny> {
+  ): Promise<Company> {
     try {
-      const company = await dataSource.manager.findOne(Compagny, {
+      const company = await dataSource.manager.findOne(Company, {
         where: { id },
       });
 
       if (!company) {
-        throw new GraphQLError(`Compagny with ID ${id} not found`, {
+        throw new GraphQLError(`Company with ID ${id} not found`, {
           extensions: { code: "COMPAGNY_NOT_FOUND" },
         });
       }
@@ -63,7 +63,7 @@ export class CompagnyMutations {
       return company;
     } catch (error) {
       const err = error as Error;
-      throw new GraphQLError(`Compagny with ID ${id} not found`, {
+      throw new GraphQLError(`Company with ID ${id} not found`, {
         extensions: {
           code: "UPDATE_COMPAGNY_ERROR",
           originalError: err.message || "Unknown error",
@@ -73,15 +73,15 @@ export class CompagnyMutations {
   }
 
   @Mutation(() => Boolean)
-  async deleteCompagny(@Arg("id") id: number): Promise<boolean> {
+  async deleteCompany(@Arg("id") id: number): Promise<boolean> {
     try {
-      const company = await dataSource.manager.findOne(Compagny, {
+      const company = await dataSource.manager.findOne(Company, {
         where: { id },
       });
 
       if (!company) {
         console.info(`no company found with is id: ${id}!!`);
-        throw new GraphQLError(`Compagny with ID ${id} not found`, {
+        throw new GraphQLError(`Company with ID ${id} not found`, {
           extensions: { code: "COMPAGNY_NOT_FOUND" },
         });
       }
@@ -90,7 +90,7 @@ export class CompagnyMutations {
       return true;
     } catch (error) {
       const err = error as Error;
-      throw new GraphQLError("Failed to delete compagny", {
+      throw new GraphQLError("Failed to delete company", {
         extensions: {
           code: "DELETE_COMPAGNY_ERROR",
           originalError: err.message || "Unknown error",

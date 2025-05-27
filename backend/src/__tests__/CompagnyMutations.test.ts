@@ -1,53 +1,53 @@
 import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Compagny } from "../entities/Compagny";
-import { CompagnyMutations } from "../graphql-resolvers/CompagnyMutations";
+import { Company } from "../entities/Company";
+import { CompanyMutations } from "../graphql-resolvers/CompanyMutations";
 
-describe("Compagny Mutations", () => {
-  let compagnyMutations: CompagnyMutations;
-  let compagny: Compagny;
+describe("Company Mutations", () => {
+  let companyMutations: CompanyMutations;
+  let company: Company;
 
   beforeEach(() => {
-    compagnyMutations = new CompagnyMutations();
-    compagny = new Compagny(
+    companyMutations = new CompanyMutations();
+    company = new Company(
       faker.company.name(),
       faker.location.streetAddress(),
       faker.phone.number(),
     );
   });
 
-  describe("createCompagny", () => {
-    it("should create a new compagny", async () => {
-      mockTypeOrm().onMock(Compagny).toReturn(compagny, "save");
-      const createdCompagny: Compagny = await compagnyMutations.createCompagny(
-        compagny.name,
-        compagny.address,
-        compagny.contactInfo,
+  describe("createCompany", () => {
+    it("should create a new company", async () => {
+      mockTypeOrm().onMock(Company).toReturn(company, "save");
+      const createdCompany: Company = await companyMutations.createCompany(
+        company.name,
+        company.address,
+        company.contactInfo,
       );
 
-      expect(createdCompagny).toMatchObject({
-        name: compagny.name,
-        address: compagny.address,
-        contactInfo: compagny.contactInfo,
+      expect(createdCompany).toMatchObject({
+        name: company.name,
+        address: company.address,
+        contactInfo: company.contactInfo,
       });
     });
   });
 
-  describe("updateCompagny", () => {
-    it("should update an existing compagny", async () => {
-      const mockCompany = new Compagny(
+  describe("updateCompany", () => {
+    it("should update an existing company", async () => {
+      const mockCompany = new Company(
         faker.company.name(),
         faker.location.streetAddress(),
         faker.phone.number(),
       );
       mockCompany.id = 1;
 
-      mockTypeOrm().onMock(Compagny).toReturn(mockCompany, "findOne");
+      mockTypeOrm().onMock(Company).toReturn(mockCompany, "findOne");
 
-      mockTypeOrm().onMock(Compagny).toReturn(mockCompany, "save");
+      mockTypeOrm().onMock(Company).toReturn(mockCompany, "save");
 
-      // Appeler la mutation updateCompagny
-      const updatedCompany = await compagnyMutations.updateCompagny(
+      // Appeler la mutation updateCompany
+      const updatedCompany = await companyMutations.updateCompany(
         mockCompany.id,
         "New Company Name",
         "New Address",
@@ -65,17 +65,17 @@ describe("Compagny Mutations", () => {
 
     it("should return an error if the company does not exist", async () => {
       // Moquer `findOne()` pour retourner `undefined`
-      mockTypeOrm().onMock(Compagny).toReturn(undefined, "findOne");
+      mockTypeOrm().onMock(Company).toReturn(undefined, "findOne");
 
       // Vérifier que la mutation renvoie une erreur
       await expect(
-        compagnyMutations.updateCompagny(
+        companyMutations.updateCompany(
           999,
           "New Name",
           "New Address",
           "New Contact Info",
         ),
-      ).rejects.toThrow("Compagny with ID 999 not found");
+      ).rejects.toThrow("Company with ID 999 not found");
     });
   });
 });
