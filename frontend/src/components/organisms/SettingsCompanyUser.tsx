@@ -2,6 +2,7 @@ import { useMeQuery } from "@generated/graphql-types";
 
 export default function Settings() {
   const { data, loading, error } = useMeQuery();
+  console.info("Settings query data:", data, error, loading);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;

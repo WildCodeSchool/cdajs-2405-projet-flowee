@@ -51,9 +51,11 @@ Flowee est une application SaaS conçue pour centraliser et optimiser la gestion
 
 ### Prérequis
 - Node.js (v18 ou supérieur)
-- PostgreSQL (v15 ou supérieur)
-- npm ou yarn
-- Docker et Docker Compose (optionnel, mais recommandé)
+- Docker + Docker Compose
+- PostgreSQL (via container)
+- Redis (via container)
+- Make (Linux/macOS, ou WSL sur Windows)
+
 
 ### Installation
 
@@ -62,34 +64,30 @@ Flowee est une application SaaS conçue pour centraliser et optimiser la gestion
 git clone https://github.com/votre-organisation/flowee.git
 cd flowee
 ```
-
-2. Installez les dépendances backend
-```bash
-cd backend
-npm install
+ 2. First launch (local - developpement ) 
+ ````
+ make env
 ```
 
-3. Installez les dépendances frontend
-```bash
-cd ../frontend
-npm install
-```
+This script performs the following steps:
 
-4. Configurez les variables d'environnement
-```bash
-# Dans le dossier racine, créez un fichier .env avec les informations adaptées
-```
+- Stops the running containers and removes the volumes (docker compose down -v)
 
-5. Démarrez l'application en mode développement
-```bash
-# Dans un terminal, démarrez le backend
-cd backend
-npm run dev
+- Rebuilds the containers (--build)
 
-# Dans un autre terminal, démarrez le frontend
-cd frontend
-npm run dev
-```
+- Restarts the services (--force-recreate -d)
+
+You get a ready-to-use environment with:
+
+- Backend at http://localhost:4000
+
+- Frontend at http://localhost:5173
+
+- Adminer at http://localhost:8080
+
+- Redis Commander at http://localhost:8881
+
+⚠️ Dependencies are automatically installed via the Dockerfiles.
 
 ## 🏗️ Architecture
 

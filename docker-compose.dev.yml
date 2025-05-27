@@ -1,5 +1,6 @@
 services:
   frontend:
+    container_name: flowee-frontend
     build: ./frontend
     command: sh -c "npm run dev"
     restart: unless-stopped
@@ -10,6 +11,7 @@ services:
       - /app/node_modules
 
   backend:
+    container_name: flowee-backend
     build: ./backend
     command: sh -c "npm run start"
     restart: unless-stopped
@@ -29,6 +31,7 @@ services:
       NODE_ENV: development
 
   db:
+    container_name: flowee-db
     image: postgres:16
     restart: unless-stopped
     # set shared memory limit when using docker-compose
@@ -59,6 +62,7 @@ services:
       retries: 3
 
   adminer:
+    container_name: flowee-adminer
     image: adminer
     restart: always
     ports:
@@ -68,6 +72,7 @@ services:
     image: redis
 
   redis-commander:
+    container_name: flowee-redis-commander
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
     platform: linux/x86_64

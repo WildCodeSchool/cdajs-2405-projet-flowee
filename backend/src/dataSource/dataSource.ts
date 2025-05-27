@@ -1,15 +1,14 @@
 import { DataSource } from "typeorm";
-import { Project } from "../entities/Project";
 import dotenv from "dotenv";
-import { Deliverable } from "../entities/Deliverable";
-import type { DeliverableStatus } from "../enums/DeliverableStatus";
 dotenv.config();
 
-const dbHost: string = process.env.DB_HOST || "";
-const dbPort: number = Number.parseInt(process.env.DB_PORT || "", 10);
-const dbName: string = process.env.DB_NAME || "";
-const dbUser: string = process.env.DB_USER || "";
-const dbPassword: string = process.env.DB_PASSWORD || "";
+const dbHost = process.env.DB_HOST ?? "localhost";
+const dbPort = Number.parseInt(process.env.DB_PORT ?? "5432", 10);
+const dbName = process.env.DB_NAME ?? "flowee";
+const dbUser = process.env.DB_USER ?? "postgres";
+const dbPassword = process.env.DB_PASSWORD ?? "passwordadminer";
+
+const isProd = process.env.NODE_ENV === "production";
 
 export const dataSource = new DataSource({
   type: "postgres",
@@ -19,32 +18,8 @@ export const dataSource = new DataSource({
   username: dbUser,
   password: dbPassword,
   entities: ["src/entities/*.ts"],
-  synchronize: true,
-  logging: "all",
+  migrations: ["src/migration/*.ts"],
+  migrationsTableName: "migrations",
+  synchronize: false,
+  logging: isProd ? ["error"] : "all", // Only log errors in production
 });
-
-export async function cleanDB() {
-  await dataSource.manager.clear(Project);
-}
-
-//Create a new deliverable
-
-export async function CreateDeliverableTestData(
-  name: string,
-  perimeter: string,
-  deliveryDate?: string,
-  status?: DeliverableStatus,
-  createdAt?: string,
-  reviewTimes?: number,
-) {
-  const deliverable = new Deliverable(
-    name,
-    perimeter,
-    deliveryDate,
-    status,
-    createdAt,
-    reviewTimes,
-  );
-  console.info("new deliverable: ", deliverable);
-  await dataSource.manager.save(deliverable);
-}
