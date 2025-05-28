@@ -42,9 +42,12 @@ export class Account extends BaseEntity {
   @OneToOne(
     () => Client,
     (client) => client.account,
+    {
+      nullable: true,
+    },
   )
-  @Field(() => Client)
-  client!: Client;
+  @Field(() => Client, { nullable: true })
+  client?: Client;
 
   @OneToOne(
     () => CompanyUser,
