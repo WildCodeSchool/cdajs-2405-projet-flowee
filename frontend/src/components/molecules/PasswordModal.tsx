@@ -113,7 +113,7 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Change Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
