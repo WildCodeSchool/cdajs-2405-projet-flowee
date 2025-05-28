@@ -9,6 +9,7 @@
 ![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)
 ![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker)
 ![Nginx](https://img.shields.io/badge/Nginx-1.21.x-009639?logo=nginx)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WildCodeSchool/cdajs-2405-projet-flowee)
 
 Flowee is a SaaS application built to streamline project management between companies and their clients. By centralizing communications and tracking deliverables, Flowee enhances visibility, organization, and accountability across all stages of a project.
 
