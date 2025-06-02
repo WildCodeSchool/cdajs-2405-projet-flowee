@@ -85,8 +85,8 @@ export class TaskMutations {
     }
   }
 
-  @Mutation(() => Task)
-  async deleteTask(@Arg("id") id: number): Promise<Task> {
+  @Mutation(() => Boolean)
+  async deleteTask(@Arg("id") id: number): Promise<boolean> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
       if (!task) {
@@ -96,7 +96,7 @@ export class TaskMutations {
       }
 
       await dataSource.manager.remove(task);
-      return task;
+      return true;
     } catch (error) {
       //Releve l erreur initiale si c'est une erreur GraphQLError
       if (error instanceof GraphQLError) {
