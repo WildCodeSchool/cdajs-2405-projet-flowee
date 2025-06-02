@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ClientStatus } from "@generated/graphql-types";
-import EllipsesIcon from "@icons/Ellipses";
+import EllipsesIcon from "@components/atoms/Icons/Ellipses";
 import ModalClient from "@components/ModalClient";
 import type { ClientUI } from "@interfaces/client.types";
 import { capitalize } from "@utils/stringUtils";

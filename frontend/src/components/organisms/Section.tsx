@@ -7,7 +7,7 @@ import { useGetProjectsByUserQuery } from "@generated/graphql-types";
 import type { Deliverable, Project, Task } from "@generated/graphql-types";
 
 import { useRoleTheme } from "@context/roleThemeContext";
-import ArrowIcon from "@icons/Arrow";
+import ArrowIcon from "@components/atoms/Icons/Arrow";
 import { NavLink } from "react-router-dom";
 export interface SectionProps {
   title: string;

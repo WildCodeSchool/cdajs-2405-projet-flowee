@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
-import DashboardIcon from "@icons/DashboardIcon";
-import ProjectsIcon from "@icons/ProjectsIcon";
-import PlusIcon from "@icons/PlusIcon";
-import ClientsIcon from "@icons/ClientsIcon";
-import SettingsIcon from "@icons/SettingsIcon";
-import LogoEntrepriseIcon from "@icons/LogoEntreprise";
+import DashboardIcon from "@components/atoms/Icons/DashboardIcon";
+import ProjectsIcon from "@components/atoms/Icons/ProjectsIcon";
+import PlusIcon from "@components/atoms/Icons/PlusIcon";
+import ClientsIcon from "@components/atoms/Icons/ClientsIcon";
+import SettingsIcon from "@components/atoms/Icons/SettingsIcon";
+import LogoEntrepriseIcon from "@components/atoms/Icons/LogoEntreprise";
 import { useRoleTheme } from "@context/roleThemeContext";
-import LogoClientIcon from "@icons/LogoClient";
+import LogoClientIcon from "@components/atoms/Icons/LogoClient";
 import Logout from "@components/molecules/Logout";
 
 export default function Navigation() {
