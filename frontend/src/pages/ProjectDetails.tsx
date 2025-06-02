@@ -82,9 +82,6 @@ const ProjectDetails = () => {
     }
   };
 
-  //SEARCHBAR
-  const [searchFilter, setSearchFilter] = useState("");
-
   return (
     <SignedInLayout>
       <NavLink to={"/projects"}>Back to projects</NavLink>
@@ -119,7 +116,7 @@ const ProjectDetails = () => {
               </span>
             </div>
           </aside>
-          <SearchBar setSearchFilter={setSearchFilter} />
+
           {project?.deliverables && (
             <DeliverablesByStatus
               deliverables={project.deliverables}
@@ -139,12 +136,10 @@ const ProjectDetails = () => {
               </span>
             </div>
           </aside>
-          <SearchBar setSearchFilter={setSearchFilter} />
 
           <section className="mb-4">
             <TasksByDeliverable
               deliverables={deliverables}
-              projectSlug={slug}
               onDelete={(id, name) => openDeleteModal("task", id, name)}
             />
           </section>

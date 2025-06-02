@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
 import { useState } from "react";
 import ItemDetails from "@pages/ItemDetails";
+import SearchBar from "./Search";
 interface Props {
   deliverables: Deliverable[];
   projectSlug: string | undefined;
@@ -21,22 +22,26 @@ export const DeliverablesByStatus = ({
   projectSlug,
   onDelete,
 }: Props) => {
+  const [searchFilter, setSearchFilter] = useState("");
+
   const [selectedDeliverableId, setSelectedDeliverableId] = useState<
     number | null
   >(null);
   const grouped = useMemo(() => {
     const g: Partial<Record<DeliverableStatus, Deliverable[]>> = {};
     for (const d of deliverables) {
+      if (!d.name?.toLowerCase().includes(searchFilter.toLowerCase())) continue;
+
       const status = d.status as DeliverableStatus;
       if (!g[status]) g[status] = [];
       g[status]?.push(d);
     }
     return g;
-  }, [deliverables]);
-  console.log("deliverables list:", deliverables);
+  }, [deliverables, searchFilter]);
 
   return (
     <>
+      <SearchBar setSearchFilter={setSearchFilter} />
       <Accordion className="w-full" allowMultiple>
         {DELIVERABLE_STATUS.map((status) => {
           const list = grouped[status];
