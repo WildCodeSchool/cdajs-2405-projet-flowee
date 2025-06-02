@@ -14,6 +14,7 @@ import type { MyContext } from "../types/MyContext";
 import { CompanyUser } from "../entities/CompanyUser";
 import { generateActivationToken } from "../utils/accesstoken";
 import { sendActivationEmail } from "../services/sendActivationEmail";
+import { invalidateCache } from "../utils/invalidatecache";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -151,6 +152,19 @@ export class ProjectMutations {
           },
         },
       );
+    }
+    // Invalidate cache
+    await invalidateCache(ctx.redis, user);
+    console.info("Cache invalidated for user projects");
+    console.info("Project created successfully:", result.newproject);
+    // Return the newly created project
+    if (!result.newproject) {
+      throw new GraphQLError("Project creation failed", {
+        extensions: {
+          code: "CREATE_PROJECT_FAILED",
+          originalError: "No project was created",
+        },
+      });
     }
 
     return result.newproject;

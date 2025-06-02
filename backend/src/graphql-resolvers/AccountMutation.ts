@@ -1,24 +1,27 @@
+import argon2 from "argon2";
+import { GraphQLError } from "graphql";
+import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Account } from "../entities/Account";
-import { Mutation, Arg, Resolver } from "type-graphql";
-import type { Role } from "../enums/Role";
+import { Client } from "../entities/Client";
+import { CompanyUser } from "../entities/CompanyUser";
 import { AccountStatus } from "../enums/AccountStatus";
-import argon2 from "argon2";
+import type { Role } from "../enums/Role";
 import {
   generateClientToken,
   generateCompanyUserToken,
 } from "../middlewares/auth";
-import { Client } from "../entities/Client";
-import { CompanyUser } from "../entities/CompanyUser";
+import { sendPasswordChangeNotification } from "../services/sendActivationEmail";
+import type { MyContext } from "../types/MyContext";
 import {
   clearActivationToken,
   isActivationTokenExpired,
 } from "../utils/accesstoken";
-import { GraphQLError } from "graphql";
 import {
   generateActivationJWT,
   verifyActivationJWT,
 } from "../utils/generateactivationtoken";
+import { validatePasswordChange } from "../utils/passwordUtils";
 
 @Resolver(Account)
 export class AccountMutation {
@@ -96,6 +99,65 @@ export class AccountMutation {
 
     await dataSource.manager.save(account);
     return true;
+  }
+
+  @Mutation(() => Boolean)
+  async updatePassword(
+    @Arg("currentPassword") currentPassword: string,
+    @Arg("newPassword") newPassword: string,
+    @Ctx() context: MyContext,
+  ): Promise<boolean> {
+    try {
+      if (!context.user) {
+        throw new GraphQLError("Not authenticated");
+      }
+
+      const account = await dataSource.manager.findOne(Account, {
+        where: { id: context.user.id },
+      });
+
+      if (!account) {
+        throw new GraphQLError("Account not found");
+      }
+
+      // Verify current password
+      const isValid = await argon2.verify(account.password, currentPassword);
+      if (!isValid) {
+        throw new GraphQLError("Current password is incorrect");
+      }
+
+      // Validate new password
+      const validationResult = validatePasswordChange(
+        currentPassword,
+        newPassword,
+      );
+
+      if (!validationResult.isValid) {
+        throw new GraphQLError(validationResult.errors.join(", "));
+      }
+
+      // Hash and save new password
+      account.password = await argon2.hash(newPassword);
+      await dataSource.manager.save(account);
+
+      // Send notification email
+      try {
+        const userName =
+          account.client?.clientName ||
+          account.companyUser?.firstname ||
+          account.email;
+        await sendPasswordChangeNotification(account.email, userName);
+      } catch (emailError) {
+        // Don't block the process if email fails
+      }
+
+      return true;
+    } catch (error) {
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+      throw new GraphQLError("Error updating password");
+    }
   }
 }
 

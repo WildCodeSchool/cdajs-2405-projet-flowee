@@ -9,8 +9,8 @@ import {
 import { CompanyUser } from "./CompanyUser";
 
 @ObjectType()
-@Entity("compagny")
-export class Compagny extends BaseEntity {
+@Entity("company")
+export class Company extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id?: number;
