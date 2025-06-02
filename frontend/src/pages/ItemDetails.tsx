@@ -1,38 +1,40 @@
-import { NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   useGetDeliverableByIdQuery,
   useGetTaskByIdQuery,
 } from "@generated/graphql-types";
 import { Tag } from "@components/atoms/Tag";
-import { useLocation } from "react-router-dom";
-const ItemDetails = () => {
-  const { type, id } = useParams();
-  const parseId = Number(id);
-  const { pathname } = useLocation();
-  const isDeliverable = pathname.includes("/deliverables/");
-  const { data: deliverableData } = useGetDeliverableByIdQuery({
-    skip: !isDeliverable || !id,
-    variables: { id: parseId ?? 0 },
-    onCompleted: (data) => {
-      console.info("Deliverable details data:", data);
-    },
-  });
-  console.log("ID =", parseId, "type =", type);
 
-  const { data: taskData } = useGetTaskByIdQuery({
-    skip: isDeliverable || !id,
-    variables: { id: parseId ?? 0 },
+interface ItemDetailsProps {
+  id: number;
+  type: "deliverable" | "task";
+  onClose: () => void;
+}
+
+const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
+  const isDeliverable = type === "deliverable";
+
+  const { data: deliverableData, loading: loadingDeliverable } =
+    useGetDeliverableByIdQuery({
+      skip: !isDeliverable,
+      variables: { id },
+    });
+
+  const { data: taskData, loading: loadingTask } = useGetTaskByIdQuery({
+    skip: isDeliverable,
+    variables: { id },
   });
+
+  const deliverable = deliverableData?.getDeliverable;
+  const task = taskData?.getTask;
   const item = isDeliverable
     ? deliverableData?.getDeliverable
     : taskData?.getTask;
-  const deliverable = deliverableData?.getDeliverable;
+
   // console.log("item", item);
   console.log("deliverable", deliverableData);
-  const navigate = useNavigate();
-  const task = taskData?.getTask;
+
   // console.log("task", task);
-  if (!item) {
+  if (!item || loadingDeliverable || loadingTask) {
     return (
       <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end h-full">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative">
@@ -41,6 +43,7 @@ const ItemDetails = () => {
       </div>
     );
   }
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end h-full">
       <div className="bg-white shadow-xl w-full h-full max-w-lg p-8 relative">
@@ -49,7 +52,7 @@ const ItemDetails = () => {
 
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={onClose}
             className="absolute top-3 right-3"
           >
             X
@@ -57,7 +60,9 @@ const ItemDetails = () => {
         </section>
 
         <section className="flex gap-4">
-          <Tag text={item?.status ?? ""} />
+          <Tag
+            text={isDeliverable ? deliverable?.status : task?.status ?? ""}
+          />
           <Tag text={isDeliverable ? "DELIVERABLE" : "TASK"} />
         </section>
 
@@ -104,7 +109,7 @@ const ItemDetails = () => {
         <section>
           <h2 className="mt-4 font-semibold">Perimeter</h2>
           <p className="text-sm text-gray-600">
-            {deliverable?.perimeter ?? task?.description ?? "No Permter added"}
+            {deliverable?.perimeter ?? task?.description ?? "No Perimter added"}
           </p>
         </section>
       </div>

@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, use } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
@@ -78,10 +78,6 @@ const router = createBrowserRouter([
       {
         path: "/projects/:slug",
         element: <ProjectDetails />,
-        children: [
-          { path: "deliverables/:id", element: <ItemDetails /> },
-          { path: "tasks/:id", element: <ItemDetails /> },
-        ],
       },
 
       {
