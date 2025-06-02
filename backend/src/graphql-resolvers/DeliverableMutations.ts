@@ -3,7 +3,7 @@ import { Arg, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
+import type { DeliverableStatus } from "../enums/DeliverableStatus";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
