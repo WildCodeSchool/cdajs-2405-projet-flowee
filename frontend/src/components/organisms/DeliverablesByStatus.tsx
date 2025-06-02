@@ -7,13 +7,19 @@ import {
 import type { Deliverable } from "@generated/graphql-types";
 import { useMemo } from "react";
 import { NavLink } from "react-router-dom";
+import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
 
 interface Props {
   deliverables: Deliverable[];
   projectSlug: string | undefined;
+  onDelete: (id: number) => void;
 }
 
-export const DeliverablesByStatus = ({ deliverables, projectSlug }: Props) => {
+export const DeliverablesByStatus = ({
+  deliverables,
+  projectSlug,
+  onDelete,
+}: Props) => {
   const grouped = useMemo(() => {
     const g: Partial<Record<DeliverableStatus, Deliverable[]>> = {};
     for (const d of deliverables) {
@@ -49,12 +55,20 @@ export const DeliverablesByStatus = ({ deliverables, projectSlug }: Props) => {
                   key={deliverable.id}
                   className="bg-white roundedshadow-sm flex justify-between"
                 >
-                  <NavLink
-                    to={`/projects/${projectSlug}/deliverables/${deliverable.id}`}
-                    className="font-medium"
-                  >
-                    {deliverable.name}
-                  </NavLink>
+                  <aside className="flex  gap-2 ">
+                    <button
+                      type="button"
+                      onClick={() => onDelete(Number(deliverable.id))}
+                    >
+                      <TrashcanIcon className="w-3 h-3 fill-red" />
+                    </button>
+                    <NavLink
+                      to={`/projects/${projectSlug}/deliverables/${deliverable.id}`}
+                      className="font-medium"
+                    >
+                      {deliverable.name}
+                    </NavLink>
+                  </aside>
 
                   {deliverable.endDate && (
                     <p className="text-xs text-gray-400">
