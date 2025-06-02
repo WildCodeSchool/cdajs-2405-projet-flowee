@@ -2,7 +2,11 @@ import FilterIcon from "@components/atoms/Icons/FilterIcon";
 import PlusIcon from "@components/atoms/Icons/PlusIcon";
 import { Tag } from "@components/atoms/Tag";
 import SearchBar from "@components/organisms/Search";
-import { useGetProjectByIdQuery } from "@generated/graphql-types";
+import {
+  useGetProjectByIdQuery,
+  useDeleteDeliverableMutation,
+  useDeleteTaskMutation,
+} from "@generated/graphql-types";
 import SignedInLayout from "@layout/SignedInLayout";
 import { useState } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
@@ -15,7 +19,7 @@ const ProjectDetails = () => {
   const parsedId = Number(rawId);
   const id = rawId && !Number.isNaN(parsedId) ? parsedId : null;
 
-  const { data } = useGetProjectByIdQuery({
+  const { data, refetch } = useGetProjectByIdQuery({
     skip: id === null,
     variables: { id: id ?? 0 },
 
@@ -28,7 +32,38 @@ const ProjectDetails = () => {
   });
 
   const project = data?.getProjectById;
+
+  //DELIVERABLES
   const deliverables = project?.deliverables ?? [];
+  const [deleteDeliverableMutation] = useDeleteDeliverableMutation();
+  const handleDeleteDeliverable = async (id: number) => {
+    try {
+      await deleteDeliverableMutation({
+        variables: { id },
+      });
+      console.info("Deliverable deleted");
+      refetch();
+    } catch (err) {
+      console.error("Error deleting deliverable:", err);
+    }
+  };
+
+  //TASKS
+  const [deleteTaskMutation] = useDeleteTaskMutation();
+
+  const handleDeleteTask = async (id: number) => {
+    try {
+      await deleteTaskMutation({
+        variables: { id },
+      });
+      console.info("Task deleted");
+      refetch();
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
+  };
+
+  //SEARCHBAR
   const [searchFilter, setSearchFilter] = useState("");
 
   return (
@@ -61,6 +96,7 @@ const ProjectDetails = () => {
             <DeliverablesByStatus
               deliverables={project.deliverables}
               projectSlug={slug}
+              onDelete={handleDeleteDeliverable}
             />
           )}
         </section>
@@ -81,6 +117,7 @@ const ProjectDetails = () => {
             <TasksByDeliverable
               deliverables={deliverables}
               projectSlug={slug}
+              onDelete={handleDeleteTask}
             />
           </section>
         </section>
