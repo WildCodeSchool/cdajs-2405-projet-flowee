@@ -1,3 +1,4 @@
+import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
 import type { Deliverable } from "@generated/graphql-types";
 import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import { NavLink } from "react-router-dom";
@@ -5,9 +6,14 @@ import { NavLink } from "react-router-dom";
 interface Props {
   deliverables: Deliverable[];
   projectSlug: string | undefined;
+  onDelete: (id: number) => void;
 }
 
-export const TasksByDeliverable = ({ deliverables, projectSlug }: Props) => {
+export const TasksByDeliverable = ({
+  deliverables,
+  projectSlug,
+  onDelete,
+}: Props) => {
   return (
     <Accordion className="w-full" allowMultiple>
       {deliverables.map((deliverable) => (
@@ -27,12 +33,20 @@ export const TasksByDeliverable = ({ deliverables, projectSlug }: Props) => {
                   key={task.id}
                   className="bg-white roundedshadow-sm flex justify-between"
                 >
-                  <NavLink
-                    to={`/projects/${projectSlug}/tasks/${task.id}`}
-                    className="font-medium"
-                  >
-                    {task.name}
-                  </NavLink>
+                  <aside className="flex  gap-2 ">
+                    <button
+                      type="button"
+                      onClick={() => onDelete(Number(task.id))}
+                    >
+                      <TrashcanIcon className="w-3 h-3 fill-red" />
+                    </button>
+                    <NavLink
+                      to={`/projects/${projectSlug}/tasks/${task.id}`}
+                      className="font-medium"
+                    >
+                      {task.name}
+                    </NavLink>
+                  </aside>
 
                   {task.endDate && (
                     <p className="text-xs text-gray-400">
