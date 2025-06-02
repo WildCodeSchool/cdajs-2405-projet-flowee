@@ -30,10 +30,6 @@ const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
     ? deliverableData?.getDeliverable
     : taskData?.getTask;
 
-  // console.log("item", item);
-  console.log("deliverable", deliverableData);
-
-  // console.log("task", task);
   if (!item || loadingDeliverable || loadingTask) {
     return (
       <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end h-full">
@@ -61,7 +57,9 @@ const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
 
         <section className="flex gap-4">
           <Tag
-            text={isDeliverable ? deliverable?.status : task?.status ?? ""}
+            text={
+              isDeliverable ? deliverable?.status ?? "" : task?.status ?? ""
+            }
           />
           <Tag text={isDeliverable ? "DELIVERABLE" : "TASK"} />
         </section>
