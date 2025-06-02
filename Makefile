@@ -36,6 +36,7 @@ env:
 # Création d'un utilisateur de base de données
 .PHONY: init-db-user
 init-db-user:
+docker exec -it $(BACKEND_CONTAINER) \
 	npx ts-node backend/src/scripts/init_db_user.ts
 
 # Supprimer un utilisateur de base de données

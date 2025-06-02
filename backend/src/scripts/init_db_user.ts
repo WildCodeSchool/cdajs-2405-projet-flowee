@@ -16,8 +16,9 @@ if (!DB_NAME || !DB_USER || !DB_PASSWORD || !DB_SUPERUSER) {
   process.exit(1);
 }
 
-const startDbCommand = "docker compose -f docker-compose.dev.yml up -d db";
-const stopDbCommand = "docker compose -f docker-compose.dev.yml stop db";
+// Pas besoin de lancer les containers ici ils sont deja lancés avec le script run.sh ou le makefile
+// const startDbCommand = "docker compose -f docker-compose.dev.yml up -d db";
+// const stopDbCommand = "docker compose -f docker-compose.dev.yml stop db";
 
 const createUserCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -c "CREATE USER \\"${DB_USER}\\" WITH PASSWORD '${DB_PASSWORD}';"`;
 const createDatabaseCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -c "CREATE DATABASE \\"${DB_NAME}\\" OWNER \\"${DB_USER}\\";"`;
@@ -76,23 +77,23 @@ function waitForPostgres(): Promise<void> {
   });
 }
 
-function isDbRunning(): Promise<boolean> {
-  return new Promise((resolve) => {
-    exec(
-      `docker ps --filter "name=${DB_CONTAINER}" --filter "status=running" -q`,
-      (error, stdout) => {
-        resolve(!!stdout.trim());
-        console.error(error);
-      },
-    );
-  });
-}
+// function isDbRunning(): Promise<boolean> {
+//   return new Promise((resolve) => {
+//     exec(
+//       `docker ps --filter "name=${DB_CONTAINER}" --filter "status=running" -q`,
+//       (error, stdout) => {
+//         resolve(!!stdout.trim());
+//         console.error(error);
+//       },
+//     );
+//   });
+// }
 
 async function init() {
   try {
-    const dbAlreadyRunning = await isDbRunning();
+    // const dbAlreadyRunning = await isDbRunning();
 
-    await executeCommand(startDbCommand);
+    // await executeCommand(startDbCommand);
     await waitForPostgres();
 
     await executeCommand(createUserCommand);
@@ -106,9 +107,9 @@ async function init() {
     await executeCommand(grantAllSequences);
     await executeCommand(setDefaultPrivilegesTables);
     await executeCommand(setDefaultPrivilegesSequences);
-    if (!dbAlreadyRunning) {
-      await executeCommand(stopDbCommand);
-    }
+    // if (!dbAlreadyRunning) {
+    //   await executeCommand(stopDbCommand);
+    // }
 
     console.log("Database successfully initialized!");
   } catch (err) {
