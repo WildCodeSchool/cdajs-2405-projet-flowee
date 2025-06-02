@@ -12,7 +12,7 @@ import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
 interface Props {
   deliverables: Deliverable[];
   projectSlug: string | undefined;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, name: string) => void;
 }
 
 export const DeliverablesByStatus = ({
@@ -58,7 +58,9 @@ export const DeliverablesByStatus = ({
                   <aside className="flex  gap-2 ">
                     <button
                       type="button"
-                      onClick={() => onDelete(Number(deliverable.id))}
+                      onClick={() =>
+                        onDelete(Number(deliverable.id), deliverable.name)
+                      }
                     >
                       <TrashcanIcon className="w-3 h-3 fill-red" />
                     </button>

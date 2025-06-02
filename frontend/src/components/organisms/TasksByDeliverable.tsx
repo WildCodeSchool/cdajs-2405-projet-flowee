@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 interface Props {
   deliverables: Deliverable[];
   projectSlug: string | undefined;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, name: string) => void;
 }
 
 export const TasksByDeliverable = ({
@@ -36,7 +36,7 @@ export const TasksByDeliverable = ({
                   <aside className="flex  gap-2 ">
                     <button
                       type="button"
-                      onClick={() => onDelete(Number(task.id))}
+                      onClick={() => onDelete(Number(task.id), task.name)}
                     >
                       <TrashcanIcon className="w-3 h-3 fill-red" />
                     </button>

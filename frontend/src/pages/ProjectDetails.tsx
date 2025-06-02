@@ -12,6 +12,7 @@ import { useState } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
 import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
+import ModalConfirmDelete from "@components/molecules/ModalConfirmDelete";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -36,30 +37,48 @@ const ProjectDetails = () => {
   //DELIVERABLES
   const deliverables = project?.deliverables ?? [];
   const [deleteDeliverableMutation] = useDeleteDeliverableMutation();
-  const handleDeleteDeliverable = async (id: number) => {
-    try {
-      await deleteDeliverableMutation({
-        variables: { id },
-      });
-      console.info("Deliverable deleted");
-      refetch();
-    } catch (err) {
-      console.error("Error deleting deliverable:", err);
-    }
-  };
 
   //TASKS
   const [deleteTaskMutation] = useDeleteTaskMutation();
 
-  const handleDeleteTask = async (id: number) => {
+  //MODAL
+  const [modalState, setModalState] = useState<{
+    open: boolean;
+    entity: "task" | "deliverable" | null;
+    id: number | null;
+    name: string;
+  }>({
+    open: false,
+    entity: null,
+    id: null,
+    name: "",
+  });
+
+  const openDeleteModal = (
+    entity: "task" | "deliverable",
+    id: number,
+    name: string
+  ) => {
+    setModalState({ open: true, entity, id, name });
+  };
+
+  const confirmDelete = async () => {
+    const { entity, id } = modalState;
+    if (!id || !entity) return;
+
     try {
-      await deleteTaskMutation({
-        variables: { id },
-      });
-      console.info("Task deleted");
+      if (entity === "task") {
+        await deleteTaskMutation({ variables: { id } });
+        console.info("Tâche supprimée");
+      } else {
+        await deleteDeliverableMutation({ variables: { id } });
+        console.info("Livrable supprimé");
+      }
+
+      setModalState({ open: false, entity: null, id: null, name: "" });
       refetch();
     } catch (err) {
-      console.error("Error deleting task:", err);
+      console.error("Erreur lors de la suppression :", err);
     }
   };
 
@@ -80,6 +99,15 @@ const ProjectDetails = () => {
         <h3 className="text-lg font-semibold">About the project</h3>
         <p>{project?.description}</p>
       </section>
+      <ModalConfirmDelete
+        open={modalState.open}
+        header={`Are you sure you want to delete this ${modalState.entity}?`}
+        itemName={modalState.name}
+        onConfirm={confirmDelete}
+        onCancel={() =>
+          setModalState({ open: false, entity: null, id: null, name: "" })
+        }
+      />
       <section className="flex gap-4 w-full">
         <section className="flex flex-col gap-4 w-full">
           <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold ">
@@ -96,7 +124,7 @@ const ProjectDetails = () => {
             <DeliverablesByStatus
               deliverables={project.deliverables}
               projectSlug={slug}
-              onDelete={handleDeleteDeliverable}
+              onDelete={(id, name) => openDeleteModal("deliverable", id, name)}
             />
           )}
         </section>
@@ -117,7 +145,7 @@ const ProjectDetails = () => {
             <TasksByDeliverable
               deliverables={deliverables}
               projectSlug={slug}
-              onDelete={handleDeleteTask}
+              onDelete={(id, name) => openDeleteModal("task", id, name)}
             />
           </section>
         </section>
