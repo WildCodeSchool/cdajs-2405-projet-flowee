@@ -1,13 +1,14 @@
-import FilterIcon from "@components/atoms/Icons/FilterIcon";
 import PlusIcon from "@components/atoms/Icons/PlusIcon";
 import { Tag } from "@components/atoms/Tag";
-
+import type { FormData } from "@interfaces/FormData";
 import {
   useCreateDeliverableMutation,
+  useCreateTaskMutation,
   useGetProjectByIdQuery,
   useDeleteDeliverableMutation,
   useDeleteTaskMutation,
   DeliverableStatus,
+  TaskStatus,
 } from "@generated/graphql-types";
 import SignedInLayout from "@layout/SignedInLayout";
 import { useState } from "react";
@@ -41,32 +42,41 @@ const ProjectDetails = () => {
     "deliverable"
   );
   const [createDeliverableMutation] = useCreateDeliverableMutation();
+  const [createTaskMutation] = useCreateTaskMutation();
 
-  const handleSubmit = async (formData: {
-    projectId: number;
-    name: string;
-    deadline?: string;
-    perimeter?: string;
-    status?: DeliverableStatus;
-  }) => {
+  const handleSubmit = async (formData: FormData) => {
     try {
-      const { name, perimeter, deadline, projectId, status } = formData;
-
-      await createDeliverableMutation({
-        variables: {
-          newDeliverable: {
-            name,
-            perimeter,
-            deliveryDate: deadline,
-            projectId,
-            status: status ?? DeliverableStatus.NotStarted,
+      if (formData.type === "deliverable") {
+        const { name, perimeter, deadline, projectId, status } = formData;
+        await createDeliverableMutation({
+          variables: {
+            newDeliverable: {
+              name,
+              perimeter,
+              deliveryDate: deadline,
+              projectId,
+              status: status ?? DeliverableStatus.NotStarted,
+            },
           },
-        },
-      });
+        });
+      } else if (formData.type === "task") {
+        const { name, description, deadline, deliverableId, status } = formData;
+        await createTaskMutation({
+          variables: {
+            newTask: {
+              name,
+              description,
+              endDate: deadline,
+              deliverableId,
+              status: status ?? TaskStatus.NotStarted,
+            },
+          },
+        });
+      }
 
       refetch();
     } catch (error) {
-      console.error("creation error", error);
+      console.error("Erreur de création :", error);
     } finally {
       setShowModal(false);
     }
@@ -180,7 +190,6 @@ const ProjectDetails = () => {
           <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold">
             <h2>Tasks</h2>
             <div className="flex gap-4 items-center">
-              <FilterIcon className="fill-theme-darkGray " />
               <button
                 className="flex items-center justify-center w-6 h-6 border-2 border-theme-darkGray rounded-full"
                 type="button"
@@ -208,6 +217,10 @@ const ProjectDetails = () => {
           onClose={() => setShowModal(false)}
           onSubmit={handleSubmit}
           projectOptions={projectOptions}
+          deliverableOptions={deliverables.map((d) => ({
+            id: d.id,
+            name: d.name,
+          }))}
         />
       )}
 

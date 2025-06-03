@@ -1,48 +1,54 @@
 import { Input } from "@components/atoms/Input";
 import { Textarea } from "@components/atoms/TextArea";
-import { DeliverableStatus } from "@generated/graphql-types";
+import { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
 import { useState } from "react";
+import type { ModalCreateItemProps } from "@interfaces/CreateItemProps";
 
-interface ModalCreateItemProps {
-  mode: "deliverable" | "task";
-  onClose: () => void;
-  onSubmit: (formData: {
-    projectId: number;
-    name: string;
-    deadline?: string;
-    perimeter?: string;
-    status?: DeliverableStatus;
-  }) => void;
-  projectOptions: { id: string; name: string }[];
-}
 export default function AddItem({
   mode,
   onClose,
   onSubmit,
   projectOptions,
+  deliverableOptions = [],
 }: ModalCreateItemProps) {
-  const [project, setProject] = useState("");
-  const [name, setName] = useState("");
   const [currentMode, setCurrentMode] = useState<"deliverable" | "task">(mode);
+  const isDeliverable = mode === "deliverable";
+
+  const [project, setProject] = useState("");
+  const [deliverableId, setDeliverableId] = useState("");
+  const [name, setName] = useState("");
   const [deadline, setDeadline] = useState("");
   const [perimeter, setPerimeter] = useState("");
-  const [status, setStatus] = useState<DeliverableStatus>(
-    DeliverableStatus.NotStarted
+  const [status, setStatus] = useState(
+    isDeliverable ? DeliverableStatus.NotStarted : TaskStatus.NotStarted
   );
-
-  const isDeliverable = mode === "deliverable";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      name,
-      deadline,
-      perimeter,
-      projectId: Number(project),
-      status,
-    });
+
+    if (isDeliverable) {
+      onSubmit({
+        type: "deliverable",
+        name,
+        deadline,
+        perimeter,
+        projectId: Number(project),
+        status: status as DeliverableStatus,
+      });
+    } else {
+      onSubmit({
+        type: "task",
+        name,
+        deadline,
+        description: perimeter,
+        deliverableId: Number(deliverableId),
+        status: status as TaskStatus,
+      });
+    }
+
     onClose();
   };
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end h-full">
       <section className="bg-white max-w-sm p-6 flex flex-col gap-4">
@@ -82,34 +88,63 @@ export default function AddItem({
           onSubmit={handleSubmit}
           className="max-w-m p-6 flex flex-col gap-4"
         >
-          <label className=" font-medium">
-            Project *
-            <select
-              required
-              value={project}
-              onChange={(e) => setProject(e.target.value)}
-              className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md focus:bg-white focus:outline-blue focus:invalid:border-red focus:invalid:outline-red"
-            >
-              <option value="" disabled>
-                Select a project
-              </option>
-              {projectOptions.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
+          {isDeliverable ? (
+            <label className="font-medium">
+              Project *
+              <select
+                required
+                value={project}
+                onChange={(e) => setProject(e.target.value)}
+                className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md"
+              >
+                <option value="" disabled>
+                  Select a project
                 </option>
-              ))}
-            </select>
-          </label>
+                {projectOptions.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <label className="font-medium">
+              Deliverable *
+              <select
+                required
+                value={deliverableId}
+                onChange={(e) => setDeliverableId(e.target.value)}
+                className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md"
+              >
+                <option value="" disabled>
+                  Select a deliverable
+                </option>
+                {deliverableOptions.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <label className="font-medium">
             Status
             <select
               required
               value={status}
-              onChange={(e) => setStatus(e.target.value as DeliverableStatus)}
-              className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md focus:bg-white focus:outline-blue"
+              onChange={(e) =>
+                setStatus(
+                  isDeliverable
+                    ? (e.target.value as DeliverableStatus)
+                    : (e.target.value as TaskStatus)
+                )
+              }
+              className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md"
             >
-              {Object.entries(DeliverableStatus).map(([label, value]) => (
+              {Object.entries(
+                isDeliverable ? DeliverableStatus : TaskStatus
+              ).map(([label, value]) => (
                 <option key={value} value={value}>
                   {label.replace(/([A-Z])/g, " $1").trim()}
                 </option>

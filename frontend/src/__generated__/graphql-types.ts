@@ -86,6 +86,15 @@ export type CreateProjectInput = {
   projectName: Scalars['String']['input'];
 };
 
+export type CreateTaskInput = {
+  deliverableId: Scalars['Float']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  startDate?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<TaskStatus>;
+};
+
 export type Deliverable = {
   __typename?: 'Deliverable';
   createdAt?: Maybe<Scalars['String']['output']>;
@@ -173,11 +182,7 @@ export type MutationCreateProjectArgs = {
 
 
 export type MutationCreateTaskArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  endDate?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  startDate?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  newTask: CreateTaskInput;
 };
 
 
@@ -319,6 +324,14 @@ export type Task = {
   status?: Maybe<Scalars['String']['output']>;
 };
 
+/** The status of a Task */
+export enum TaskStatus {
+  Blocked = 'BLOCKED',
+  Completed = 'COMPLETED',
+  InProgress = 'IN_PROGRESS',
+  NotStarted = 'NOT_STARTED'
+}
+
 export type TrackerStats = {
   __typename?: 'TrackerStats';
   approvedDeliverables?: Maybe<Scalars['Float']['output']>;
@@ -417,6 +430,13 @@ export type DeleteTaskMutationVariables = Exact<{
 
 
 export type DeleteTaskMutation = { __typename?: 'Mutation', deleteTask: boolean };
+
+export type CreateTaskMutationVariables = Exact<{
+  newTask: CreateTaskInput;
+}>;
+
+
+export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null, deliverable?: { __typename?: 'Deliverable', id: string, name: string } | null } };
 
 export type GetAllClientsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -901,6 +921,48 @@ export function useDeleteTaskMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
 export type DeleteTaskMutationResult = Apollo.MutationResult<DeleteTaskMutation>;
 export type DeleteTaskMutationOptions = Apollo.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
+export const CreateTaskDocument = gql`
+    mutation CreateTask($newTask: CreateTaskInput!) {
+  createTask(newTask: $newTask) {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+    deliverable {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateTaskMutationFn = Apollo.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      newTask: // value for 'newTask'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(baseOptions?: Apollo.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, options);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = Apollo.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
 export const GetAllClientsDocument = gql`
     query GetAllClients {
   getAllClients {

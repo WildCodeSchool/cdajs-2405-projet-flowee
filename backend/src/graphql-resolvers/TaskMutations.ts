@@ -1,11 +1,10 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Task } from "../entities/Task";
 
 import type { TaskStatus } from "../enums/TaskStatus";
 import { CreateTaskInput } from "../inputs/CreateTaskInput";
-import type { MyContext } from "../types/MyContext";
 import { Deliverable } from "../entities/Deliverable";
 
 @Resolver(Task)
