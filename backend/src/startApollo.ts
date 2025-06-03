@@ -33,7 +33,8 @@ import {
   createComplexityRule,
   createMaxDepthRule,
   createNoIntrospectionRule,
-} from './utils/securityRules';
+} from "./utils/securityRules";
+import { DeliverableStatus } from "./enums/DeliverableStatus";
 
 registerEnumType(Role, {
   name: "Role",
@@ -45,6 +46,10 @@ registerEnumType(ProjectStatus, {
   description: "Project, task or deliverable status",
 });
 
+registerEnumType(DeliverableStatus, {
+  name: "DeliverableStatus",
+  description: "The status of a deliverable",
+});
 registerEnumType(AccountStatus, {
   name: "AccountStatus",
   description: "Account status",
@@ -54,7 +59,6 @@ registerEnumType(ClientStatus, {
   name: "ClientStatus",
   description: "Status of client",
 });
-
 
 export async function cleanDB() {
   await dataSource.manager.clear(Project);
@@ -84,31 +88,32 @@ async function startServerApollo() {
       ],
       authChecker,
     });
-    const server = new ApolloServer<MyContext>({ 
+    const server = new ApolloServer<MyContext>({
       schema, // Allows introspection outside of the prod
-      introspection: process.env.NODE_ENV !== 'production', 
+      introspection: process.env.NODE_ENV !== "production",
       // règles de validation
       validationRules: [
-        createMaxDepthRule(10),              // max depth = 10
-        createComplexityRule({               // max complexity = 500
-        scalarCost: 1,
-        objectCost: 2,
-        listFactor: 10,
-        maxCost: 500,
-    }),
-    // Disable introspection in prod
-    ...(process.env.NODE_ENV === 'production'
-      ? [createNoIntrospectionRule()]
-      : []),
-  ],
-  // we put our rate-limiter in-memory
-  plugins: [
-    createRateLimiterPlugin({
-      windowMs: 60_000, // 1 minute
-      max: 100,         // 100 requests per minute
-    }),
-  ],
-});
+        createMaxDepthRule(10), // max depth = 10
+        createComplexityRule({
+          // max complexity = 500
+          scalarCost: 1,
+          objectCost: 2,
+          listFactor: 10,
+          maxCost: 500,
+        }),
+        // Disable introspection in prod
+        ...(process.env.NODE_ENV === "production"
+          ? [createNoIntrospectionRule()]
+          : []),
+      ],
+      // we put our rate-limiter in-memory
+      plugins: [
+        createRateLimiterPlugin({
+          windowMs: 60_000, // 1 minute
+          max: 100, // 100 requests per minute
+        }),
+      ],
+    });
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
