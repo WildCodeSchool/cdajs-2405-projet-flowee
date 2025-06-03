@@ -1,4 +1,4 @@
-import SuccessIcon from "@atoms/Icons/Success";
+import SuccessIcon from "@components/atoms/Icons/Success";
 
 export default function SuccessBanner({ message }: { message: string }) {
   return (

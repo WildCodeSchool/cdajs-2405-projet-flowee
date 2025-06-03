@@ -7,7 +7,7 @@ import {
 import { Input } from "@atoms/Input";
 import { Textarea } from "@atoms/TextArea";
 import { NavLink } from "react-router-dom";
-import ArrowIcon from "@atoms/Icons/Arrow";
+import ArrowIcon from "@components/atoms/Icons/Arrow";
 
 export default function CreateProject() {
   const {

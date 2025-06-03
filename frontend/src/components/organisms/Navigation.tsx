@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
-import DashboardIcon from "@icons/DashboardIcon";
-import ProjectsIcon from "@icons/ProjectsIcon";
-import PlusIcon from "@icons/PlusIcon";
-import ClientsIcon from "@icons/ClientsIcon";
-import SettingsIcon from "@icons/SettingsIcon";
-import LogoEntrepriseIcon from "@icons/LogoEntreprise";
+import DashboardIcon from "@components/atoms/Icons/DashboardIcon";
+import ProjectsIcon from "@components/atoms/Icons/ProjectsIcon";
+import PlusIcon from "@components/atoms/Icons/PlusIcon";
+import ClientsIcon from "@components/atoms/Icons/ClientsIcon";
+import SettingsIcon from "@components/atoms/Icons/SettingsIcon";
+import LogoEntrepriseIcon from "@components/atoms/Icons/LogoEntreprise";
 import { useRoleTheme } from "@context/roleThemeContext";
-import LogoClientIcon from "@icons/LogoClient";
+import LogoClientIcon from "@components/atoms/Icons/LogoClient";
 import Logout from "@components/molecules/Logout";
 
 export default function Navigation() {
@@ -48,7 +48,7 @@ export default function Navigation() {
               className="flex flex-col items-center text-gray-500 md:justify-center"
             >
               <div className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-theme-veryDark">
-                <PlusIcon className="h-6 w-6 md:h-4 md:w-4 text-white" />
+                <PlusIcon className="h-6 w-6 md:h-4 md:w-4 fill-white" />
               </div>
             </NavLink>
           </li>

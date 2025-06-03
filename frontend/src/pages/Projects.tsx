@@ -6,9 +6,9 @@ import SearchBar from "@organisms/Search";
 import { useState } from "react";
 import { Card } from "@organisms/Cards";
 import { NavLink } from "react-router-dom";
-import ArrowIcon from "@icons/Arrow";
+import ArrowIcon from "@components/atoms/Icons/Arrow";
 import SignedInLayout from "@layout/SignedInLayout";
-import FilterIcon from "@icons/FilterIcon";
+import FilterIcon from "@components/atoms/Icons/FilterIcon";
 export default function Projects() {
   const [searchFilter, setSearchFilter] = useState("");
   const role = useGetProjectsByUserQuery();

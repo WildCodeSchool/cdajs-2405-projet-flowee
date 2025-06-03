@@ -13,7 +13,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 };
 export type MakeEmpty<
   T extends { [key: string]: unknown },
-  K extends keyof T,
+  K extends keyof T
 > = { [_ in K]?: never };
 export type Incremental<T> =
   | T
@@ -82,12 +82,31 @@ export type CompanyUser = {
   lastname: Scalars["String"]["output"];
 };
 
+export type CreateDeliverableInput = {
+  createdAt?: InputMaybe<Scalars["String"]["input"]>;
+  deliveryDate?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  perimeter?: InputMaybe<Scalars["String"]["input"]>;
+  projectId: Scalars["Float"]["input"];
+  reviewTimes?: InputMaybe<Scalars["Float"]["input"]>;
+  status?: InputMaybe<DeliverableStatus>;
+};
+
 export type CreateProjectInput = {
   clientEmail: Scalars["String"]["input"];
   clientName: Scalars["String"]["input"];
   description?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["String"]["input"]>;
   projectName: Scalars["String"]["input"];
+};
+
+export type CreateTaskInput = {
+  deliverableId: Scalars["Float"]["input"];
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  endDate?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  startDate?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<TaskStatus>;
 };
 
 export type Deliverable = {
@@ -103,6 +122,16 @@ export type Deliverable = {
   tasks?: Maybe<Array<Task>>;
 };
 
+/** The status of a deliverable */
+export enum DeliverableStatus {
+  Approved = "APPROVED",
+  Blocked = "BLOCKED",
+  InProgress = "IN_PROGRESS",
+  InReview = "IN_REVIEW",
+  Late = "LATE",
+  NotStarted = "NOT_STARTED",
+}
+
 export type Mutation = {
   __typename?: "Mutation";
   activateAccountAndReturnToken: Scalars["String"]["output"];
@@ -114,9 +143,9 @@ export type Mutation = {
   createProject: Project;
   createTask: Task;
   deleteClient: Scalars["Boolean"]["output"];
-  deleteCompany: Scalars["Boolean"]["output"];
+  deleteCompagny: Scalars["Boolean"]["output"];
   deleteDeliverable: Scalars["Boolean"]["output"];
-  deleteTask: Task;
+  deleteTask: Scalars["Boolean"]["output"];
   login: Scalars["String"]["output"];
   setPasswordFromActivation: Scalars["Boolean"]["output"];
   updateClient: Client;
@@ -300,6 +329,14 @@ export type Task = {
   status?: Maybe<Scalars["String"]["output"]>;
 };
 
+/** The status of a Task */
+export enum TaskStatus {
+  Blocked = "BLOCKED",
+  Completed = "COMPLETED",
+  InProgress = "IN_PROGRESS",
+  NotStarted = "NOT_STARTED",
+}
+
 export type TrackerStats = {
   __typename?: "TrackerStats";
   approvedDeliverables?: Maybe<Scalars["Float"]["output"]>;
@@ -453,36 +490,6 @@ export type GetAllDeliverablesQuery = {
   }>;
 };
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
-
-export type MeQuery = {
-  __typename?: "Query";
-  me?: {
-    __typename?: "Account";
-    id: string;
-    email: string;
-    role: string;
-    companyUser?: {
-      __typename?: "CompanyUser";
-      id: string;
-      firstname: string;
-      lastname: string;
-      company?: {
-        __typename?: "Company";
-        id: string;
-        name: string;
-        address?: string | null;
-        contactInfo?: string | null;
-      } | null;
-    } | null;
-    client?: {
-      __typename?: "Client";
-      id: string;
-      clientName?: string | null;
-    } | null;
-  } | null;
-};
-
 export type MeCompanyQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeCompanyQuery = {
@@ -621,12 +628,12 @@ export type UpdatePasswordMutation = {
 };
 
 export const CreateAccountDocument = gql`
-    mutation CreateAccount($role: String!, $password: String!, $email: String!) {
-  createAccount(role: $role, password: $password, email: $email) {
-    id
+  mutation CreateAccount($role: String!, $password: String!, $email: String!) {
+    createAccount(role: $role, password: $password, email: $email) {
+      id
+    }
   }
-}
-    `;
+`;
 export type CreateAccountMutationFn = Apollo.MutationFunction<
   CreateAccountMutation,
   CreateAccountMutationVariables
@@ -655,7 +662,7 @@ export function useCreateAccountMutation(
   baseOptions?: Apollo.MutationHookOptions<
     CreateAccountMutation,
     CreateAccountMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -673,10 +680,10 @@ export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<
   CreateAccountMutationVariables
 >;
 export const ActivateAccountAndReturnTokenDocument = gql`
-    mutation ActivateAccountAndReturnToken($token: String!) {
-  activateAccountAndReturnToken(token: $token)
-}
-    `;
+  mutation ActivateAccountAndReturnToken($token: String!) {
+    activateAccountAndReturnToken(token: $token)
+  }
+`;
 export type ActivateAccountAndReturnTokenMutationFn = Apollo.MutationFunction<
   ActivateAccountAndReturnTokenMutation,
   ActivateAccountAndReturnTokenMutationVariables
@@ -703,7 +710,7 @@ export function useActivateAccountAndReturnTokenMutation(
   baseOptions?: Apollo.MutationHookOptions<
     ActivateAccountAndReturnTokenMutation,
     ActivateAccountAndReturnTokenMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -722,10 +729,10 @@ export type ActivateAccountAndReturnTokenMutationOptions =
     ActivateAccountAndReturnTokenMutationVariables
   >;
 export const SetPasswordFromActivationDocument = gql`
-    mutation SetPasswordFromActivation($token: String!, $password: String!) {
-  setPasswordFromActivation(token: $token, password: $password)
-}
-    `;
+  mutation SetPasswordFromActivation($token: String!, $password: String!) {
+    setPasswordFromActivation(token: $token, password: $password)
+  }
+`;
 export type SetPasswordFromActivationMutationFn = Apollo.MutationFunction<
   SetPasswordFromActivationMutation,
   SetPasswordFromActivationMutationVariables
@@ -753,7 +760,7 @@ export function useSetPasswordFromActivationMutation(
   baseOptions?: Apollo.MutationHookOptions<
     SetPasswordFromActivationMutation,
     SetPasswordFromActivationMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -772,13 +779,13 @@ export type SetPasswordFromActivationMutationOptions =
     SetPasswordFromActivationMutationVariables
   >;
 export const MutationDocument = gql`
-    mutation Mutation($accountId: Float!, $name: String!) {
-  createClient(accountId: $accountId, Name: $name) {
-    id
-    clientName
+  mutation Mutation($accountId: Float!, $name: String!) {
+    createClient(accountId: $accountId, Name: $name) {
+      id
+      clientName
+    }
   }
-}
-    `;
+`;
 export type MutationMutationFn = Apollo.MutationFunction<
   MutationMutation,
   MutationMutationVariables
@@ -806,12 +813,12 @@ export function useMutationMutation(
   baseOptions?: Apollo.MutationHookOptions<
     MutationMutation,
     MutationMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<MutationMutation, MutationMutationVariables>(
     MutationDocument,
-    options,
+    options
   );
 }
 export type MutationMutationHookResult = ReturnType<typeof useMutationMutation>;
@@ -821,10 +828,10 @@ export type MutationMutationOptions = Apollo.BaseMutationOptions<
   MutationMutationVariables
 >;
 export const DeleteClientDocument = gql`
-    mutation DeleteClient($id: Float!) {
-  deleteClient(id: $id)
-}
-    `;
+  mutation DeleteClient($id: Float!) {
+    deleteClient(id: $id)
+  }
+`;
 export type DeleteClientMutationFn = Apollo.MutationFunction<
   DeleteClientMutation,
   DeleteClientMutationVariables
@@ -851,7 +858,7 @@ export function useDeleteClientMutation(
   baseOptions?: Apollo.MutationHookOptions<
     DeleteClientMutation,
     DeleteClientMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -869,14 +876,14 @@ export type DeleteClientMutationOptions = Apollo.BaseMutationOptions<
   DeleteClientMutationVariables
 >;
 export const ArchiveClientDocument = gql`
-    mutation ArchiveClient($id: Float!) {
-  archiveClient(id: $id) {
-    id
-    clientName
-    status
+  mutation ArchiveClient($id: Float!) {
+    archiveClient(id: $id) {
+      id
+      clientName
+      status
+    }
   }
-}
-    `;
+`;
 export type ArchiveClientMutationFn = Apollo.MutationFunction<
   ArchiveClientMutation,
   ArchiveClientMutationVariables
@@ -903,7 +910,7 @@ export function useArchiveClientMutation(
   baseOptions?: Apollo.MutationHookOptions<
     ArchiveClientMutation,
     ArchiveClientMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -921,22 +928,27 @@ export type ArchiveClientMutationOptions = Apollo.BaseMutationOptions<
   ArchiveClientMutationVariables
 >;
 export const UpdateClientDocument = gql`
-    mutation UpdateClient($id: Float!, $newName: String, $newEmail: String, $newStatus: String) {
-  updateClient(
-    id: $id
-    newName: $newName
-    newEmail: $newEmail
-    newStatus: $newStatus
+  mutation UpdateClient(
+    $id: Float!
+    $newName: String
+    $newEmail: String
+    $newStatus: String
   ) {
-    id
-    clientName
-    status
-    account {
-      email
+    updateClient(
+      id: $id
+      newName: $newName
+      newEmail: $newEmail
+      newStatus: $newStatus
+    ) {
+      id
+      clientName
+      status
+      account {
+        email
+      }
     }
   }
-}
-    `;
+`;
 export type UpdateClientMutationFn = Apollo.MutationFunction<
   UpdateClientMutation,
   UpdateClientMutationVariables
@@ -966,7 +978,7 @@ export function useUpdateClientMutation(
   baseOptions?: Apollo.MutationHookOptions<
     UpdateClientMutation,
     UpdateClientMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -984,18 +996,18 @@ export type UpdateClientMutationOptions = Apollo.BaseMutationOptions<
   UpdateClientMutationVariables
 >;
 export const CreateProjectDocument = gql`
-    mutation CreateProject($newProject: CreateProjectInput!) {
-  createProject(newProject: $newProject) {
-    id
-    projectName
-    companyUserId
-    description
-    startDate
-    endDate
-    status
+  mutation CreateProject($newProject: CreateProjectInput!) {
+    createProject(newProject: $newProject) {
+      id
+      projectName
+      companyUserId
+      description
+      startDate
+      endDate
+      status
+    }
   }
-}
-    `;
+`;
 export type CreateProjectMutationFn = Apollo.MutationFunction<
   CreateProjectMutation,
   CreateProjectMutationVariables
@@ -1022,7 +1034,7 @@ export function useCreateProjectMutation(
   baseOptions?: Apollo.MutationHookOptions<
     CreateProjectMutation,
     CreateProjectMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
@@ -1040,10 +1052,10 @@ export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<
   CreateProjectMutationVariables
 >;
 export const LoginDocument = gql`
-    mutation Login($password: String!, $email: String!) {
-  login(password: $password, email: $email)
-}
-    `;
+  mutation Login($password: String!, $email: String!) {
+    login(password: $password, email: $email)
+  }
+`;
 export type LoginMutationFn = Apollo.MutationFunction<
   LoginMutation,
   LoginMutationVariables
@@ -1071,12 +1083,12 @@ export function useLoginMutation(
   baseOptions?: Apollo.MutationHookOptions<
     LoginMutation,
     LoginMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
     LoginDocument,
-    options,
+    options
   );
 }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
@@ -1086,17 +1098,17 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutationVariables
 >;
 export const GetAllClientsDocument = gql`
-    query GetAllClients {
-  getAllClients {
-    id
-    clientName
-    account {
-      email
+  query GetAllClients {
+    getAllClients {
+      id
+      clientName
+      account {
+        email
+      }
+      status
     }
-    status
   }
-}
-    `;
+`;
 
 /**
  * __useGetAllClientsQuery__
@@ -1117,24 +1129,24 @@ export function useGetAllClientsQuery(
   baseOptions?: Apollo.QueryHookOptions<
     GetAllClientsQuery,
     GetAllClientsQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetAllClientsQuery, GetAllClientsQueryVariables>(
     GetAllClientsDocument,
-    options,
+    options
   );
 }
 export function useGetAllClientsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetAllClientsQuery,
     GetAllClientsQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetAllClientsQuery, GetAllClientsQueryVariables>(
     GetAllClientsDocument,
-    options,
+    options
   );
 }
 export function useGetAllClientsSuspenseQuery(
@@ -1143,7 +1155,7 @@ export function useGetAllClientsSuspenseQuery(
     | Apollo.SuspenseQueryHookOptions<
         GetAllClientsQuery,
         GetAllClientsQueryVariables
-      >,
+      >
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1168,24 +1180,24 @@ export type GetAllClientsQueryResult = Apollo.QueryResult<
   GetAllClientsQueryVariables
 >;
 export const GetAllDeliverablesDocument = gql`
-    query GetAllDeliverables {
-  getAllDeliverables {
-    id
-    name
-    perimeter
-    endDate
-    status
-    createdAt
-    reviewTimes
-    tasks {
+  query GetAllDeliverables {
+    getAllDeliverables {
       id
       name
-      description
+      perimeter
+      endDate
       status
+      createdAt
+      reviewTimes
+      tasks {
+        id
+        name
+        description
+        status
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetAllDeliverablesQuery__
@@ -1206,7 +1218,7 @@ export function useGetAllDeliverablesQuery(
   baseOptions?: Apollo.QueryHookOptions<
     GetAllDeliverablesQuery,
     GetAllDeliverablesQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -1218,7 +1230,7 @@ export function useGetAllDeliverablesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetAllDeliverablesQuery,
     GetAllDeliverablesQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
@@ -1232,7 +1244,7 @@ export function useGetAllDeliverablesSuspenseQuery(
     | Apollo.SuspenseQueryHookOptions<
         GetAllDeliverablesQuery,
         GetAllDeliverablesQueryVariables
-      >,
+      >
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1256,96 +1268,26 @@ export type GetAllDeliverablesQueryResult = Apollo.QueryResult<
   GetAllDeliverablesQuery,
   GetAllDeliverablesQueryVariables
 >;
-export const MeDocument = gql`
-    query Me {
-  me {
-    id
-    email
-    role
-    companyUser {
-      id
-      firstname
-      lastname
-      company {
-        id
-        name
-        address
-        contactInfo
-      }
-    }
-    client {
-      id
-      clientName
-    }
-  }
-}
-    `;
-
-/**
- * __useMeQuery__
- *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-}
-export function useMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-}
-export function useMeSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(
-    MeDocument,
-    options,
-  );
-}
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MeCompanyDocument = gql`
-    query MeCompany {
-  me {
-    id
-    email
-    role
-    companyUser {
+  query MeCompany {
+    me {
       id
-      firstname
-      lastname
-      company {
+      email
+      role
+      companyUser {
         id
-        name
-        address
-        contactInfo
+        firstname
+        lastname
+        company {
+          id
+          name
+          address
+          contactInfo
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useMeCompanyQuery__
@@ -1363,33 +1305,30 @@ export const MeCompanyDocument = gql`
  * });
  */
 export function useMeCompanyQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    MeCompanyQuery,
-    MeCompanyQueryVariables
-  >,
+  baseOptions?: Apollo.QueryHookOptions<MeCompanyQuery, MeCompanyQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<MeCompanyQuery, MeCompanyQueryVariables>(
     MeCompanyDocument,
-    options,
+    options
   );
 }
 export function useMeCompanyLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     MeCompanyQuery,
     MeCompanyQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<MeCompanyQuery, MeCompanyQueryVariables>(
     MeCompanyDocument,
-    options,
+    options
   );
 }
 export function useMeCompanySuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<MeCompanyQuery, MeCompanyQueryVariables>,
+    | Apollo.SuspenseQueryHookOptions<MeCompanyQuery, MeCompanyQueryVariables>
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1397,7 +1336,7 @@ export function useMeCompanySuspenseQuery(
       : { ...defaultOptions, ...baseOptions };
   return Apollo.useSuspenseQuery<MeCompanyQuery, MeCompanyQueryVariables>(
     MeCompanyDocument,
-    options,
+    options
   );
 }
 export type MeCompanyQueryHookResult = ReturnType<typeof useMeCompanyQuery>;
@@ -1412,18 +1351,18 @@ export type MeCompanyQueryResult = Apollo.QueryResult<
   MeCompanyQueryVariables
 >;
 export const GetAllProjectsDocument = gql`
-    query GetAllProjects {
-  getAllProjects {
-    id
-    projectName
-    companyUserId
-    description
-    startDate
-    endDate
-    status
+  query GetAllProjects {
+    getAllProjects {
+      id
+      projectName
+      companyUserId
+      description
+      startDate
+      endDate
+      status
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useGetAllProjectsQuery__
@@ -1444,24 +1383,24 @@ export function useGetAllProjectsQuery(
   baseOptions?: Apollo.QueryHookOptions<
     GetAllProjectsQuery,
     GetAllProjectsQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetAllProjectsQuery, GetAllProjectsQueryVariables>(
     GetAllProjectsDocument,
-    options,
+    options
   );
 }
 export function useGetAllProjectsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetAllProjectsQuery,
     GetAllProjectsQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetAllProjectsQuery, GetAllProjectsQueryVariables>(
     GetAllProjectsDocument,
-    options,
+    options
   );
 }
 export function useGetAllProjectsSuspenseQuery(
@@ -1470,7 +1409,7 @@ export function useGetAllProjectsSuspenseQuery(
     | Apollo.SuspenseQueryHookOptions<
         GetAllProjectsQuery,
         GetAllProjectsQueryVariables
-      >,
+      >
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1495,39 +1434,39 @@ export type GetAllProjectsQueryResult = Apollo.QueryResult<
   GetAllProjectsQueryVariables
 >;
 export const GetProjectsByUserDocument = gql`
-    query GetProjectsByUser {
-  getProjectsByUser {
-    id
-    projectName
-    companyUserId
-    description
-    startDate
-    endDate
-    status
-    client {
+  query GetProjectsByUser {
+    getProjectsByUser {
       id
-      clientName
-    }
-    deliverables {
-      id
-      name
-      perimeter
+      projectName
+      companyUserId
+      description
+      startDate
       endDate
       status
-      createdAt
-      reviewTimes
-      tasks {
+      client {
+        id
+        clientName
+      }
+      deliverables {
         id
         name
-        description
-        status
-        startDate
+        perimeter
         endDate
+        status
+        createdAt
+        reviewTimes
+        tasks {
+          id
+          name
+          description
+          status
+          startDate
+          endDate
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetProjectsByUserQuery__
@@ -1548,7 +1487,7 @@ export function useGetProjectsByUserQuery(
   baseOptions?: Apollo.QueryHookOptions<
     GetProjectsByUserQuery,
     GetProjectsByUserQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
@@ -1560,7 +1499,7 @@ export function useGetProjectsByUserLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetProjectsByUserQuery,
     GetProjectsByUserQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
@@ -1574,7 +1513,7 @@ export function useGetProjectsByUserSuspenseQuery(
     | Apollo.SuspenseQueryHookOptions<
         GetProjectsByUserQuery,
         GetProjectsByUserQueryVariables
-      >,
+      >
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1599,39 +1538,39 @@ export type GetProjectsByUserQueryResult = Apollo.QueryResult<
   GetProjectsByUserQueryVariables
 >;
 export const GetProjectByIdDocument = gql`
-    query GetProjectById($id: Float!) {
-  getProjectById(id: $id) {
-    id
-    projectName
-    companyUserId
-    description
-    startDate
-    endDate
-    status
-    client {
+  query GetProjectById($id: Float!) {
+    getProjectById(id: $id) {
       id
-      clientName
-    }
-    deliverables {
-      id
-      name
-      perimeter
+      projectName
+      companyUserId
+      description
+      startDate
       endDate
       status
-      createdAt
-      reviewTimes
-      tasks {
+      client {
+        id
+        clientName
+      }
+      deliverables {
         id
         name
-        description
-        status
-        startDate
+        perimeter
         endDate
+        status
+        createdAt
+        reviewTimes
+        tasks {
+          id
+          name
+          description
+          status
+          startDate
+          endDate
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetProjectByIdQuery__
@@ -1657,24 +1596,24 @@ export function useGetProjectByIdQuery(
     (
       | { variables: GetProjectByIdQueryVariables; skip?: boolean }
       | { skip: boolean }
-    ),
+    )
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetProjectByIdQuery, GetProjectByIdQueryVariables>(
     GetProjectByIdDocument,
-    options,
+    options
   );
 }
 export function useGetProjectByIdLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetProjectByIdQuery,
     GetProjectByIdQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetProjectByIdQuery, GetProjectByIdQueryVariables>(
     GetProjectByIdDocument,
-    options,
+    options
   );
 }
 export function useGetProjectByIdSuspenseQuery(
@@ -1683,7 +1622,7 @@ export function useGetProjectByIdSuspenseQuery(
     | Apollo.SuspenseQueryHookOptions<
         GetProjectByIdQuery,
         GetProjectByIdQueryVariables
-      >,
+      >
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1708,14 +1647,14 @@ export type GetProjectByIdQueryResult = Apollo.QueryResult<
   GetProjectByIdQueryVariables
 >;
 export const GetTrackerStatsDocument = gql`
-    query GetTrackerStats {
-  getTrackerStats {
-    approvedDeliverables
-    lateProjects
-    needReview
+  query GetTrackerStats {
+    getTrackerStats {
+      approvedDeliverables
+      lateProjects
+      needReview
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useGetTrackerStatsQuery__
@@ -1736,19 +1675,19 @@ export function useGetTrackerStatsQuery(
   baseOptions?: Apollo.QueryHookOptions<
     GetTrackerStatsQuery,
     GetTrackerStatsQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetTrackerStatsQuery, GetTrackerStatsQueryVariables>(
     GetTrackerStatsDocument,
-    options,
+    options
   );
 }
 export function useGetTrackerStatsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     GetTrackerStatsQuery,
     GetTrackerStatsQueryVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
@@ -1762,7 +1701,7 @@ export function useGetTrackerStatsSuspenseQuery(
     | Apollo.SuspenseQueryHookOptions<
         GetTrackerStatsQuery,
         GetTrackerStatsQueryVariables
-      >,
+      >
 ) {
   const options =
     baseOptions === Apollo.skipToken
@@ -1787,10 +1726,10 @@ export type GetTrackerStatsQueryResult = Apollo.QueryResult<
   GetTrackerStatsQueryVariables
 >;
 export const UpdatePasswordDocument = gql`
-    mutation UpdatePassword($currentPassword: String!, $newPassword: String!) {
-  updatePassword(currentPassword: $currentPassword, newPassword: $newPassword)
-}
-    `;
+  mutation UpdatePassword($currentPassword: String!, $newPassword: String!) {
+    updatePassword(currentPassword: $currentPassword, newPassword: $newPassword)
+  }
+`;
 export type UpdatePasswordMutationFn = Apollo.MutationFunction<
   UpdatePasswordMutation,
   UpdatePasswordMutationVariables
@@ -1818,7 +1757,7 @@ export function useUpdatePasswordMutation(
   baseOptions?: Apollo.MutationHookOptions<
     UpdatePasswordMutation,
     UpdatePasswordMutationVariables
-  >,
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<

@@ -3,6 +3,7 @@ import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Task } from "../entities/Task";
 import { TaskMutations } from "../graphql-resolvers/TaskMutations";
 import { TaskStatus } from "../enums/TaskStatus";
+import type { CreateTaskInput } from "../inputs/CreateTaskInput";
 
 describe("Task Mutations", () => {
   let taskMutations: TaskMutations;
@@ -28,19 +29,19 @@ describe("Task Mutations", () => {
 
   describe("createTask", () => {
     it("should create a new task", async () => {
-      // Moquer la méthode 'save' de la classe Task
       mockTypeOrm().onMock(Task).toReturn(task, "save");
 
-      // Appel de la mutation createTask
-      const createdTask = await taskMutations.createTask(
-        task.name,
-        task.description,
-        task.status,
-        task.startDate,
-        task.endDate
-      );
+      const input: CreateTaskInput = {
+        name: task.name,
+        description: task.description,
+        status: task.status,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        deliverableId: faker.number.int(),
+      };
 
-      // Vérifie que l'objet retourné match l'original
+      const createdTask = await taskMutations.createTask(input);
+
       expect(createdTask).toMatchObject({
         name: task.name,
         description: task.description,
@@ -50,17 +51,17 @@ describe("Task Mutations", () => {
       });
     });
 
-    it("should throw an error if something goes wrong (e.g. name is empty)", async () => {
-      // Ici, on s'attend à ce que l'erreur levée soit "Invalid information"
-      // car dans TaskMutations.ts, le catch jette "Invalid information"
-      await expect(
-        taskMutations.createTask(
-          "", // name vide
-          "Some description",
-          TaskStatus.NOT_STARTED
-          // startDate et endDate peuvent être omis
-        )
-      ).rejects.toThrow("Name is required");
+    it("should throw an error if name is empty", async () => {
+      const input: CreateTaskInput = {
+        name: "",
+        description: "Some description",
+        status: TaskStatus.NOT_STARTED,
+        deliverableId: faker.number.int(),
+      };
+
+      await expect(taskMutations.createTask(input)).rejects.toThrow(
+        "Name is required"
+      );
     });
   });
 
