@@ -159,7 +159,7 @@ const ProjectDetails = () => {
           setModalState({ open: false, entity: null, id: null, name: "" })
         }
       />
-      <section className="flex gap-4 w-full">
+      <section className="flex flex-col md:flex-row gap-4 w-full">
         <section className="flex flex-col gap-4 w-full">
           <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold ">
             <h2>Deliverables</h2>

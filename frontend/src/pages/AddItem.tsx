@@ -51,7 +51,7 @@ export default function AddItem({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end h-full">
-      <section className="bg-white w-full max-w-sm p-6 flex flex-col gap-4">
+      <section className="bg-white w-full h-full md:max-w-sm p-6 flex flex-col gap-4 overflow-y-auto">
         <button
           type="button"
           onClick={onClose}
