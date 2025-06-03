@@ -12,7 +12,7 @@ export default function AddItem({
   deliverableOptions = [],
 }: ModalCreateItemProps) {
   const [currentMode, setCurrentMode] = useState<"deliverable" | "task">(mode);
-  const isDeliverable = mode === "deliverable";
+  const isDeliverable = currentMode === "deliverable";
 
   const [project, setProject] = useState("");
   const [deliverableId, setDeliverableId] = useState("");
@@ -51,7 +51,7 @@ export default function AddItem({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end h-full">
-      <section className="bg-white max-w-sm p-6 flex flex-col gap-4">
+      <section className="bg-white w-full max-w-sm p-6 flex flex-col gap-4">
         <button
           type="button"
           onClick={onClose}
@@ -59,7 +59,7 @@ export default function AddItem({
         >
           x
         </button>
-        <aside className="flex justify-evenly items-center mb-4">
+        <aside className="flex justify-evenly items-center mb-4 w-full">
           <button
             type="button"
             className={` mt-4 px-6 py-2 rounded-lg font-medium text-sm transition-all ${
@@ -73,7 +73,7 @@ export default function AddItem({
           </button>
           <button
             type="button"
-            className={`px-6 py-2 rounded-lg font-medium text-sm transition-all ${
+            className={` mt-4 px-6 py-2 rounded-lg font-medium text-sm transition-all ${
               !isDeliverable
                 ? "bg-theme-base text-white"
                 : "bg-gray-100 text-black hover:bg-gray-200"
