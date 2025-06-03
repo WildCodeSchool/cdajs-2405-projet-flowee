@@ -28,9 +28,6 @@ const ProjectDetails = () => {
     skip: id === null,
     variables: { id: id ?? 0 },
 
-    onCompleted: (data) => {
-      console.info("Project details data:", data);
-    },
     onError: (error) => {
       console.error("Error fetching project details:", error);
     },
@@ -119,16 +116,14 @@ const ProjectDetails = () => {
     try {
       if (entity === "task") {
         await deleteTaskMutation({ variables: { id } });
-        console.info("Tâche supprimée");
       } else {
         await deleteDeliverableMutation({ variables: { id } });
-        console.info("Livrable supprimé");
       }
 
       setModalState({ open: false, entity: null, id: null, name: "" });
       refetch();
     } catch (err) {
-      console.error("Erreur lors de la suppression :", err);
+      console.error("Can't delete :", err);
     }
   };
 

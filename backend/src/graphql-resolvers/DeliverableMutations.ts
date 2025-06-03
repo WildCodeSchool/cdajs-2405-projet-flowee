@@ -56,7 +56,7 @@ export class DeliverableMutations {
       deliverable.project = project;
 
       await dataSource.manager.save(deliverable);
-      console.info("Deliverable created:", deliverable);
+
       return deliverable;
     } catch (error) {
       throw new GraphQLError("Failed to create deliverable", {
