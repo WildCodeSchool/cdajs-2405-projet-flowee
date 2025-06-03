@@ -1,28 +1,50 @@
 import { GraphQLError } from "graphql";
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
-import type { DeliverableStatus } from "../enums/DeliverableStatus";
+
+import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
+import type { MyContext } from "../types/MyContext";
+import { Project } from "../entities/Project";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
+  @Authorized("ADMIN")
   @Mutation((_) => Deliverable)
   async createDeliverable(
-    @Arg("name") name: string,
-    @Arg("perimeter", { nullable: true }) perimeter?: string,
-    @Arg("deliveryDate", { nullable: true }) deliveryDate?: string,
-    @Arg("status", { nullable: true }) status?: DeliverableStatus,
-    @Arg("createdAt", { nullable: true }) createdAt?: string,
-    @Arg("reviewTimes", { nullable: true }) reviewTimes?: number
+    @Arg("newDeliverable", () => CreateDeliverableInput)
+    newDeliverableInput: CreateDeliverableInput,
+    @Ctx() ctx: MyContext
   ): Promise<Deliverable> {
-    if (!name) {
-      throw new GraphQLError("Name is required", {
-        extensions: { code: "VALIDATION_ERROR" },
+    const user = ctx.user;
+
+    if (!user || user.role !== "ADMIN") {
+      throw new GraphQLError("Unauthorized : admin required", {
+        extensions: { code: "FORBIDDEN" },
       });
     }
+    const {
+      name,
+      perimeter,
+      deliveryDate,
+      status,
+      createdAt,
+      reviewTimes,
+      projectId,
+    } = newDeliverableInput;
+
     try {
-      const newDeliverable = new Deliverable(
+      const project = await dataSource.manager.findOne(Project, {
+        where: { id: projectId },
+      });
+      if (!project) {
+        throw new GraphQLError("Project not found", {
+          extensions: { code: "NOT_FOUND" },
+        });
+      }
+
+      const deliverable = new Deliverable(
         name,
         perimeter,
         deliveryDate,
@@ -30,13 +52,13 @@ export class DeliverableMutations {
         createdAt,
         reviewTimes
       );
-      await dataSource.manager.save(newDeliverable);
-      console.info("Deliverable created:", newDeliverable);
-      return newDeliverable;
+
+      deliverable.project = project;
+
+      await dataSource.manager.save(deliverable);
+      console.info("Deliverable created:", deliverable);
+      return deliverable;
     } catch (error) {
-      if (error instanceof GraphQLError) {
-        throw error;
-      }
       throw new GraphQLError("Failed to create deliverable", {
         extensions: {
           code: "CREATE_DELIVERABLE_ERROR",

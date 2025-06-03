@@ -68,6 +68,16 @@ export type CompanyUser = {
   lastname: Scalars['String']['output'];
 };
 
+export type CreateDeliverableInput = {
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  deliveryDate?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  perimeter?: InputMaybe<Scalars['String']['input']>;
+  projectId: Scalars['Float']['input'];
+  reviewTimes?: InputMaybe<Scalars['Float']['input']>;
+  status?: InputMaybe<DeliverableStatus>;
+};
+
 export type CreateProjectInput = {
   clientEmail: Scalars['String']['input'];
   clientName: Scalars['String']['input'];
@@ -88,6 +98,16 @@ export type Deliverable = {
   status?: Maybe<Scalars['String']['output']>;
   tasks?: Maybe<Array<Task>>;
 };
+
+/** The status of a deliverable */
+export enum DeliverableStatus {
+  Approved = 'APPROVED',
+  Blocked = 'BLOCKED',
+  InProgress = 'IN_PROGRESS',
+  InReview = 'IN_REVIEW',
+  Late = 'LATE',
+  NotStarted = 'NOT_STARTED'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -143,12 +163,7 @@ export type MutationCreateCompagnyArgs = {
 
 
 export type MutationCreateDeliverableArgs = {
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  deliveryDate?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  perimeter?: InputMaybe<Scalars['String']['input']>;
-  reviewTimes?: InputMaybe<Scalars['Float']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  newDeliverable: CreateDeliverableInput;
 };
 
 
@@ -380,6 +395,13 @@ export type DeleteDeliverableMutationVariables = Exact<{
 
 
 export type DeleteDeliverableMutation = { __typename?: 'Mutation', deleteDeliverable: boolean };
+
+export type CreateDeliverableMutationVariables = Exact<{
+  newDeliverable: CreateDeliverableInput;
+}>;
+
+
+export type CreateDeliverableMutation = { __typename?: 'Mutation', createDeliverable: { __typename?: 'Deliverable', id: string, name: string, perimeter?: string | null, endDate?: string | null, status?: string | null, createdAt?: string | null, reviewTimes?: number | null, project?: { __typename?: 'Project', id: string, projectName: string, companyUserId: number, description?: string | null, startDate?: string | null, endDate?: string | null, status?: string | null } | null } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -768,6 +790,54 @@ export function useDeleteDeliverableMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteDeliverableMutationHookResult = ReturnType<typeof useDeleteDeliverableMutation>;
 export type DeleteDeliverableMutationResult = Apollo.MutationResult<DeleteDeliverableMutation>;
 export type DeleteDeliverableMutationOptions = Apollo.BaseMutationOptions<DeleteDeliverableMutation, DeleteDeliverableMutationVariables>;
+export const CreateDeliverableDocument = gql`
+    mutation CreateDeliverable($newDeliverable: CreateDeliverableInput!) {
+  createDeliverable(newDeliverable: $newDeliverable) {
+    id
+    name
+    perimeter
+    endDate
+    status
+    createdAt
+    reviewTimes
+    project {
+      id
+      projectName
+      companyUserId
+      description
+      startDate
+      endDate
+      status
+    }
+  }
+}
+    `;
+export type CreateDeliverableMutationFn = Apollo.MutationFunction<CreateDeliverableMutation, CreateDeliverableMutationVariables>;
+
+/**
+ * __useCreateDeliverableMutation__
+ *
+ * To run a mutation, you first call `useCreateDeliverableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDeliverableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDeliverableMutation, { data, loading, error }] = useCreateDeliverableMutation({
+ *   variables: {
+ *      newDeliverable: // value for 'newDeliverable'
+ *   },
+ * });
+ */
+export function useCreateDeliverableMutation(baseOptions?: Apollo.MutationHookOptions<CreateDeliverableMutation, CreateDeliverableMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDeliverableMutation, CreateDeliverableMutationVariables>(CreateDeliverableDocument, options);
+      }
+export type CreateDeliverableMutationHookResult = ReturnType<typeof useCreateDeliverableMutation>;
+export type CreateDeliverableMutationResult = Apollo.MutationResult<CreateDeliverableMutation>;
+export type CreateDeliverableMutationOptions = Apollo.BaseMutationOptions<CreateDeliverableMutation, CreateDeliverableMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(password: $password, email: $email)
