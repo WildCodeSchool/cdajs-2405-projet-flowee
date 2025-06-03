@@ -35,6 +35,7 @@ import {
   createNoIntrospectionRule,
 } from "./utils/securityRules";
 import { DeliverableStatus } from "./enums/DeliverableStatus";
+import { TaskStatus } from "./enums/TaskStatus";
 
 registerEnumType(Role, {
   name: "Role",
@@ -49,6 +50,11 @@ registerEnumType(ProjectStatus, {
 registerEnumType(DeliverableStatus, {
   name: "DeliverableStatus",
   description: "The status of a deliverable",
+});
+
+registerEnumType(TaskStatus, {
+  name: "TaskStatus",
+  description: "The status of a Task",
 });
 registerEnumType(AccountStatus, {
   name: "AccountStatus",

@@ -1,27 +1,32 @@
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Task } from "../entities/Task";
 
 import type { TaskStatus } from "../enums/TaskStatus";
+import { CreateTaskInput } from "../inputs/CreateTaskInput";
+import type { MyContext } from "../types/MyContext";
+import { Deliverable } from "../entities/Deliverable";
 
 @Resolver(Task)
 export class TaskMutations {
+  @Authorized("ADMIN")
   @Mutation(() => Task)
   async createTask(
-    @Arg("name") name: string,
-    @Arg("description", { nullable: true }) description?: string,
-    @Arg("status", { nullable: true }) status?: TaskStatus,
-    @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string
+    @Arg("newTask", () => CreateTaskInput)
+    newTaskInput: CreateTaskInput
   ): Promise<Task> {
-    if (!name) {
-      throw new GraphQLError("Name is required", {
-        extensions: { code: "VALIDATION_ERROR" },
-      });
-    }
+    const { name, description, startDate, endDate, status, deliverableId } =
+      newTaskInput;
 
     try {
+      const deliverable = await dataSource.manager.findOneByOrFail(
+        Deliverable,
+        {
+          id: deliverableId,
+        }
+      );
+
       const newTask = new Task(
         name,
         description ?? "",
@@ -29,10 +34,12 @@ export class TaskMutations {
         endDate,
         status
       );
+
+      newTask.deliverable = deliverable;
+
       await dataSource.manager.save(newTask);
       return newTask;
     } catch (error) {
-      // Relancer l’erreur si c’est déjà un GraphQLError
       if (error instanceof GraphQLError) {
         throw error;
       }
