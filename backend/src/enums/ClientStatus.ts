@@ -1,5 +1,5 @@
 export enum ClientStatus {
-    ACTIVE = "ACTIVE",
-    INACTIVE = "INACTIVE",
-    ARCHIVED = "ARCHIVED",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  ARCHIVED = "ARCHIVED",
 }

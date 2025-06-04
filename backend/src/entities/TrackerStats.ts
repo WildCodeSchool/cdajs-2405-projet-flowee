@@ -14,7 +14,7 @@ export class TrackerStats {
   constructor(
     needReview: number,
     approvedDeliverables: number,
-    lateProjects?: number
+    lateProjects?: number,
   ) {
     this.needReview = needReview;
     this.approvedDeliverables = approvedDeliverables;

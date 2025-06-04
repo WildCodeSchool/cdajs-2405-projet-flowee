@@ -105,10 +105,7 @@ export default function SettingsClient() {
             </form>
           </section>
           <section aria-labelledby="project-heading" className="mb-10">
-            <h2
-              id="project-heading"
-              className="md:ml-6 text-base font-medium "
-            >
+            <h2 id="project-heading" className="md:ml-6 text-base font-medium ">
               Projects
             </h2>
             <div className="md:ml-6 space-y-2">
@@ -127,7 +124,10 @@ export default function SettingsClient() {
             </div>
           </section>
           <section aria-labelledby="notifications-heading" className="mb-12">
-            <h2 id="notifications-heading" className="text-xl font-semibold mb-6">
+            <h2
+              id="notifications-heading"
+              className="text-xl font-semibold mb-6"
+            >
               Notifications
             </h2>
             <div className="flex flex-col space-y-4 md:ml-6">
@@ -159,9 +159,9 @@ export default function SettingsClient() {
           </div>
         </div>
       </main>
-      <PasswordModal 
-        isOpen={isPasswordModalOpen} 
-        onClose={() => setIsPasswordModalOpen(false)} 
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
       />
     </div>
   );

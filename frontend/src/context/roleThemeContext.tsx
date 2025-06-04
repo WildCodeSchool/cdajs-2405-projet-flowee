@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useEffect } from "react";
+import { createContext, useContext, type ReactNode, useEffect } from "react";
 import { useAuth } from "./authContext";
 
 type RoleClass = "client" | "admin" | "visitor";

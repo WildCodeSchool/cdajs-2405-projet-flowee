@@ -28,6 +28,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   DateTimeISO: { input: any; output: any };
 };
 

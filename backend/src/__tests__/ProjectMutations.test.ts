@@ -57,7 +57,7 @@ describe("Project creation", () => {
 
       const createdProject: Project = await projectMutations.createProject(
         validInput,
-        mockCtx as MyContext
+        mockCtx as MyContext,
       );
 
       expect(createdProject).toEqual(expect.anything());

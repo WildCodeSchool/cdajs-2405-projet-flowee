@@ -2,7 +2,7 @@ import { Arg, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Account } from "../entities/Account";
 import { Client } from "../entities/Client";
-import { ClientStatus} from "../enums/ClientStatus";
+import { ClientStatus } from "../enums/ClientStatus";
 
 @Resolver(Client)
 export class ClientMutations {
@@ -50,13 +50,13 @@ export class ClientMutations {
       throw new Error("client not found");
     }
 
-     if (newName !== undefined) {
+    if (newName !== undefined) {
       client.clientName = newName;
     }
     if (newEmail) {
-       if (!client.account) {
-      throw new Error("Account not found for the client");
-    }
+      if (!client.account) {
+        throw new Error("Account not found for the client");
+      }
       client.account.email = newEmail;
       await dataSource.manager.save(client.account);
     }
@@ -65,13 +65,10 @@ export class ClientMutations {
     }
     await dataSource.manager.save(client);
     return client;
-    }
-
+  }
 
   @Mutation(() => Boolean)
-  async deleteClient(
-    @Arg("id", () => Number) id: number,
-  ): Promise<boolean> {
+  async deleteClient(@Arg("id", () => Number) id: number): Promise<boolean> {
     try {
       const result = await dataSource.manager.delete(Client, { id });
       return result.affected !== 0;
@@ -82,9 +79,7 @@ export class ClientMutations {
   }
 
   @Mutation(() => Client)
-  async archiveClient(
-    @Arg("id", () => Number) id: number,
-  ): Promise<Client> {
+  async archiveClient(@Arg("id", () => Number) id: number): Promise<Client> {
     try {
       const client = await dataSource.manager.findOne(Client, {
         where: { id },
