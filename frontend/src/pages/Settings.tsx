@@ -14,9 +14,11 @@ export default function Settings() {
       {!loading && !error && data?.me?.companyUser && <SettingsCompanyUser />}
       {!loading && !error && data?.me?.client && <SettingsClient />}
       {/* Optionnel : fallback si aucun type reconnu */}
-      {!loading && !error && data?.me && !data.me.companyUser && !data.me.client && (
-        <div>Unknown user type</div>
-      )}
+      {!loading &&
+        !error &&
+        data?.me &&
+        !data.me.companyUser &&
+        !data.me.client && <div>Unknown user type</div>}
     </SignedInLayout>
   );
 }

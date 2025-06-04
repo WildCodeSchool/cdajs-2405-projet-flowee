@@ -13,7 +13,7 @@ export class TaskMutations {
     @Arg("description", { nullable: true }) description?: string,
     @Arg("status", { nullable: true }) status?: TaskStatus,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     if (!name) {
       throw new GraphQLError("Name is required", {
@@ -27,7 +27,7 @@ export class TaskMutations {
         description ?? "",
         startDate,
         endDate,
-        status
+        status,
       );
       await dataSource.manager.save(newTask);
       return newTask;
@@ -53,7 +53,7 @@ export class TaskMutations {
     @Arg("description", { nullable: true }) description?: string,
     @Arg("status", { nullable: true }) status?: TaskStatus,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });

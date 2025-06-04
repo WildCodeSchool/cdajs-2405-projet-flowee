@@ -6,8 +6,10 @@ export interface ClientUI {
   id: string;
   clientName: string | null | undefined;
   status: ClientStatus | null | undefined;
-  account: {
-    email: string;
-  } | null | undefined;
+  account:
+    | {
+        email: string;
+      }
+    | null
+    | undefined;
 }
-

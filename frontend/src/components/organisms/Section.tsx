@@ -70,7 +70,7 @@ export const Section: React.FC<SectionProps> = ({
       items = isAdmin
         ? projects.flatMap(
             (project) =>
-              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? []
+              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? [],
           )
         : [];
       break;
