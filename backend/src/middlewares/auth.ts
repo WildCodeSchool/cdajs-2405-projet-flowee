@@ -72,7 +72,7 @@ export async function getAccount(token: string): Promise<Account | null> {
 
     const cleanToken = token.replace(/^Bearer\s/, "");
 
-    const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: number };
+    const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: string };
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },
@@ -99,7 +99,7 @@ export async function getAccountWithRelations(
     if (!token || token.trim() === "") return null;
 
     const cleanToken = token.replace(/^Bearer\s/, "");
-    const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: number };
+    const payload = jwt.verify(cleanToken, JWT_SECRET) as { accountId: string };
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: payload.accountId },
