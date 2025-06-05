@@ -33,10 +33,19 @@ env:
 # Gestion utilisateurs
 # ===============================
 
+# Wait for DB to be ready 
+.PHONY: wait-db
+wait-db:
+	@until docker exec $(DB_CONTAINER) pg_isready -U $(DB_SUPERUSER); do \
+		echo "Waiting for postgres..."; \
+		sleep 2; \
+	done
+
+
 # Création d'un utilisateur de base de données
 .PHONY: init-db-user
-init-db-user:
-		npx ts-node backend/src/scripts/init_db_user.ts
+init-db-user: wait-db
+	docker exec -it $(BACKEND_CONTAINER) npx ts-node /app/src/scripts/init_db_user.ts
 
 # Supprimer un utilisateur de base de données
 .PHONY: clean-test-users
