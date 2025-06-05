@@ -9,7 +9,7 @@ export class ClientMutations {
   @Mutation(() => Client)
   async createClient(
     @Arg("Name") name: string,
-    @Arg("accountId") accountId: number,
+    @Arg("accountId") accountId: string,
   ): Promise<Client> {
     try {
       const account = await dataSource.manager.findOne(Account, {
