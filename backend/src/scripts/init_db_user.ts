@@ -23,7 +23,7 @@ if (!DB_NAME || !DB_USER || !DB_PASSWORD || !DB_SUPERUSER) {
 const createUserCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -c "CREATE USER \\"${DB_USER}\\" WITH PASSWORD '${DB_PASSWORD}';"`;
 const createDatabaseCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -c "CREATE DATABASE \\"${DB_NAME}\\" OWNER \\"${DB_USER}\\";"`;
 const grantPrivilegesCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -c "GRANT ALL PRIVILEGES ON DATABASE \\"${DB_NAME}\\" TO \\"${DB_USER}\\";"`;
-const changeSchemaOwnerCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -d ${DB_NAME} -c "ALTER SCHEMA public OWNER TO \\"${DB_USER}\\";"`;
+// const changeSchemaOwnerCommand = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -d ${DB_NAME} -c "ALTER SCHEMA public OWNER TO \\"${DB_USER}\\";"`;
 
 const grantAllOnExistingObjects = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -d ${DB_NAME} -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \\"${DB_USER}\\";"`;
 const grantSchemaUsage = `docker exec -i ${DB_CONTAINER} psql -U ${DB_SUPERUSER} -d ${DB_NAME} -c "GRANT USAGE ON SCHEMA public TO \\"${DB_USER}\\";"`;
@@ -99,7 +99,7 @@ async function init() {
     await executeCommand(createUserCommand);
     await executeCommand(createDatabaseCommand);
     await executeCommand(grantPrivilegesCommand);
-    await executeCommand(changeSchemaOwnerCommand);
+    // await executeCommand(changeSchemaOwnerCommand);
 
     await executeCommand(grantSchemaUsage);
     await executeCommand(grantAllOnExistingObjects);

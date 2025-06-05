@@ -530,6 +530,7 @@ export type GetProjectsByUserQueryVariables = Exact<{ [key: string]: never }>;
 export type GetProjectsByUserQuery = {
   __typename?: "Query";
   getProjectsByUser: Array<{
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     currentUserRole: any;
     __typename?: "Project";
     id: string;

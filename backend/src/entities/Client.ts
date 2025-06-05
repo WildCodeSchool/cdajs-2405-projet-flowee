@@ -25,7 +25,7 @@ export class Client extends BaseEntity {
   @Field({ nullable: true })
   clientName: string;
 
-  @Column({ nullable: true, default: ClientStatus.ACTIVE })
+  @Column({ nullable: true, default: ClientStatus.INACTIVE })
   @Field(() => ClientStatus, { nullable: true })
   status?: ClientStatus;
 
