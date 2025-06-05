@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Deliverable } from "./Deliverable";
 
-import { TaskStatus } from "../enums/TaskStatus";
+import type { TaskStatus } from "../enums/TaskStatus";
 
 @ObjectType()
 @Entity()
@@ -38,10 +38,14 @@ export class Task extends BaseEntity {
   endDate?: string;
 
   //relations
-  @ManyToOne(() => Deliverable, (deliverable) => deliverable.tasks, {
-    nullable: true,
-    onDelete: "SET NULL",
-  })
+  @ManyToOne(
+    () => Deliverable,
+    (deliverable) => deliverable.tasks,
+    {
+      nullable: true,
+      onDelete: "SET NULL",
+    },
+  )
   @Field(() => Deliverable, { nullable: true })
   deliverable?: Deliverable;
 
@@ -50,7 +54,7 @@ export class Task extends BaseEntity {
     description: string,
     startDate?: string,
     endDate?: string,
-    status?: TaskStatus
+    status?: TaskStatus,
   ) {
     super();
 

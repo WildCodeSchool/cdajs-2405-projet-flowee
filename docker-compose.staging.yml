@@ -66,5 +66,23 @@ services:
       - web-client-build:/web-client-build
       - ./logs:/var/log/nginx
 
+  redis:
+    hostname: redis
+    image: redis
+
+  redis-commander:
+    container_name: flowee-redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    platform: linux/x86_64
+    restart: always
+    depends_on:
+      - redis
+    environment:
+    - REDIS_HOSTS=redis 
+    ports:
+    - "8881:8081"
+
+
 volumes:
   web-client-build:

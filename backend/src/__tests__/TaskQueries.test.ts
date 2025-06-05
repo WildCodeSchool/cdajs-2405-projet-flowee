@@ -10,7 +10,6 @@ describe("Task Queries", () => {
     taskQueries = new TaskQueries();
   });
 
-
   // 1) getAllTasks
 
   describe("getAllTasks", () => {
@@ -21,13 +20,13 @@ describe("Task Queries", () => {
           faker.lorem.words(2),
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
-          faker.date.future().toISOString()
+          faker.date.future().toISOString(),
         ),
         new Task(
           faker.lorem.words(2),
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
-          faker.date.future().toISOString()
+          faker.date.future().toISOString(),
         ),
       ];
 
@@ -59,7 +58,7 @@ describe("Task Queries", () => {
         "Existing Task",
         "Some description",
         faker.date.past().toISOString(),
-        faker.date.future().toISOString()
+        faker.date.future().toISOString(),
       );
       existingTask.id = 42;
 

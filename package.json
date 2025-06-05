@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
-    "format": "npx @biomejs/biome format --write './src'"
+    "lint": "npx @biomejs/biome lint --write ./backend/src ./frontend/src",
+    "format": "npx @biomejs/biome format --write ./backend/src ./frontend/src",
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/react-router-dom": "^5.3.3",
-    "concurrently": "^9.0.1"
+    "concurrently": "^9.0.1",
+    "husky": "^9.1.7"
   }
 }

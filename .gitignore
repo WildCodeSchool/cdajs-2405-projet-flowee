@@ -6,3 +6,5 @@ data/base/
 .env
 
 logs/
+
+backend/docs

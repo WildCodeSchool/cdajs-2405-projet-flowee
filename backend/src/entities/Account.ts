@@ -10,6 +10,7 @@ import { AccountStatus } from "../enums/AccountStatus";
 import type { Role } from "../enums/Role";
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
+import { IsEmail } from "class-validator";
 
 @ObjectType()
 @Entity("account")
@@ -20,9 +21,10 @@ export class Account extends BaseEntity {
 
   @Column()
   @Field()
+  @IsEmail({}, { message: "L'email n'est pas valide" })
   email: string;
 
-  @Column() // pas de @Field ici pour éviter de l'exposer
+  @Column() //no @Field  here to avoid being exposed in queries and mutations. Still available in backend
   password: string;
 
   @Column()
