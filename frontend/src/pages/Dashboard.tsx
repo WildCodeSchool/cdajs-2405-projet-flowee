@@ -4,6 +4,7 @@ import Tracker from "@organisms/Tracker";
 import { Section } from "@organisms/Section";
 import { useRoleTheme } from "@context/roleThemeContext";
 import SignedInLayout from "@layout/SignedInLayout";
+
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");
 
