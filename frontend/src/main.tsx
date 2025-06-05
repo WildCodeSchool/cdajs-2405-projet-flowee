@@ -1,4 +1,4 @@
-import { StrictMode, use } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
@@ -23,11 +23,10 @@ import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
-import ItemDetails from "@pages/ItemDetails";
 import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
-import ProjectDetails from "@pages/ProjectDetails";
+import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",

@@ -1,5 +1,3 @@
-import PlusIcon from "@components/atoms/Icons/PlusIcon";
-import { Tag } from "@components/atoms/Tag";
 import type { FormData } from "@interfaces/FormData";
 import {
   useCreateDeliverableMutation,
@@ -13,10 +11,12 @@ import {
 import SignedInLayout from "@layout/SignedInLayout";
 import { useState } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
-import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
-import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
-import ModalConfirmDelete from "@components/molecules/ModalConfirmDelete";
-import AddItem from "./AddItem";
+
+import DeleteModal from "@components/molecules/DeleteModal";
+import AddModal from "@components/molecules/AddModal";
+
+import ProjectHeader from "./ProjectHeader";
+import ProjectSections from "./ProjectSections";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -134,90 +134,44 @@ const ProjectDetails = () => {
   return (
     <SignedInLayout>
       <NavLink to={"/projects"}>Back to projects</NavLink>
-      <section className="flex justify-between gap-4">
-        <h1 className="text-3xl font-bold">{project?.projectName}</h1>
-        <p className="font-semibold">{project?.endDate}</p>
-      </section>
-      <section className="flex gap-4">
-        <Tag text={project?.client.clientName ?? ""} />
-      </section>
-      <section>
-        <h3 className="text-lg font-semibold">About the project</h3>
-        <p>{project?.description}</p>
-      </section>
-      <ModalConfirmDelete
+      <ProjectHeader
+        name={project?.projectName ?? ""}
+        endDate={project?.endDate ?? ""}
+        clientName={project?.client.clientName ?? ""}
+        description={project?.description ?? ""}
+      />
+      {project && (
+        <ProjectSections
+          project={project}
+          slug={slug ?? ""}
+          deliverables={deliverables}
+          setShowModal={setShowModal}
+          setModalType={setModalType}
+          openDeleteModal={openDeleteModal}
+        />
+      )}
+
+      <DeleteModal
         open={modalState.open}
-        header={`Are you sure you want to delete this ${modalState.entity}?`}
+        entityType={modalState.entity ?? "task"}
         itemName={modalState.name}
         onConfirm={confirmDelete}
         onCancel={() =>
           setModalState({ open: false, entity: null, id: null, name: "" })
         }
       />
-      <section className="flex flex-col md:flex-row gap-4 w-full">
-        <section className="flex flex-col gap-4 w-full">
-          <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold ">
-            <h2>Deliverables</h2>
-            <div className="flex gap-4 items-center">
-              <button
-                className="flex items-center justify-center w-6 h-6 border-2 border-theme-darkGray rounded-full"
-                type="button"
-                onClick={() => {
-                  setShowModal(true);
-                  setModalType("deliverable");
-                }}
-              >
-                <PlusIcon className="fill-theme-darkGray w-3 h-3" />
-              </button>
-            </div>
-          </aside>
 
-          {project?.deliverables && (
-            <DeliverablesByStatus
-              deliverables={project.deliverables}
-              projectSlug={slug}
-              onDelete={(id, name) => openDeleteModal("deliverable", id, name)}
-            />
-          )}
-        </section>
-
-        <section className="flex flex-col gap-4 w-full">
-          <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold">
-            <h2>Tasks</h2>
-            <div className="flex gap-4 items-center">
-              <button
-                className="flex items-center justify-center w-6 h-6 border-2 border-theme-darkGray rounded-full"
-                type="button"
-                onClick={() => {
-                  setShowModal(true);
-                  setModalType("task");
-                }}
-              >
-                <PlusIcon className="fill-theme-darkGray w-3 h-3" />
-              </button>
-            </div>
-          </aside>
-
-          <section className="mb-4">
-            <TasksByDeliverable
-              deliverables={deliverables}
-              onDelete={(id, name) => openDeleteModal("task", id, name)}
-            />
-          </section>
-        </section>
-      </section>
-      {showModal && (
-        <AddItem
-          mode={modalType}
-          onClose={() => setShowModal(false)}
-          onSubmit={handleSubmit}
-          projectOptions={projectOptions}
-          deliverableOptions={deliverables.map((d) => ({
-            id: d.id,
-            name: d.name,
-          }))}
-        />
-      )}
+      <AddModal
+        mode={modalType}
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+        projectOptions={projectOptions}
+        deliverableOptions={deliverables.map((d) => ({
+          id: d.id,
+          name: d.name,
+        }))}
+      />
 
       <Outlet />
     </SignedInLayout>
