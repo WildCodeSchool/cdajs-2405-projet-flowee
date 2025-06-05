@@ -69,7 +69,7 @@ export class ProjectMutations {
           relations: ["account"],
         });
 
-        // Cas : le client existe mais l'email ne correspond à aucun compte
+        // Cas 1 : le client existe mais l'email ne correspond à aucun compte
         if (!account && client) {
           console.warn(
             `[SECURITY] Un client avec ce nom (${clientName}) existe, mais l'email fourni (${clientEmail}) ne correspond à aucun compte.`,
@@ -80,7 +80,7 @@ export class ProjectMutations {
           );
         }
 
-        // Cas : le compte existe mais pas le nom de client
+        // Cas 2 : le compte existe mais pas le nom de client
         if (account && !client) {
           console.warn(
             `[SECURITY] Un compte existe déjà avec cet email (${clientEmail}), mais le nom de client (${clientName}) ne correspond pas.`,
@@ -91,7 +91,7 @@ export class ProjectMutations {
           );
         }
 
-        // Cas : les deux existent mais ne sont pas liés
+        // Cas 3 : les deux existent mais ne sont pas liés
         if (account && client && client.account?.id !== account.id) {
           console.warn(
             `[SECURITY] Incohérence : account (${clientEmail}) non lié à client (${clientName})`,
@@ -102,27 +102,29 @@ export class ProjectMutations {
           );
         }
 
-        // Cas : les deux existent et sont liés mais client inactif
+        // Cas 4 : les deux existent, sont liés, mais au moins un statut n'est pas ACTIVE
         if (
           account &&
           client &&
           client.account?.id === account.id &&
-          client.status !== ClientStatus.ACTIVE
+          (account.status !== AccountStatus.ACTIVE ||
+            client.status !== ClientStatus.ACTIVE)
         ) {
           console.warn(
-            `[SECURITY] Tentative création projet pour client inactif : ${clientName}, email : ${clientEmail}`,
+            `[SECURITY] Refus projet : statut account=${account.status}, statut client=${client.status}`,
           );
           throw new GraphQLError(
             "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
-            { extensions: { code: "CLIENT_NOT_ACTIVE" } },
+            { extensions: { code: "STATUS_INVALID" } },
           );
         }
 
-        // Cas : les deux existent, sont liés, et client actif => création projet
+        // Cas 5 : les deux existent, sont liés, statuts OK -> on crée le projet (pas d'email d'activation)
         if (
           account &&
           client &&
           client.account?.id === account.id &&
+          account.status === AccountStatus.ACTIVE &&
           client.status === ClientStatus.ACTIVE
         ) {
           const newproject: Project = await manager.save(Project, {
@@ -136,8 +138,7 @@ export class ProjectMutations {
           });
           return { newproject, account, clientName, token: "" };
         }
-
-        // Cas : ni client ni compte => on crée les deux
+        // Cas 6 : ni client ni compte => on crée les deux, envoi mail d'activation
         if (!account && !client) {
           const newAccount = manager.create(Account, {
             email: clientEmail,
@@ -173,7 +174,7 @@ export class ProjectMutations {
           return { newproject, account: newAccount, clientName, token };
         }
 
-        // Catch all
+        // Catch all other unkonwn errors
         throw new GraphQLError(
           "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
           { extensions: { code: "UNKNOWN_ERROR" } },
@@ -203,7 +204,7 @@ export class ProjectMutations {
       });
     }
 
-    // Envoi du mail après transaction
+    // Envoi du mail après transaction if new account created
     try {
       if (result.token) {
         await sendActivationEmail(
