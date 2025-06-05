@@ -1,4 +1,4 @@
-import AddItem from "../../pages/AddItem";
+import AddItem from "@pages/AddItem";
 import type { FormData } from "@interfaces/FormData";
 import type { DeliverableOption, ProjectOption } from "@interfaces/Options";
 

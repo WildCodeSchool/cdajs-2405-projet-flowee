@@ -18,11 +18,11 @@ import AddModal from "@components/molecules/AddModal";
 import ProjectHeader from "./ProjectHeader";
 import ProjectSections from "./ProjectSections";
 
+import { parseIdFromSlug, getProjectOptions } from "@utils/project";
+
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
-  const rawId = slug?.split("-").pop();
-  const parsedId = Number(rawId);
-  const id = rawId && !Number.isNaN(parsedId) ? parsedId : null;
+  const id = parseIdFromSlug(slug);
 
   const { data, refetch } = useGetProjectByIdQuery({
     skip: id === null,
@@ -80,6 +80,10 @@ const ProjectDetails = () => {
   };
 
   const project = data?.getProjectById;
+  const availableProjects = getProjectOptions(project).map((p) => ({
+    id: String(p.id),
+    name: p.name,
+  }));
 
   //DELIVERABLES
   const deliverables = project?.deliverables ?? [];
@@ -127,10 +131,6 @@ const ProjectDetails = () => {
     }
   };
 
-  const projectOptions = project
-    ? [{ id: project.id, name: project.projectName }]
-    : [];
-
   return (
     <SignedInLayout>
       <NavLink to={"/projects"}>Back to projects</NavLink>
@@ -166,7 +166,7 @@ const ProjectDetails = () => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onSubmit={handleSubmit}
-        projectOptions={projectOptions}
+        projectOptions={availableProjects}
         deliverableOptions={deliverables.map((d) => ({
           id: d.id,
           name: d.name,
