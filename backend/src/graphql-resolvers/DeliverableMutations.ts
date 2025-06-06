@@ -15,7 +15,7 @@ export class DeliverableMutations {
   async createDeliverable(
     @Arg("newDeliverable", () => CreateDeliverableInput)
     newDeliverableInput: CreateDeliverableInput,
-    @Ctx() ctx: MyContext
+    @Ctx() ctx: MyContext,
   ): Promise<Deliverable> {
     const user = ctx.user;
 
@@ -50,7 +50,7 @@ export class DeliverableMutations {
         deliveryDate,
         status,
         createdAt,
-        reviewTimes
+        reviewTimes,
       );
 
       deliverable.project = project;
@@ -73,7 +73,7 @@ export class DeliverableMutations {
   async updateDeliverable(
     @Arg("id") id: number,
     @Arg("name", { nullable: true }) name?: string,
-    @Arg("perimeter", { nullable: true }) perimeter?: string
+    @Arg("perimeter", { nullable: true }) perimeter?: string,
   ): Promise<Deliverable> {
     try {
       const deliverable = await dataSource.manager.findOne(Deliverable, {

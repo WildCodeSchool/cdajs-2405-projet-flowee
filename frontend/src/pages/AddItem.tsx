@@ -20,7 +20,7 @@ export default function AddItem({
   const [deadline, setDeadline] = useState("");
   const [perimeter, setPerimeter] = useState("");
   const [status, setStatus] = useState(
-    isDeliverable ? DeliverableStatus.NotStarted : TaskStatus.NotStarted
+    isDeliverable ? DeliverableStatus.NotStarted : TaskStatus.NotStarted,
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -137,13 +137,13 @@ export default function AddItem({
                 setStatus(
                   isDeliverable
                     ? (e.target.value as DeliverableStatus)
-                    : (e.target.value as TaskStatus)
+                    : (e.target.value as TaskStatus),
                 )
               }
               className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md"
             >
               {Object.entries(
-                isDeliverable ? DeliverableStatus : TaskStatus
+                isDeliverable ? DeliverableStatus : TaskStatus,
               ).map(([label, value]) => (
                 <option key={value} value={value}>
                   {label.replace(/([A-Z])/g, " $1").trim()}
