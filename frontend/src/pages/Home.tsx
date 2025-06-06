@@ -1,4 +1,4 @@
-import LogoIcon from "@icons/Logo";
+import LogoIcon from "@components/atoms/Icons/Logo";
 import Button from "@atoms/Button";
 
 export default function Home() {

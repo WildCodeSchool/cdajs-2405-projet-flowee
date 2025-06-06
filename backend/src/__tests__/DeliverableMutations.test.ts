@@ -3,6 +3,7 @@ import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Deliverable } from "../entities/Deliverable";
 import { DeliverableMutations } from "../graphql-resolvers/DeliverableMutations";
 import { DeliverableStatus } from "../enums/DeliverableStatus";
+import type { MyContext } from "../types/MyContext";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
@@ -14,14 +15,10 @@ describe("deliverable Mutations", () => {
     deliverable = new Deliverable(
       faker.company.buzzAdjective(), // name
       faker.lorem.sentence(), // perimeter
-      faker.date
-        .future()
-        .toISOString(), // date de livraison
+      faker.date.future().toISOString(), // date de livraison
       DeliverableStatus.IN_PROGRESS, // exemple de status
-      faker.date
-        .past()
-        .toISOString(), // createAt
-      faker.number.int({ min: 1, max: 5 }), // ReviewTimes
+      faker.date.past().toISOString(), // createAt
+      faker.number.int({ min: 1, max: 5 }) // ReviewTimes
     );
   });
 
@@ -29,23 +26,34 @@ describe("deliverable Mutations", () => {
     it("should create a new deliverable", async () => {
       mockTypeOrm().onMock(Deliverable).toReturn(deliverable, "save");
 
-      const createdDeliverable: Deliverable =
-        await deliverableMutations.createDeliverable(
-          deliverable.name,
-          deliverable.perimeter,
-          deliverable.endDate,
-          deliverable.status,
-          deliverable.createdAt,
-          deliverable.reviewTimes,
-        );
-
-      expect(createdDeliverable).toMatchObject({
+      const input = {
         name: deliverable.name,
         perimeter: deliverable.perimeter,
-        endDate: deliverable.endDate,
+        deliveryDate: deliverable.endDate,
         status: deliverable.status,
         createdAt: deliverable.createdAt,
         reviewTimes: deliverable.reviewTimes,
+        projectId: faker.number.int(),
+      };
+
+      const mockCtx = {
+        user: {
+          role: "ADMIN",
+        },
+      } as MyContext;
+
+      const createdDeliverable = await deliverableMutations.createDeliverable(
+        input,
+        mockCtx
+      );
+
+      expect(createdDeliverable).toMatchObject({
+        name: input.name,
+        perimeter: input.perimeter,
+        deliveryDate: input.deliveryDate,
+        status: input.status,
+        createdAt: input.createdAt,
+        reviewTimes: input.reviewTimes,
       });
     });
   });

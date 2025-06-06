@@ -32,6 +32,8 @@ import {
   createMaxDepthRule,
   createNoIntrospectionRule,
 } from "./utils/securityRules";
+import { DeliverableStatus } from "./enums/DeliverableStatus";
+import { TaskStatus } from "./enums/TaskStatus";
 import { createClient, type RedisClientType } from "redis";
 
 registerEnumType(Role, {
@@ -44,6 +46,15 @@ registerEnumType(ProjectStatus, {
   description: "Project, task or deliverable status",
 });
 
+registerEnumType(DeliverableStatus, {
+  name: "DeliverableStatus",
+  description: "The status of a deliverable",
+});
+
+registerEnumType(TaskStatus, {
+  name: "TaskStatus",
+  description: "The status of a Task",
+});
 registerEnumType(AccountStatus, {
   name: "AccountStatus",
   description: "Account status",
@@ -96,6 +107,7 @@ async function startServerApollo() {
     const server = new ApolloServer<MyContext>({
       schema, // Allows introspection outside of the prod
       introspection: process.env.NODE_ENV !== "production",
+      // règles de validation
       validationRules: [
         createMaxDepthRule(10), // max depth = 10
         createComplexityRule({
