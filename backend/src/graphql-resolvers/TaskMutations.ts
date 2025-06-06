@@ -13,7 +13,7 @@ export class TaskMutations {
   @Mutation(() => Task)
   async createTask(
     @Arg("newTask", () => CreateTaskInput)
-    newTaskInput: CreateTaskInput
+    newTaskInput: CreateTaskInput,
   ): Promise<Task> {
     const { name, description, startDate, endDate, status, deliverableId } =
       newTaskInput;
@@ -23,7 +23,7 @@ export class TaskMutations {
         Deliverable,
         {
           id: deliverableId,
-        }
+        },
       );
 
       const newTask = new Task(
@@ -31,7 +31,7 @@ export class TaskMutations {
         description ?? "",
         startDate,
         endDate,
-        status
+        status,
       );
 
       newTask.deliverable = deliverable;
@@ -59,7 +59,7 @@ export class TaskMutations {
     @Arg("description", { nullable: true }) description?: string,
     @Arg("status", { nullable: true }) status?: TaskStatus,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });

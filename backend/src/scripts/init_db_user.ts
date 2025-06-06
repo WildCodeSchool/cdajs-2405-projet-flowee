@@ -64,7 +64,7 @@ async function init_db_user() {
 
     // 3. Droits sur la BDD
     await client.query(
-      `GRANT ALL PRIVILEGES ON DATABASE "${DB_NAME}" TO "${DB_USER}";`
+      `GRANT ALL PRIVILEGES ON DATABASE "${DB_NAME}" TO "${DB_USER}";`,
     );
     console.log("✅ Privileges granted on database.");
     // 4. Droits sur le schéma public

@@ -37,7 +37,7 @@ export const TasksByDeliverable = ({
             {deliverable.tasks?.length ? (
               (() => {
                 const filteredTasks = deliverable.tasks.filter((task) =>
-                  task.name.toLowerCase().includes(searchFilter.toLowerCase())
+                  task.name.toLowerCase().includes(searchFilter.toLowerCase()),
                 );
 
                 return filteredTasks.length > 0 ? (
