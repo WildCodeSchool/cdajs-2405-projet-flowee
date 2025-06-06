@@ -26,8 +26,7 @@
     "prod": "node build/index.js",
     "init:db": "ts-node src/scripts/init_db_user.ts",
     "migration:generate": "typeorm migration:generate ./src/migration/InitialSchema -d ./src/dataSource/dataSource.ts",
-    "migration:run": "typeorm migration:run -d ./src/dataSource/dataSource.ts",
-    "startprod": "node ./build/index.js"
+    "migration:run": "typeorm migration:run -d ./src/dataSource/dataSource.ts"
   },
   "author": "",
   "license": "ISC",

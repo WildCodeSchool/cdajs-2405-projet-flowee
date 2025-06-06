@@ -13,8 +13,8 @@ FROM node:lts-alpine
 RUN apk --no-cache add curl
 WORKDIR /app
 
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/build ./build
 COPY package.json ./
 RUN npm install --production
 
-CMD ["npm", "run", "startprod"]
+CMD ["npm", "run", "prod"]
