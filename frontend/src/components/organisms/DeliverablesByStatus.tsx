@@ -17,11 +17,7 @@ interface Props {
   onDelete: (id: number, name: string) => void;
 }
 
-export const DeliverablesByStatus = ({
-  deliverables,
-  projectSlug,
-  onDelete,
-}: Props) => {
+export const DeliverablesByStatus = ({ deliverables, onDelete }: Props) => {
   const [searchFilter, setSearchFilter] = useState("");
 
   const [selectedDeliverableId, setSelectedDeliverableId] = useState<
