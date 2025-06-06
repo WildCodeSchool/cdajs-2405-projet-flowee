@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Deliverable } from "../entities/Deliverable";
-import { DeliverableMutations } from "../graphql-resolvers/DeliverableMutations";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
+import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Deliverable } from "../../entities/Deliverable";
+import { DeliverableStatus } from "../../enums/DeliverableStatus";
+import { DeliverableMutations } from "../../graphql-resolvers/DeliverableMutations";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;

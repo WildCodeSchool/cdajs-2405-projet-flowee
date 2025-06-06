@@ -75,7 +75,7 @@ describe("LoginForm", () => {
 
   it("affiche une erreur si les identifiants sont incorrects", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    
+
     const router = createMemoryRouter(
       [
         {
@@ -111,5 +111,36 @@ describe("LoginForm", () => {
     ).toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     errorSpy.mockRestore();
+  });
+
+  it("affiche une erreur quand l'email est vide", async () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: "/",
+          element: <LoginForm />,
+        },
+      ],
+      routerConfig,
+    );
+
+    render(
+      <MockedProvider mocks={[]} addTypename={false}>
+        <RouterProvider router={router} />
+      </MockedProvider>,
+    );
+
+    // On remplit uniquement le mot de passe
+    await userEvent.type(screen.getByLabelText(/password/i), "password123");
+    await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
+
+    // On vérifie que l'erreur s'affiche
+    const errorMessage = await screen.findByText("Email is required");
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveClass("text-red");
+    // On vérifie que le token n'est pas stocké
+    expect(setToken).not.toHaveBeenCalled();
+    // On vérifie qu'il n'y a pas de redirection
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
