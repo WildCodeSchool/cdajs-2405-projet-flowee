@@ -1,15 +1,18 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
+
 import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Project } from "./Project";
+import { ClientStatus } from "../enums/ClientStatus";
 import { Account } from "./Account";
+import { Project } from "./Project";
 
 @ObjectType()
 @Entity("client")
@@ -18,28 +21,30 @@ export class Client extends BaseEntity {
   @Field(() => ID)
   id?: number;
 
-  @Column()
-  @Field()
-  firstname: string;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  clientName: string;
 
-  @Column()
-  @Field()
-  lastname: string;
+  @Column({ nullable: true, default: ClientStatus.INACTIVE })
+  @Field(() => ClientStatus, { nullable: true })
+  status?: ClientStatus;
 
   @OneToMany(
     () => Project,
     (project) => project.client,
+    { eager: true },
   )
-  @Field((type) => [Project])
   projects?: Project[];
 
-  @OneToOne(() => Account)
-  @JoinColumn()
+  @OneToOne(() => Account, { eager: true })
+  @JoinColumn({ name: "account_id" })
+  @Index({ unique: true })
+  @Field(() => Account, { nullable: true })
   account?: Account;
 
-  constructor(firstname: string, lastname: string) {
+  constructor(clientName: string, account: Account) {
     super();
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.clientName = clientName;
+    this.account = account;
   }
 }

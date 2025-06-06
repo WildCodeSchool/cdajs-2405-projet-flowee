@@ -1,77 +1,120 @@
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
-import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
-import { Status } from "../enums/Status";
-import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
+
+import type { TaskStatus } from "../enums/TaskStatus";
+import { CreateTaskInput } from "../inputs/CreateTaskInput";
+import { Deliverable } from "../entities/Deliverable";
 
 @Resolver(Task)
 export class TaskMutations {
-  @Mutation((_) => Task)
+  @Authorized("ADMIN")
+  @Mutation(() => Task)
   async createTask(
-    @Arg("name") name: string,
-    @Arg("description", { nullable: true }) description: string,
-    @Arg("status", { nullable: true }) status: Status = Status.NOT_STARTED,
-    @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string,
-  ): Promise<Task | undefined> {
+    @Arg("newTask", () => CreateTaskInput)
+    newTaskInput: CreateTaskInput,
+  ): Promise<Task> {
+    const { name, description, startDate, endDate, status, deliverableId } =
+      newTaskInput;
+
     try {
-      const newTask = new Task(name, description, startDate, endDate, status);
+      const deliverable = await dataSource.manager.findOneByOrFail(
+        Deliverable,
+        {
+          id: deliverableId,
+        },
+      );
 
-      // if (deliverableInput) {
-      //   const deliverable = await dataSource.manager.findOne(Deliverable, {
-      //     where: { id: deliverableInput.id },
-      //   });
+      const newTask = new Task(
+        name,
+        description ?? "",
+        startDate,
+        endDate,
+        status,
+      );
 
-      // if (!deliverable) {
-      //   throw new Error("Deliverable not found");
-      // }
-      // newTask.deliverable = deliverable;
+      newTask.deliverable = deliverable;
 
       await dataSource.manager.save(newTask);
-
       return newTask;
     } catch (error) {
-      console.info(error);
-      throw new Error("Invalid information");
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+
+      throw new GraphQLError("Failed to create task", {
+        extensions: {
+          code: "CREATE_TASK_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 
-  @Mutation((_) => Task)
+  @Mutation(() => Task)
   async updateTask(
     @Arg("id") id: number,
-    @Arg("name") name: string,
-    @Arg("description") description: string,
+    @Arg("name", { nullable: true }) name?: string,
+    @Arg("description", { nullable: true }) description?: string,
+    @Arg("status", { nullable: true }) status?: TaskStatus,
+    @Arg("startDate", { nullable: true }) startDate?: string,
+    @Arg("endDate", { nullable: true }) endDate?: string,
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
       if (!task) {
-        throw new Error("Task not found");
+        throw new GraphQLError(`Task with ID ${id} not found`, {
+          extensions: { code: "TASK_NOT_FOUND" },
+        });
       }
 
-      task.name = name;
-      task.description = description;
+      if (name) task.name = name;
+      if (description) task.description = description;
+      if (status) task.status = status;
+      if (startDate) task.startDate = startDate;
+      if (endDate) task.endDate = endDate;
 
       await dataSource.manager.save(task);
-
       return task;
     } catch (error) {
-      throw new Error("Invalid information");
+      // Si l’erreur est déjà une GraphQLError,
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+      throw new GraphQLError("Failed to update task", {
+        extensions: {
+          code: "UPDATE_TASK_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 
-  @Mutation((_) => Task)
-  async deleteTask(@Arg("id") id: number): Promise<Task> {
+  @Mutation(() => Boolean)
+  async deleteTask(@Arg("id") id: number): Promise<boolean> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
       if (!task) {
-        throw new Error("Task not found");
+        throw new GraphQLError(`Task with ID ${id} not found`, {
+          extensions: { code: "TASK_NOT_FOUND" },
+        });
       }
 
       await dataSource.manager.remove(task);
-
-      return task;
+      return true;
     } catch (error) {
-      throw new Error("Invalid information");
+      //Releve l erreur initiale si c'est une erreur GraphQLError
+      if (error instanceof GraphQLError) {
+        throw error;
+      }
+
+      throw new GraphQLError("Failed to delete task", {
+        extensions: {
+          code: "DELETE_TASK_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 }

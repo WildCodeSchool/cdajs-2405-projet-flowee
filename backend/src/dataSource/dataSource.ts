@@ -1,13 +1,16 @@
 import { DataSource } from "typeorm";
-import { Project } from "../entities/Project";
 import dotenv from "dotenv";
 dotenv.config();
 
-const dbHost: string = process.env.DB_HOST || "";
-const dbPort: number = Number.parseInt(process.env.DB_PORT || "", 10);
-const dbName: string = process.env.DB_NAME || "";
-const dbUser: string = process.env.DB_USER || "";
-const dbPassword: string = process.env.DB_PASSWORD || "";
+const dbHost = process.env.DB_HOST ?? "localhost";
+const dbPort = Number.parseInt(process.env.DB_PORT ?? "5432", 10);
+const dbName = process.env.DB_NAME ?? "flowee";
+const dbUser = process.env.DB_USER ?? "postgres";
+const dbPassword = process.env.DB_PASSWORD ?? "passwordadminer";
+console.info("dbPassword", dbPassword, dbUser, dbName, dbHost, dbPort);
+
+const isProd =
+  process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 
 export const dataSource = new DataSource({
   type: "postgres",
@@ -16,47 +19,10 @@ export const dataSource = new DataSource({
   database: dbName,
   username: dbUser,
   password: dbPassword,
-  entities: ["src/entities/*.ts"],
-  synchronize: true,
-  logging: "all",
+  schema: "public",
+  entities: [isProd ? "build/entities/*.js" : "src/entities/*.ts"],
+  migrations: [isProd ? "build/migration/*.js" : "src/migration/*.ts"],
+  migrationsTableName: "migrations",
+  synchronize: false,
+  logging: isProd ? ["error"] : "all", // Only log errors in production
 });
-
-export async function cleanDB() {
-  await dataSource.manager.clear(Project);
-}
-
-export async function CreateTestData(
-  name: string,
-  author: string,
-  description: string,
-  startDate: string,
-  endDate: string,
-) {
-  const project = new Project(name, description, author, startDate, endDate);
-  console.log("j'ai créé de la data dand datasource", project);
-  await dataSource.manager.save(project);
-}
-
-export async function initTestData() {
-  await CreateTestData(
-    "Projet1",
-    "Cyrielle",
-    "Ceci est mon premier projet",
-    "2024-10-23",
-    "2025-10-23",
-  );
-  await CreateTestData(
-    "Projet2",
-    "Alex",
-    "Ceci est mon deuxième projet",
-    "2024-10-23",
-    "2025-10-23",
-  );
-  await CreateTestData(
-    "Projet3",
-    "Luis",
-    "Ceci est mon 3ème projet",
-    "2024-10-23",
-    "2025-10-23",
-  );
-}

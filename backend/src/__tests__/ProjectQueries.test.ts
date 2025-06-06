@@ -9,36 +9,15 @@ describe("Project Graphql queries", () => {
 
   beforeEach(() => {
     projectQueries = new ProjectQueries();
-    projects = [
-      new Project(
+    projects = Array.from({ length: 4 }).map(() => {
+      return new Project(
         faker.commerce.productName(),
-        faker.person.fullName(),
+        faker.number.int({ min: 1, max: 1000 }),
         faker.lorem.sentence(),
-        faker.date.past().toString(),
-        faker.date.future().toString(),
-      ),
-      new Project(
-        faker.commerce.productName(),
-        faker.person.fullName(),
-        faker.lorem.sentence(),
-        faker.date.past().toString(),
-        faker.date.future().toString(),
-      ),
-      new Project(
-        faker.commerce.productName(),
-        faker.person.fullName(),
-        faker.lorem.sentence(),
-        faker.date.past().toString(),
-        faker.date.future().toString(),
-      ),
-      new Project(
-        faker.commerce.productName(),
-        faker.person.fullName(),
-        faker.lorem.sentence(),
-        faker.date.past().toString(),
-        faker.date.future().toString(),
-      ),
-    ];
+        faker.date.past().toISOString(),
+        faker.date.future().toISOString(),
+      );
+    });
   });
 
   describe("query all projects from TypeORM", () => {
@@ -47,11 +26,11 @@ describe("Project Graphql queries", () => {
       const retrievedProjects: Project[] =
         await projectQueries.getAllProjects();
       expect(retrievedProjects.length).toBe(projects.length);
-      expect(retrievedProjects[0]).toHaveProperty("name");
-      expect(retrievedProjects[0]).toHaveProperty("author");
+      expect(retrievedProjects[0]).toHaveProperty("projectName");
       expect(retrievedProjects[0]).toHaveProperty("description");
       expect(retrievedProjects[0]).toHaveProperty("startDate");
       expect(retrievedProjects[0]).toHaveProperty("endDate");
+      expect(retrievedProjects[0]).toHaveProperty("companyUserId");
     });
   });
 });

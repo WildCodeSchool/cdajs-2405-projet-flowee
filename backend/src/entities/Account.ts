@@ -1,44 +1,76 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   Entity,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Project } from "./Project";
+import { AccountStatus } from "../enums/AccountStatus";
 import type { Role } from "../enums/Role";
+import { Client } from "./Client";
+import { CompanyUser } from "./CompanyUser";
+import { IsEmail } from "class-validator";
 
 @ObjectType()
 @Entity("account")
 export class Account extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   @Field(() => ID)
-  id?: number;
+  id!: string;
 
   @Column()
   @Field()
+  @IsEmail({}, { message: "L'email n'est pas valide" })
   email: string;
 
-  @Column()
-  @Field()
+  @Column() //no @Field  here to avoid being exposed in queries and mutations. Still available in backend
   password: string;
 
   @Column()
   @Field()
   role: Role;
 
-  @OneToMany(
-    () => Project,
-    (project) => project.client,
-  )
-  @Field((type) => [Project])
-  projects?: Project[];
+  @Column({ nullable: true })
+  activationToken?: string;
 
-  constructor(email: string, password: string, role: Role) {
+  @Column({ nullable: true })
+  tokenExpiresAt?: Date;
+
+  @Column({ type: "enum", enum: AccountStatus, default: AccountStatus.PENDING })
+  @Field(() => AccountStatus)
+  status: AccountStatus;
+
+  @OneToOne(
+    () => Client,
+    (client) => client.account,
+    {
+      nullable: true,
+    },
+  )
+  @Field(() => Client, { nullable: true })
+  client?: Client;
+
+  @OneToOne(
+    () => CompanyUser,
+    (companyUser) => companyUser.account,
+    {
+      nullable: true,
+    },
+  )
+  @Field(() => CompanyUser, { nullable: true })
+  companyUser?: CompanyUser;
+
+  constructor(
+    email: string,
+    password: string,
+    role: Role,
+    status: AccountStatus,
+  ) {
     super();
     this.email = email;
     this.password = password;
     this.role = role;
+    this.status = status;
   }
 }

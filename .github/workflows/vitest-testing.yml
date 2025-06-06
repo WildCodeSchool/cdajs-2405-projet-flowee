@@ -1,0 +1,42 @@
+name: vitest testing
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches: [dev]
+
+jobs:
+  front-vitest-tests:
+    name: Run Vitest Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Check installed dependencies
+        run: |
+          cd frontend
+          npm list --depth=0
+
+      - name: Run Vitest tests
+        run: |
+          cd frontend
+          npx vitest --run
+        env:
+          DEBUG: 'apollo:*'

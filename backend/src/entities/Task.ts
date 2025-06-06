@@ -7,13 +7,14 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Deliverable } from "./Deliverable";
-import type { Status } from "../enums/Status";
+
+import type { TaskStatus } from "../enums/TaskStatus";
 
 @ObjectType()
 @Entity()
 export class Task extends BaseEntity {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field(() => ID)
   id?: number;
 
   @Column()
@@ -26,7 +27,7 @@ export class Task extends BaseEntity {
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  status?: Status;
+  status?: TaskStatus;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -40,9 +41,12 @@ export class Task extends BaseEntity {
   @ManyToOne(
     () => Deliverable,
     (deliverable) => deliverable.tasks,
-    { nullable: true, onDelete: "SET NULL" },
+    {
+      nullable: true,
+      onDelete: "SET NULL",
+    },
   )
-  @Field((type) => Deliverable, { nullable: true })
+  @Field(() => Deliverable, { nullable: true })
   deliverable?: Deliverable;
 
   constructor(
@@ -50,7 +54,7 @@ export class Task extends BaseEntity {
     description: string,
     startDate?: string,
     endDate?: string,
-    status?: Status,
+    status?: TaskStatus,
   ) {
     super();
 

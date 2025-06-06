@@ -1,3 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root.client {
+  --very-light: #edf0fb;
+  --light: #8597d0;
+  --base: #4a65be;
+  --dark: #4a65be;
+  --very-dark: #25335f;
+  --success: #379c3b;
+  --error: #d9495b;
+  --warning: #d4711d;
+  --light-gray: #f3f3f3;
+  --gray: #cfcfcf;
+  --dark-gray: #383838;
+}
+:root.admin {
+  --very-light: #faf1e7;
+  --light: #e3ab76;
+  --base: #d98d44;
+  --dark: #d4711d;
+  --very-dark: #d16309;
+  --success: #379c3b;
+  --error: #d9495b;
+  --warning: #d4711d;
+  --light-gray: #f3f3f3;
+  --gray: #cfcfcf;
+  --dark-gray: #383838;
+}
+
+:root.visitor {
+  --very-light: #faf1e7;
+  --base: #d98d44;
+  --success: #379c3b;
+  --error: #d9495b;
+  --warning: #d4711d;
+  --light-gray: #f3f3f3;
+  --gray: #cfcfcf;
+  --dark-gray: #383838;
+}
+
+@layer base {
+  html {
+    @apply font-quicksand;
+    @apply text-black;
+  }
+}
+html,
+body,
+main {
+  @apply h-full;
+}
+
+body {
+  @apply flex flex-col;
+}
+
+#root {
+  @apply flex-1 flex flex-col;
+}

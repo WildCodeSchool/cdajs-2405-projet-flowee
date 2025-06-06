@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
+    "types": ["vite/client"],
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    /* Use "node" for Jest compatibility */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -18,6 +21,23 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@atoms/*": ["components/atoms/*"],
+      "@molecules/*": ["components/molecules/*"],
+      "@organisms/*": ["components/organisms/*"],
+      "@icons/*": ["components/atoms/Icons/*"],
+      "@illustrations/*": ["components/atoms/illustrations/*"],
+      "@pages/*": ["pages/*"],
+      "@context/*": ["context/*"],
+      "@queries/*": ["graphql-queries/*"],
+      "@mutations/*": ["graphql-mutations/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@layout/*": ["layout/*"],
+      "@generated/*": ["__generated__/*"],
+      "@utils/*": ["utils/*"]
+    }
   }
 }

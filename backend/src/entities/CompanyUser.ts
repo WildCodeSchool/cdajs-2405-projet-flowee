@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { Project } from "./Project";
 import { Account } from "./Account";
-import { Compagny } from "./Compagny";
+import { Company } from "./Company";
 
 @ObjectType()
 @Entity("company user")
@@ -32,21 +32,20 @@ export class CompanyUser extends BaseEntity {
     () => Project,
     (project) => project.client,
   )
-  @Field((type) => [Project])
   projects?: Project[];
 
   @OneToOne(() => Account)
-  @JoinColumn()
+  @JoinColumn({ name: "account_id" }) // la clé étrangère est ici
   @Field((_) => Account)
   account?: Account;
 
   @ManyToOne(
-    () => Compagny,
+    () => Company,
     (company) => company.companyUsers,
     { nullable: true, onDelete: "SET NULL" },
   )
-  @Field((type) => Compagny, { nullable: true })
-  company?: Compagny;
+  @Field(() => Company, { nullable: true })
+  company?: Company;
 
   constructor(firstname: string, lastname: string) {
     super();

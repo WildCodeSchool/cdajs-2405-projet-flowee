@@ -1,22 +1,50 @@
+import { GraphQLError } from "graphql";
+import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
-import { Task } from "../entities/Task";
-import type { Status } from "../enums/Status";
 import { Deliverable } from "../entities/Deliverable";
-import { Mutation, Arg, InputType, Field, Resolver } from "type-graphql";
+import { Task } from "../entities/Task";
+
+import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
+import type { MyContext } from "../types/MyContext";
+import { Project } from "../entities/Project";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
+  @Authorized("ADMIN")
   @Mutation((_) => Deliverable)
   async createDeliverable(
-    @Arg("name") name: string,
-    @Arg("perimeter", { nullable: true }) perimeter?: string,
-    @Arg("deliveryDate", { nullable: true }) deliveryDate?: string,
-    @Arg("status", { nullable: true }) status?: Status,
-    @Arg("createdAt", { nullable: true }) createdAt?: string,
-    @Arg("reviewTimes", { nullable: true }) reviewTimes?: number,
+    @Arg("newDeliverable", () => CreateDeliverableInput)
+    newDeliverableInput: CreateDeliverableInput,
+    @Ctx() ctx: MyContext,
   ): Promise<Deliverable> {
+    const user = ctx.user;
+
+    if (!user || user.role !== "ADMIN") {
+      throw new GraphQLError("Unauthorized : admin required", {
+        extensions: { code: "FORBIDDEN" },
+      });
+    }
+    const {
+      name,
+      perimeter,
+      deliveryDate,
+      status,
+      createdAt,
+      reviewTimes,
+      projectId,
+    } = newDeliverableInput;
+
     try {
-      const newDeliverable = new Deliverable(
+      const project = await dataSource.manager.findOne(Project, {
+        where: { id: projectId },
+      });
+      if (!project) {
+        throw new GraphQLError("Project not found", {
+          extensions: { code: "NOT_FOUND" },
+        });
+      }
+
+      const deliverable = new Deliverable(
         name,
         perimeter,
         deliveryDate,
@@ -24,11 +52,19 @@ export class DeliverableMutations {
         createdAt,
         reviewTimes,
       );
-      await dataSource.manager.save(newDeliverable);
-      return newDeliverable;
+
+      deliverable.project = project;
+
+      await dataSource.manager.save(deliverable);
+
+      return deliverable;
     } catch (error) {
-      console.info(error);
-      throw new Error("Invalid information");
+      throw new GraphQLError("Failed to create deliverable", {
+        extensions: {
+          code: "CREATE_DELIVERABLE_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 
@@ -36,37 +72,47 @@ export class DeliverableMutations {
   @Mutation((_) => Deliverable)
   async updateDeliverable(
     @Arg("id") id: number,
-    @Arg("name") name: string,
-    @Arg("perimeter") perimeter: string,
+    @Arg("name", { nullable: true }) name?: string,
+    @Arg("perimeter", { nullable: true }) perimeter?: string,
   ): Promise<Deliverable> {
     try {
       const deliverable = await dataSource.manager.findOne(Deliverable, {
         where: { id },
       });
       if (!deliverable) {
-        throw new Error("Deliverable not found");
+        throw new GraphQLError(`Deliverable with ID ${id} not found`, {
+          extensions: { code: "DELIVERABLE_NOT_FOUND" },
+        });
       }
 
-      deliverable.name = name;
-      deliverable.perimeter = perimeter;
+      if (name) deliverable.name = name;
+      if (perimeter) deliverable.perimeter = perimeter;
 
       await dataSource.manager.save(deliverable);
-
+      console.info("Deliverable updated:", deliverable);
       return deliverable;
     } catch (error) {
-      throw new Error("Invalid information");
+      throw new GraphQLError("Failed to update deliverable", {
+        extensions: {
+          code: "UPDATE_DELIVERABLE_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 
   //delete deliverable from id
-  @Mutation((_) => Deliverable)
-  async deleteDeliverable(@Arg("id") id: number): Promise<Deliverable> {
+  @Mutation(() => Boolean)
+  async deleteDeliverable(@Arg("id") id: number): Promise<boolean> {
     try {
       const deliverable = await dataSource.manager.findOne(Deliverable, {
         where: { id },
       });
+
       if (!deliverable) {
-        throw new Error("Deliverable not found");
+        throw new GraphQLError(`Deliverable with ID ${id} not found`, {
+          extensions: { code: "DELIVERABLE_NOT_FOUND" },
+        });
       }
 
       // j'enleve les taches liées au livrable
@@ -74,10 +120,16 @@ export class DeliverableMutations {
 
       // je supprime le livrable
       await dataSource.manager.remove(deliverable);
+      console.info(`Deliverable with ID ${id} deleted`);
 
-      return deliverable;
+      return true;
     } catch (error) {
-      throw new Error("Invalid information");
+      throw new GraphQLError("Failed to delete deliverable", {
+        extensions: {
+          code: "DELETE_DELIVERABLE_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
     }
   }
 }

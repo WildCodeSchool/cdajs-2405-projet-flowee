@@ -4,30 +4,36 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import type { Status } from "../enums/Status";
+import { IsNotEmpty } from "class-validator";
+
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
+import { ProjectStatus } from "../enums/ProjectStatus";
+import { Deliverable } from "./Deliverable";
 
 @ObjectType()
 @Entity()
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field(() => ID)
   id?: number;
+
+  @Column({ nullable: true })
+  @Field()
+  @IsNotEmpty({ message: "Project Name is required" })
+  projectName: string;
 
   @Column()
   @Field()
-  name: string;
+  @IsNotEmpty({ message: "company user ID is required" })
+  companyUserId: number;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  author: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  description: string;
+  description?: string;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -37,39 +43,49 @@ export class Project extends BaseEntity {
   @Field({ nullable: true })
   endDate?: string;
 
-  @Column({ nullable: true })
+  @Column({ default: ProjectStatus.NOT_STARTED })
   @Field({ nullable: true })
-  status?: Status;
+  status?: ProjectStatus;
 
   //relations
+  @OneToMany(
+    () => Deliverable,
+    (deliverable) => deliverable.project,
+  )
+  @Field(() => [Deliverable], { nullable: true })
+  deliverables?: Deliverable[];
+
   @ManyToOne(
     () => Client,
     (client) => client.projects,
-    { nullable: true, onDelete: "SET NULL" },
+    { nullable: false },
   )
-  @Field((type) => Client, { nullable: true })
+  @Field(() => Client)
   client?: Client;
 
   @ManyToOne(
     () => CompanyUser,
     (companyUser) => companyUser.projects,
-    { nullable: true, onDelete: "SET NULL" },
+    {
+      nullable: true,
+      onDelete: "SET NULL",
+    },
   )
-  @Field((type) => CompanyUser, { nullable: true })
+  @Field(() => CompanyUser, { nullable: true })
   companyUser?: CompanyUser;
 
   constructor(
-    name: string,
-    author: string,
-    description: string,
+    projectName: string,
+    companyUserId: number,
+    description?: string,
     startDate?: string,
     endDate?: string,
-    status?: Status,
+    status?: ProjectStatus,
   ) {
     super();
 
-    this.name = name;
-    this.author = author;
+    this.projectName = projectName;
+    this.companyUserId = companyUserId;
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;

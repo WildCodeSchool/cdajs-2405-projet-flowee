@@ -1,50 +1,154 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { cleanDB, dataSource, initTestData } from "./dataSource/dataSource";
-import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
-7;
-import { buildSchema } from "type-graphql";
-import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
-import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
-import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
-import { TaskQueries } from "./graphql-resolvers/TaskQueries";
-import { TaskMutations } from "./graphql-resolvers/TaskMutations";
-import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
+import { buildSchema, registerEnumType } from "type-graphql";
+import { dataSource } from "./dataSource/dataSource";
+import { Project } from "./entities/Project";
+import { AccountStatus } from "./enums/AccountStatus";
+import { ClientStatus } from "./enums/ClientStatus";
+import { ProjectStatus } from "./enums/ProjectStatus";
+import { Role } from "./enums/Role";
+import {
+  AccountMutation,
+  AuthMutation,
+} from "./graphql-resolvers/AccountMutation";
+import { AccountQueries } from "./graphql-resolvers/AccountQueries";
+import { ClientMutations } from "./graphql-resolvers/ClientMutations";
+import { ClientQueries } from "./graphql-resolvers/ClientQueries";
+import { CompanyMutations } from "./graphql-resolvers/CompanyMutations";
+import { CompanyQueries } from "./graphql-resolvers/CompanyQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
+import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
+import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
+import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
+import { TaskMutations } from "./graphql-resolvers/TaskMutations";
+import { TaskQueries } from "./graphql-resolvers/TaskQueries";
+import { TrackerStatsQueries } from "./graphql-resolvers/TrackerStatsQueries";
+import { authChecker, getAccount } from "./middlewares/auth";
+import { createRateLimiterPlugin } from "./plugins/simpleRateLimiterPlugin";
+import type { MyContext } from "./types/MyContext";
+import {
+  createComplexityRule,
+  createMaxDepthRule,
+  createNoIntrospectionRule,
+} from "./utils/securityRules";
+import { DeliverableStatus } from "./enums/DeliverableStatus";
+import { TaskStatus } from "./enums/TaskStatus";
+import { createClient, type RedisClientType } from "redis";
+
+registerEnumType(Role, {
+  name: "Role",
+  description: "Roles available for a user (admin or client) ",
+});
+
+registerEnumType(ProjectStatus, {
+  name: "ProjectStatus",
+  description: "Project, task or deliverable status",
+});
+
+registerEnumType(DeliverableStatus, {
+  name: "DeliverableStatus",
+  description: "The status of a deliverable",
+});
+
+registerEnumType(TaskStatus, {
+  name: "TaskStatus",
+  description: "The status of a Task",
+});
+registerEnumType(AccountStatus, {
+  name: "AccountStatus",
+  description: "Account status",
+});
+
+registerEnumType(ClientStatus, {
+  name: "ClientStatus",
+  description: "Status of client",
+});
+
+export async function cleanDB() {
+  await dataSource.manager.clear(Project);
+}
 
 const port = 4000;
 
+export const redisClient: RedisClientType = createClient({
+  url: "redis://redis:6379",
+});
 async function startServerApollo() {
   try {
+    // Initialize Redis client
+    try {
+      await redisClient.connect();
+      console.info("Redis client connected");
+    } catch (redisError) {
+      console.error("Error connecting to Redis client:", redisError);
+    }
+
     const schema = await buildSchema({
       resolvers: [
         ProjectQueries,
         ProjectMutations,
-        CompagnyQueries,
-        CompagnyMutations,
+        CompanyQueries,
+        CompanyMutations,
         TaskQueries,
         TaskMutations,
         DeliverableQueries,
         DeliverableMutations,
+        ClientQueries,
+        ClientMutations,
+        CompanyMutations,
+        AccountMutation,
+        AccountQueries,
+        AuthMutation,
+        TrackerStatsQueries,
       ],
+      authChecker,
     });
-    const server = new ApolloServer({
-      schema,
+    const server = new ApolloServer<MyContext>({
+      schema, // Allows introspection outside of the prod
+      introspection: process.env.NODE_ENV !== "production",
+      // règles de validation
+      validationRules: [
+        createMaxDepthRule(10), // max depth = 10
+        createComplexityRule({
+          // max complexity = 500
+          scalarCost: 1,
+          objectCost: 2,
+          listFactor: 10,
+          maxCost: 500,
+        }),
+        // Disable introspection in prod
+        ...(process.env.NODE_ENV === "production"
+          ? [createNoIntrospectionRule()]
+          : []),
+      ],
+      // we put our rate-limiter in-memory
+      plugins: [
+        createRateLimiterPlugin({
+          windowMs: 60_000, // 1 minute
+          max: 100, // 100 requests per minute
+        }),
+      ],
     });
 
     await dataSource.initialize();
-    console.log("Data Source has been initialized!");
-    // cleanDB();
-    // initTestData();
+    console.info("Data Source has been initialized!");
 
-    const { url } = await startStandaloneServer(server, {
-      listen: { port },
+    const { url } = await startStandaloneServer<MyContext>(server, {
+      context: async ({ req }) => {
+        const token = req.headers.authorization || "";
+        const user = await getAccount(token);
+
+        // Add redis to the context
+        return { user, redis: redisClient };
+      },
+      listen: { port, host: "0.0.0.0" },
     });
 
-    console.log(`🚀  Server ready at: ${url}`);
+    console.info(`🚀  Server ready at: ${url}`);
   } catch (error) {
     console.error("Error starting server:", error);
+    process.exit(1); // Quit on a critical error
   }
 }
 

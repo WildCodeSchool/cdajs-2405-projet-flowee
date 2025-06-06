@@ -1,0 +1,33 @@
+import { useState } from "react";
+import SearchIcon from "@components/atoms/Icons/searchIcon";
+
+interface SearchBarProps {
+  setSearchFilter: (search: string) => void;
+}
+
+export default function SearchBar({ setSearchFilter }: SearchBarProps) {
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  // Send data to parent component
+  const sendData = () => {
+    setSearchFilter(search);
+  };
+
+  return (
+    <div className="flex items-center justify-center flex-col  relative">
+      <input
+        type="text"
+        value={search}
+        onChange={handleSearch}
+        onKeyUp={sendData}
+        placeholder="Looking for something?"
+        className="w-full py-2 px-4 border border-theme-gray rounded-md focus:outline-theme-base hover:border-theme-darkGray "
+      />
+      <SearchIcon className="absolute right-3 text-black" />
+    </div>
+  );
+}
