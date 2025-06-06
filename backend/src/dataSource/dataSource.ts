@@ -9,7 +9,8 @@ const dbUser = process.env.DB_USER ?? "postgres";
 const dbPassword = process.env.DB_PASSWORD ?? "passwordadminer";
 console.info("dbPassword", dbPassword, dbUser, dbName, dbHost, dbPort);
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd =
+  process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 
 export const dataSource = new DataSource({
   type: "postgres",
@@ -19,8 +20,8 @@ export const dataSource = new DataSource({
   username: dbUser,
   password: dbPassword,
   schema: "public",
-  entities: ["src/entities/*.ts"],
-  migrations: ["src/migration/*.ts"],
+  entities: [isProd ? "build/entities/*.js" : "src/entities/*.ts"],
+  migrations: [isProd ? "build/migration/*.js" : "src/migration/*.ts"],
   migrationsTableName: "migrations",
   synchronize: false,
   logging: isProd ? ["error"] : "all", // Only log errors in production
