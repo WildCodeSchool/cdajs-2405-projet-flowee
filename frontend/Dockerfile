@@ -20,15 +20,13 @@ COPY . .
 
 # Variable d'environnement (staging/prod passée par le docker-compose ou docker build)
 ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+ENV NODE_ENV=$NODE_ENV
 
 RUN npm run build
 
 # Étape 2 : image nginx minimale pour servir le build
 FROM nginx:1.21.0-alpine
 
-# Variable d'env pour info, pas vraiment utile à nginx lui-même
-ENV NODE_ENV production
 
 # Copie le build dans nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
