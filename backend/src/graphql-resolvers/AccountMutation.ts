@@ -86,7 +86,7 @@ export class AccountMutation {
     const { accountId } = verifyActivationJWT(token);
 
     const account = await dataSource.manager.findOne(Account, {
-      where: { id: Number.parseInt(accountId) },
+      where: { id: accountId },
     });
 
     if (!account || account.status !== AccountStatus.PENDING) {

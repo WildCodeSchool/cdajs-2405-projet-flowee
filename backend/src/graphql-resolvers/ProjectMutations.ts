@@ -3,7 +3,6 @@ import { GraphQLError } from "graphql";
 import { Project } from "../entities/Project";
 import { Client } from "../entities/Client";
 import { Account } from "../entities/Account";
-// import { CompanyUser } from "../entities/CompanyUser";
 import { CreateProjectInput } from "../inputs/CreateProjectInput";
 import { ProjectStatus } from "../enums/ProjectStatus";
 import { Role } from "../enums/Role";
@@ -15,6 +14,7 @@ import { CompanyUser } from "../entities/CompanyUser";
 import { generateActivationToken } from "../utils/accesstoken";
 import { sendActivationEmail } from "../services/sendActivationEmail";
 import { invalidateCache } from "../utils/invalidatecache";
+import { ClientStatus } from "../enums/ClientStatus";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -61,54 +61,124 @@ export class ProjectMutations {
     // Transaction
     try {
       result = await dataSource.transaction(async (manager) => {
-        let account: Account | null = await manager.findOne(Account, {
+        const account = await manager.findOne(Account, {
           where: { email: clientEmail },
         });
+        const client = await manager.findOne(Client, {
+          where: { clientName },
+          relations: ["account"],
+        });
 
-        if (!account) {
-          account = manager.create(Account, {
+        // Cas 1 : le client existe mais l'email ne correspond à aucun compte
+        if (!account && client) {
+          console.warn(
+            `[SECURITY] Un client avec ce nom (${clientName}) existe, mais l'email fourni (${clientEmail}) ne correspond à aucun compte.`,
+          );
+          throw new GraphQLError(
+            "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+            { extensions: { code: "CLIENTNAME_EXISTS_EMAIL_UNKNOWN" } },
+          );
+        }
+
+        // Cas 2 : le compte existe mais pas le nom de client
+        if (account && !client) {
+          console.warn(
+            `[SECURITY] Un compte existe déjà avec cet email (${clientEmail}), mais le nom de client (${clientName}) ne correspond pas.`,
+          );
+          throw new GraphQLError(
+            "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+            { extensions: { code: "ACCOUNT_EXISTS_CLIENTNAME_MISMATCH" } },
+          );
+        }
+
+        // Cas 3 : les deux existent mais ne sont pas liés
+        if (account && client && client.account?.id !== account.id) {
+          console.warn(
+            `[SECURITY] Incohérence : account (${clientEmail}) non lié à client (${clientName})`,
+          );
+          throw new GraphQLError(
+            "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+            { extensions: { code: "CLIENT_ACCOUNT_MISMATCH" } },
+          );
+        }
+
+        // Cas 4 : les deux existent, sont liés, mais au moins un statut n'est pas ACTIVE
+        if (
+          account &&
+          client &&
+          client.account?.id === account.id &&
+          (account.status !== AccountStatus.ACTIVE ||
+            client.status !== ClientStatus.ACTIVE)
+        ) {
+          console.warn(
+            `[SECURITY] Refus projet : statut account=${account.status}, statut client=${client.status}`,
+          );
+          throw new GraphQLError(
+            "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+            { extensions: { code: "STATUS_INVALID" } },
+          );
+        }
+
+        // Cas 5 : les deux existent, sont liés, statuts OK -> on crée le projet (pas d'email d'activation)
+        if (
+          account &&
+          client &&
+          client.account?.id === account.id &&
+          account.status === AccountStatus.ACTIVE &&
+          client.status === ClientStatus.ACTIVE
+        ) {
+          const newproject: Project = await manager.save(Project, {
+            projectName,
+            description,
+            startDate,
+            endDate,
+            status: ProjectStatus.NOT_STARTED,
+            client,
+            companyUserId,
+          });
+          return { newproject, account, clientName, token: "" };
+        }
+        // Cas 6 : ni client ni compte => on crée les deux, envoi mail d'activation
+        if (!account && !client) {
+          const newAccount = manager.create(Account, {
             email: clientEmail,
             password: "changeme",
             role: Role.CLIENT,
             status: AccountStatus.PENDING,
           });
-          await manager.save(Account, account);
-        }
+          await manager.save(Account, newAccount);
 
-        const existingClient = await manager.findOne(Client, {
-          where: { account: { id: account?.id } },
-          relations: ["account"],
-        });
-
-        if (existingClient) {
-          throw new GraphQLError("A client already exists for this account", {
-            extensions: { code: "CLIENT_ALREADY_EXISTS" },
+          const newClient = manager.create(Client, {
+            clientName,
+            account: newAccount,
+            status: ClientStatus.INACTIVE,
           });
+          await manager.save(Client, newClient);
+
+          const newproject: Project = await manager.save(Project, {
+            projectName,
+            description,
+            startDate,
+            endDate,
+            status: ProjectStatus.NOT_STARTED,
+            client: newClient,
+            companyUserId,
+          });
+
+          // Générer token d’activation
+          const { token, expiresAt } = generateActivationToken(24);
+          newAccount.activationToken = token;
+          newAccount.tokenExpiresAt = expiresAt;
+          await manager.save(Account, newAccount);
+
+          return { newproject, account: newAccount, clientName, token };
         }
 
-        const client = manager.create(Client, {
-          clientName,
-          account,
-          accountId: account.id,
-        });
-        await manager.save(Client, client);
-
-        const newproject: Project = await manager.save(Project, {
-          projectName,
-          description,
-          startDate,
-          endDate,
-          status: ProjectStatus.NOT_STARTED,
-          client,
-          companyUserId,
-        });
-
-        const { token, expiresAt } = generateActivationToken(24);
-        account.activationToken = token;
-        account.tokenExpiresAt = expiresAt;
-        await manager.save(Account, account);
-
-        return { newproject, account, clientName, token };
+        // Catch all other unkonwn errors
+        throw new GraphQLError(
+          "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+          { extensions: { code: "UNKNOWN_ERROR" } },
+        );
       });
     } catch (error) {
       if (error instanceof GraphQLError) {
@@ -134,13 +204,15 @@ export class ProjectMutations {
       });
     }
 
-    // Envoi du mail après transaction
+    // Envoi du mail après transaction if new account created
     try {
-      await sendActivationEmail(
-        result.account.email,
-        result.clientName,
-        result.token,
-      );
+      if (result.token) {
+        await sendActivationEmail(
+          result.account.email,
+          result.clientName,
+          result.token,
+        );
+      }
     } catch (err) {
       console.error("Erreur lors de l'envoi du mail :", err);
       throw new GraphQLError(

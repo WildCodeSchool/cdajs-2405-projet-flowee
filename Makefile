@@ -33,11 +33,19 @@ env:
 # Gestion utilisateurs
 # ===============================
 
+# Wait for DB to be ready 
+.PHONY: wait-db
+wait-db:
+	@until docker exec $(DB_CONTAINER) pg_isready -U $(DB_SUPERUSER); do \
+		echo "Waiting for postgres..."; \
+		sleep 2; \
+	done
+
+
 # Création d'un utilisateur de base de données
 .PHONY: init-db-user
-init-db-user:
-	docker exec -it $(BACKEND_CONTAINER) \
-		npx ts-node backend/src/scripts/init_db_user.ts
+init-db-user: wait-db
+	docker exec -it $(BACKEND_CONTAINER) npx ts-node /app/src/scripts/init_db_user.ts
 
 # Supprimer un utilisateur de base de données
 .PHONY: clean-test-users
@@ -76,8 +84,8 @@ migration-generate:
 	@read -p "Nom de la migration : " name; \
 	TIMESTAMP=$$(date +%s); \
 	docker exec -it $(BACKEND_CONTAINER) \
-	npx typeorm-ts-node-commonjs migration:generate $(MIGRATION_PATH)/$$TIMESTAMP-$$name -d $(DATASOURCE_PATH); \
-	echo "✅ Migration générée : $$TIMESTAMP-$$name.ts"
+	npx typeorm-ts-node-commonjs migration:generate $(MIGRATION_PATH)/$${TIMESTAMP}-$${name// /-} -d $(DATASOURCE_PATH); \
+	echo "✅ Migration générée : $${TIMESTAMP}-$${name// /-}.ts"
 
 # Create an empty migration manually (skeleton)
 .PHONY: migration-create
@@ -86,6 +94,13 @@ migration-create:
 	TIMESTAMP=$$(date +%s); \
 	docker exec -it $(BACKEND_CONTAINER) \
 	npx typeorm-ts-node-commonjs migration:create $(MIGRATION_PATH)/$$TIMESTAMP-$$name
+
+# Dump the database
+
+.PHONY: backup-db
+backup-db:
+	docker exec -t flowee-db pg_dump -U flowee_user flowee > flowee_backup_before_uuid.sql
+
 
 # Run the migrations on the database
 .PHONY: migrations

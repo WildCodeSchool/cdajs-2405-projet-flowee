@@ -15,9 +15,9 @@ import { IsEmail } from "class-validator";
 @ObjectType()
 @Entity("account")
 export class Account extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   @Field(() => ID)
-  id?: number;
+  id!: string;
 
   @Column()
   @Field()

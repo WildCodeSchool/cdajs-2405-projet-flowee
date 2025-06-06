@@ -1,4 +1,3 @@
-import type { Project } from "@generated/graphql-types";
 import { useGetProjectsByUserQuery } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
 import DisplayCards from "@organisms/DisplayCards";
@@ -9,17 +8,26 @@ import { NavLink } from "react-router-dom";
 import ArrowIcon from "@icons/Arrow";
 import SignedInLayout from "@layout/SignedInLayout";
 import FilterIcon from "@icons/FilterIcon";
+import { useAuth } from "@context/authContext";
 export default function Projects() {
   const [searchFilter, setSearchFilter] = useState("");
-  const role = useGetProjectsByUserQuery();
-  if (!role) return <ErrorBanner message="Unauthorized user!" />;
-  let projects: Project[] = [];
-  const { data, loading } = useGetProjectsByUserQuery({});
-  projects = data?.getProjectsByUser ?? [];
-  if (projects.length === 0)
-    return <ErrorBanner message="No projects found!" />;
+  const { authUserData } = useAuth(); // 👈 Récupère le user et le rôle
+  const allowedRoles = ["ADMIN", "CLIENT"];
+
+  // Refetch à chaque navigation (pour que la liste soit toujours à jour)
+  const { data, loading, error } = useGetProjectsByUserQuery({});
+
+  // ⚡ Contrôle du rôle utilisateur (instantané, sans attendre la query)
+  if (!authUserData?.role || !allowedRoles.includes(authUserData.role)) {
+    return <ErrorBanner message="Unauthorized user!" />;
+  }
 
   if (loading) return <p>Loading...</p>;
+  if (error) return <ErrorBanner message={error.message} />;
+
+  const projects = data?.getProjectsByUser ?? [];
+  if (projects.length === 0)
+    return <ErrorBanner message="No projects found!" />;
 
   return (
     <SignedInLayout>
