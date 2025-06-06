@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SearchIcon from "@icons/searchIcon";
+import SearchIcon from "@components/atoms/Icons/searchIcon";
 
 interface SearchBarProps {
   setSearchFilter: (search: string) => void;

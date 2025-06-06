@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, use } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
@@ -23,6 +23,7 @@ import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
+import ItemDetails from "@pages/ItemDetails";
 import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
         path: "/projects/:slug",
         element: <ProjectDetails />,
       },
+
       {
         path: "/clients",
         element: <Clients />,
@@ -134,7 +136,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");

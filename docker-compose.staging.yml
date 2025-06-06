@@ -67,6 +67,7 @@ services:
       - ./logs:/var/log/nginx
 
   redis:
+    container_name: flowee-redis
     hostname: redis
     image: redis
 

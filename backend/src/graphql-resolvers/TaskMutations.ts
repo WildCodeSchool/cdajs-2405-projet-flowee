@@ -1,38 +1,44 @@
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { GraphQLError } from "graphql";
 import { dataSource } from "../dataSource/dataSource";
 import { Task } from "../entities/Task";
 
 import type { TaskStatus } from "../enums/TaskStatus";
+import { CreateTaskInput } from "../inputs/CreateTaskInput";
+import { Deliverable } from "../entities/Deliverable";
 
 @Resolver(Task)
 export class TaskMutations {
+  @Authorized("ADMIN")
   @Mutation(() => Task)
   async createTask(
-    @Arg("name") name: string,
-    @Arg("description", { nullable: true }) description?: string,
-    @Arg("status", { nullable: true }) status?: TaskStatus,
-    @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string,
+    @Arg("newTask", () => CreateTaskInput)
+    newTaskInput: CreateTaskInput
   ): Promise<Task> {
-    if (!name) {
-      throw new GraphQLError("Name is required", {
-        extensions: { code: "VALIDATION_ERROR" },
-      });
-    }
+    const { name, description, startDate, endDate, status, deliverableId } =
+      newTaskInput;
 
     try {
+      const deliverable = await dataSource.manager.findOneByOrFail(
+        Deliverable,
+        {
+          id: deliverableId,
+        }
+      );
+
       const newTask = new Task(
         name,
         description ?? "",
         startDate,
         endDate,
-        status,
+        status
       );
+
+      newTask.deliverable = deliverable;
+
       await dataSource.manager.save(newTask);
       return newTask;
     } catch (error) {
-      // Relancer l’erreur si c’est déjà un GraphQLError
       if (error instanceof GraphQLError) {
         throw error;
       }
@@ -53,7 +59,7 @@ export class TaskMutations {
     @Arg("description", { nullable: true }) description?: string,
     @Arg("status", { nullable: true }) status?: TaskStatus,
     @Arg("startDate", { nullable: true }) startDate?: string,
-    @Arg("endDate", { nullable: true }) endDate?: string,
+    @Arg("endDate", { nullable: true }) endDate?: string
   ): Promise<Task> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
@@ -85,8 +91,8 @@ export class TaskMutations {
     }
   }
 
-  @Mutation(() => Task)
-  async deleteTask(@Arg("id") id: number): Promise<Task> {
+  @Mutation(() => Boolean)
+  async deleteTask(@Arg("id") id: number): Promise<boolean> {
     try {
       const task = await dataSource.manager.findOne(Task, { where: { id } });
       if (!task) {
@@ -96,7 +102,7 @@ export class TaskMutations {
       }
 
       await dataSource.manager.remove(task);
-      return task;
+      return true;
     } catch (error) {
       //Releve l erreur initiale si c'est une erreur GraphQLError
       if (error instanceof GraphQLError) {

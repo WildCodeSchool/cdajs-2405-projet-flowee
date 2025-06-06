@@ -1,12 +1,20 @@
+# 1) Build
+FROM node:lts-alpine AS builder
 
-FROM node:18-bookworm
+WORKDIR /app
+COPY tsconfig.json package.json ./
+RUN npm install && npm install -g typescript
 
-RUN mkdir /app
+COPY src ./src
+RUN tsc
+
+# 2) Runtime
+FROM node:lts-alpine
+RUN apk --no-cache add curl
 WORKDIR /app
 
-COPY . . 
+COPY --from=builder /app/dist ./dist
+COPY package.json ./
+RUN npm install --production
 
-RUN npm i 
-
-RUN npm run build 
-CMD npm run start
+CMD ["npm", "run", "startprod"]

@@ -52,17 +52,26 @@ init-db-user: wait-db
 clean-test-users:
 	npx ts-node backend/src/scripts/clean_test_users.ts
 
+# ===============================
+# Launch containers
+# ===============================
 
-
-# Mode développement
-.PHONY: run
-run:
+# Launch développement
+.PHONY: run dev
+run-dev:
 	sh ./run.sh
 
-# Mode production/staging
-.PHONY: prod
-prod:
-	docker-compose -f docker-compose.prod.yml up --build -d
+# Launch staging
+.PHONY: run staging
+run-staging:
+	sh ./run-staging.sh
+
+# Launch prod
+.PHONY: run staging
+run-prod:
+	sh ./run-prod.sh	
+
+
 
 # Stop containers
 .PHONY: stop

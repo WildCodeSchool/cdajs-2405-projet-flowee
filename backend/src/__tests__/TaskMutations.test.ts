@@ -3,6 +3,7 @@ import { mockTypeOrm } from "../__tests_mockTypeorm-config";
 import { Task } from "../entities/Task";
 import { TaskMutations } from "../graphql-resolvers/TaskMutations";
 import { TaskStatus } from "../enums/TaskStatus";
+import type { CreateTaskInput } from "../inputs/CreateTaskInput";
 
 describe("Task Mutations", () => {
   let taskMutations: TaskMutations;
@@ -15,13 +16,9 @@ describe("Task Mutations", () => {
     task = new Task(
       faker.lorem.words(3), // name
       faker.lorem.sentence(), // description
-      faker.date
-        .past()
-        .toISOString(), // startDate (string)
-      faker.date
-        .future()
-        .toISOString(), // endDate (string)
-      TaskStatus.IN_PROGRESS, // Status FIXE pour (tests déterministes)
+      faker.date.past().toISOString(), // startDate (string)
+      faker.date.future().toISOString(), // endDate (string)
+      TaskStatus.IN_PROGRESS // Status FIXE pour (tests déterministes)
     );
 
     // On peut aussi attribuer un ID fictif pour simuler un objet existant lors de l'update/delete
@@ -32,19 +29,19 @@ describe("Task Mutations", () => {
 
   describe("createTask", () => {
     it("should create a new task", async () => {
-      // Moquer la méthode 'save' de la classe Task
       mockTypeOrm().onMock(Task).toReturn(task, "save");
 
-      // Appel de la mutation createTask
-      const createdTask = await taskMutations.createTask(
-        task.name,
-        task.description,
-        task.status,
-        task.startDate,
-        task.endDate,
-      );
+      const input: CreateTaskInput = {
+        name: task.name,
+        description: task.description,
+        status: task.status,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        deliverableId: faker.number.int(),
+      };
 
-      // Vérifie que l'objet retourné match l'original
+      const createdTask = await taskMutations.createTask(input);
+
       expect(createdTask).toMatchObject({
         name: task.name,
         description: task.description,
@@ -54,17 +51,17 @@ describe("Task Mutations", () => {
       });
     });
 
-    it("should throw an error if something goes wrong (e.g. name is empty)", async () => {
-      // Ici, on s'attend à ce que l'erreur levée soit "Invalid information"
-      // car dans TaskMutations.ts, le catch jette "Invalid information"
-      await expect(
-        taskMutations.createTask(
-          "", // name vide
-          "Some description",
-          TaskStatus.NOT_STARTED,
-          // startDate et endDate peuvent être omis
-        ),
-      ).rejects.toThrow("Name is required");
+    it("should throw an error if name is empty", async () => {
+      const input: CreateTaskInput = {
+        name: "",
+        description: "Some description",
+        status: TaskStatus.NOT_STARTED,
+        deliverableId: faker.number.int(),
+      };
+
+      await expect(taskMutations.createTask(input)).rejects.toThrow(
+        "Name is required"
+      );
     });
   });
 
@@ -78,7 +75,7 @@ describe("Task Mutations", () => {
         "Old Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.NOT_STARTED,
+        TaskStatus.NOT_STARTED
       );
       existingTask.id = 42; // ID fictif
 
@@ -96,7 +93,7 @@ describe("Task Mutations", () => {
       const updatedTask = await taskMutations.updateTask(
         existingTask.id,
         "New Name",
-        "New Description",
+        "New Description"
       );
 
       // Vérifier que la tâche a bien été mise à jour
@@ -113,7 +110,7 @@ describe("Task Mutations", () => {
       mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
 
       await expect(
-        taskMutations.updateTask(999, "Name", "Description"),
+        taskMutations.updateTask(999, "Name", "Description")
       ).rejects.toThrow("Task with ID 999 not found");
     });
   });
@@ -129,7 +126,7 @@ describe("Task Mutations", () => {
         "Some Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.BLOCKED,
+        TaskStatus.BLOCKED
       );
       existingTask.id = 123;
 
@@ -155,7 +152,7 @@ describe("Task Mutations", () => {
       mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
 
       await expect(taskMutations.deleteTask(9999)).rejects.toThrow(
-        "Task with ID 9999 not found",
+        "Task with ID 9999 not found"
       );
     });
   });

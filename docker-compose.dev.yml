@@ -1,7 +1,9 @@
 services:
   frontend:
     container_name: flowee-frontend
-    build: ./frontend
+    build: 
+      context : ./frontend
+      dockerfile: ./Dockerfile.dev
     command: sh -c "npm run dev"
     restart: unless-stopped
     ports:
@@ -9,10 +11,14 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      NODE_ENV: development
 
   backend:
     container_name: flowee-backend
-    build: ./backend
+    build:
+      context : ./backend
+      dockerfile: ./Dockerfile.dev
     command: sh -c "npm run start"
     restart: unless-stopped
     ports:
@@ -33,12 +39,6 @@ services:
     restart: unless-stopped
     # set shared memory limit when using docker-compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
       POSTGRES_USER: ${DB_SUPERUSER}
       POSTGRES_PASSWORD: ${DB_SUPERUSER_PASSWORD}
@@ -61,10 +61,11 @@ services:
   adminer:
     container_name: flowee-adminer
     image: adminer
-    restart: always
+    restart: unless-stopped
     ports:
       - 8080:8080
   redis:
+    container_name: flowee-redis
     hostname: redis
     image: redis
 
