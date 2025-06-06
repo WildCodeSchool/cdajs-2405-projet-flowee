@@ -1,10 +1,8 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { buildSchema } from "type-graphql";
-import { registerEnumType } from "type-graphql";
+import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
-// import { initTestData } from "./scripts/initTestData";
 import { Project } from "./entities/Project";
 import { AccountStatus } from "./enums/AccountStatus";
 import { ClientStatus } from "./enums/ClientStatus";
@@ -17,8 +15,8 @@ import {
 import { AccountQueries } from "./graphql-resolvers/AccountQueries";
 import { ClientMutations } from "./graphql-resolvers/ClientMutations";
 import { ClientQueries } from "./graphql-resolvers/ClientQueries";
-import { CompagnyMutations } from "./graphql-resolvers/CompagnyMutations";
-import { CompagnyQueries } from "./graphql-resolvers/CompagnyQueries";
+import { CompanyMutations } from "./graphql-resolvers/CompanyMutations";
+import { CompanyQueries } from "./graphql-resolvers/CompanyQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
@@ -36,6 +34,7 @@ import {
 } from "./utils/securityRules";
 import { DeliverableStatus } from "./enums/DeliverableStatus";
 import { TaskStatus } from "./enums/TaskStatus";
+import { createClient, type RedisClientType } from "redis";
 
 registerEnumType(Role, {
   name: "Role",
@@ -72,21 +71,32 @@ export async function cleanDB() {
 
 const port = 4000;
 
+export const redisClient: RedisClientType = createClient({
+  url: "redis://redis:6379",
+});
 async function startServerApollo() {
   try {
+    // Initialize Redis client
+    try {
+      await redisClient.connect();
+      console.info("Redis client connected");
+    } catch (redisError) {
+      console.error("Error connecting to Redis client:", redisError);
+    }
+
     const schema = await buildSchema({
       resolvers: [
         ProjectQueries,
         ProjectMutations,
-        CompagnyQueries,
-        CompagnyMutations,
+        CompanyQueries,
+        CompanyMutations,
         TaskQueries,
         TaskMutations,
         DeliverableQueries,
         DeliverableMutations,
         ClientQueries,
         ClientMutations,
-        CompagnyMutations,
+        CompanyMutations,
         AccountMutation,
         AccountQueries,
         AuthMutation,
@@ -123,20 +133,14 @@ async function startServerApollo() {
 
     await dataSource.initialize();
     console.info("Data Source has been initialized!");
-    // cleanDB();
-    // initTestData();
 
     const { url } = await startStandaloneServer<MyContext>(server, {
       context: async ({ req }) => {
-        // Get the user token from the headers.
         const token = req.headers.authorization || "";
-        console.info("token dans la connexion BDD", token);
-
-        // Try to retrieve a user with the token
         const user = await getAccount(token);
 
-        // Add the user to the context
-        return { user };
+        // Add redis to the context
+        return { user, redis: redisClient };
       },
       listen: { port, host: "0.0.0.0" },
     });

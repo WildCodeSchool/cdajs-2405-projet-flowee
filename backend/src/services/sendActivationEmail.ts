@@ -31,3 +31,36 @@ export async function sendActivationEmail(
     throw error;
   }
 }
+
+export async function sendPasswordChangeNotification(
+  to: string,
+  name: string | undefined,
+) {
+  try {
+    const api = new SibApiV3Sdk.TransactionalEmailsApi();
+
+    await api.sendTransacEmail({
+      to: [{ email: to, name }],
+      subject: "Confirmation de changement de mot de passe 🔒",
+      htmlContent: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Confirmation de changement de mot de passe</h2>
+          <p>Bonjour ${name},</p>
+          <p>Nous vous confirmons que votre mot de passe a été modifié avec succès le ${new Date().toLocaleString("fr-FR")}.</p>
+          <p>Si vous n'êtes pas à l'origine de ce changement, veuillez contacter immédiatement notre support.</p>
+          <hr style="border: 1px solid #eee; margin: 20px 0;">
+          <p style="color: #666; font-size: 12px;">
+            Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+          </p>
+        </div>
+      `,
+      sender: {
+        name: "Flowee",
+        email: "appflowee@gmail.com",
+      },
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'envoi du mail de notification :", error);
+    throw error;
+  }
+}

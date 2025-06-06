@@ -29,7 +29,7 @@ export default function DisplayCards({
   };
 
   const filtered = items.filter((item) =>
-    getItemTitle(item).toLowerCase().includes(searchFilter.toLowerCase())
+    getItemTitle(item).toLowerCase().includes(searchFilter.toLowerCase()),
   );
 
   const displayedItems = filtered.slice(0, limit);

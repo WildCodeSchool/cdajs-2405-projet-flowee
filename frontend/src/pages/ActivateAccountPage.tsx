@@ -20,7 +20,6 @@ export function ActivateAccountPage() {
       try {
         const res = await activateAccount({ variables: { token } });
         const jwtToken = res.data?.activateAccountAndReturnToken;
-
         if (!jwtToken) {
           navigate("/activation-error?reason=invalid", { replace: true });
           return;

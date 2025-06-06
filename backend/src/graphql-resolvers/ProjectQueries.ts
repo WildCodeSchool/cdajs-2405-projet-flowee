@@ -32,7 +32,7 @@ export class ProjectQueries {
 
   @Query(() => [Project], { nullable: true })
   async getProjectsByName(
-    @Arg("name") name: string
+    @Arg("name") name: string,
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
       where: { projectName: ILike(`%${name}%`) },
@@ -45,25 +45,30 @@ export class ProjectQueries {
   @Authorized("CLIENT", "ADMIN") // Protège cette requête pour les utilisateurs connectés
   @Query(() => [Project])
   async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
-    const user = context.user;
+    const { user, redis } = context;
 
     if (!user) {
       throw new Error("Not connected");
     }
 
+    const cacheKey = `user-projects:${user.role}:${user.id}`;
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      console.info("Projets récupérés depuis le cache");
+      return JSON.parse(cached);
+    }
+    console.log("🔄 [BBD] Projets récupérés depuis PostgreSQL");
+    let projects: Project[] = [];
+
     if (user.role === "CLIENT") {
-      const projects = await dataSource.manager.find(Project, {
+      projects = await dataSource.manager.find(Project, {
         where: {
           client: { account: { id: user.id } },
         },
         relations: ["client", "companyUser", "deliverables"],
       });
-
-      return projects;
-    }
-
-    if (user.role === "ADMIN") {
-      const projects = await dataSource.manager.find(Project, {
+    } else if (user.role === "ADMIN") {
+      projects = await dataSource.manager.find(Project, {
         where: {
           companyUser: { account: { id: user.id } },
         },
@@ -74,10 +79,13 @@ export class ProjectQueries {
           "deliverables.tasks",
         ],
       });
-
-      return projects;
+    } else {
+      throw new Error("User role not supported");
     }
 
-    throw new Error("User role not supported");
+    // Stocker le résultat dans Redis pour 10 minutes
+    await redis.set(cacheKey, JSON.stringify(projects), { EX: 600 });
+
+    return projects;
   }
 }

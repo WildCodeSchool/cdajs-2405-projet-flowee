@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_CLIENT_MUTATION = gql`
- mutation Mutation($accountId: Float!, $name: String!) {
+ mutation Mutation($accountId: String!, $name: String!) {
   createClient(accountId: $accountId, Name: $name) {
     id
     clientName
@@ -24,6 +24,7 @@ export const ARCHIVE_CLIENT_MUTATION = gql`
     }
   }
 `;
+
 export const UPDATE_CLIENT_MUTATION = gql`
   mutation UpdateClient(
     $id: Float!,
