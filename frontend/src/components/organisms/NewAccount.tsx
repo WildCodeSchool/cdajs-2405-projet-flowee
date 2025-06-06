@@ -43,7 +43,7 @@ export default function NewAccount({ user, color }: PropsType) {
 
   const [signUpData, setSignUpData] = useState(initialFormData);
   const [createAccount, { loading, error }] = useMutation(
-    CREATE_ACCOUNT_MUTATION
+    CREATE_ACCOUNT_MUTATION,
   );
 
   const [createClient] = useMutation(CREATE_CLIENT_MUTATION);

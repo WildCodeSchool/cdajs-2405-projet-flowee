@@ -88,7 +88,7 @@ export const DeliverablesByStatus = ({
                     {deliverable.endDate && (
                       <p className="text-xs text-gray-400">
                         {new Date(deliverable.endDate).toLocaleDateString(
-                          "fr-FR"
+                          "fr-FR",
                         )}
                       </p>
                     )}

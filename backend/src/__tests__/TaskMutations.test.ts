@@ -16,9 +16,13 @@ describe("Task Mutations", () => {
     task = new Task(
       faker.lorem.words(3), // name
       faker.lorem.sentence(), // description
-      faker.date.past().toISOString(), // startDate (string)
-      faker.date.future().toISOString(), // endDate (string)
-      TaskStatus.IN_PROGRESS // Status FIXE pour (tests déterministes)
+      faker.date
+        .past()
+        .toISOString(), // startDate (string)
+      faker.date
+        .future()
+        .toISOString(), // endDate (string)
+      TaskStatus.IN_PROGRESS, // Status FIXE pour (tests déterministes)
     );
 
     // On peut aussi attribuer un ID fictif pour simuler un objet existant lors de l'update/delete
@@ -60,7 +64,7 @@ describe("Task Mutations", () => {
       };
 
       await expect(taskMutations.createTask(input)).rejects.toThrow(
-        "Name is required"
+        "Name is required",
       );
     });
   });
@@ -75,7 +79,7 @@ describe("Task Mutations", () => {
         "Old Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.NOT_STARTED
+        TaskStatus.NOT_STARTED,
       );
       existingTask.id = 42; // ID fictif
 
@@ -93,7 +97,7 @@ describe("Task Mutations", () => {
       const updatedTask = await taskMutations.updateTask(
         existingTask.id,
         "New Name",
-        "New Description"
+        "New Description",
       );
 
       // Vérifier que la tâche a bien été mise à jour
@@ -110,7 +114,7 @@ describe("Task Mutations", () => {
       mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
 
       await expect(
-        taskMutations.updateTask(999, "Name", "Description")
+        taskMutations.updateTask(999, "Name", "Description"),
       ).rejects.toThrow("Task with ID 999 not found");
     });
   });
@@ -126,7 +130,7 @@ describe("Task Mutations", () => {
         "Some Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.BLOCKED
+        TaskStatus.BLOCKED,
       );
       existingTask.id = 123;
 
@@ -152,7 +156,7 @@ describe("Task Mutations", () => {
       mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
 
       await expect(taskMutations.deleteTask(9999)).rejects.toThrow(
-        "Task with ID 9999 not found"
+        "Task with ID 9999 not found",
       );
     });
   });
