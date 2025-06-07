@@ -5,7 +5,7 @@ services:
     image: cyriellethomas/flowee-deploy-client:prod-latest
     platform: linux/x86_64
     ports:
-    - "8004:80"
+    - "8010:80"
     # command: sh -c "npm run build && npm run preview"
     restart: unless-stopped
     # volumes:

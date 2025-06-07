@@ -106,8 +106,9 @@ async function startServerApollo() {
     });
     const server = new ApolloServer<MyContext>({
       schema, // Allows introspection outside of the prod
-      introspection: process.env.NODE_ENV !== "production",
-      // règles de validation
+      introspection:
+        process.env.NODE_ENV === "development" ||
+        process.env.NODE_ENV === "staging",
       validationRules: [
         createMaxDepthRule(10), // max depth = 10
         createComplexityRule({
