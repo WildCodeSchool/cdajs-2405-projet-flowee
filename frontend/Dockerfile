@@ -19,7 +19,7 @@ RUN npm install
 COPY . .
 
 # Variable d'environnement (staging/prod passée par le docker-compose ou docker build)
-ARG NODE_ENV=production
+ARG NODE_ENV
 ENV NODE_ENV=$NODE_ENV
 
 RUN npm run build
