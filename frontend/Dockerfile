@@ -19,7 +19,7 @@ RUN npm install
 COPY . .
 
 # On récupère la variable pour GraphQL au build
-ARG VITE_GRAPHQL_URI
+ARG VITE_GRAPHQL_URI=/graphql
 ENV VITE_GRAPHQL_URI=$VITE_GRAPHQL_URI
 
 # On crée le .env à la volée pour Vite
