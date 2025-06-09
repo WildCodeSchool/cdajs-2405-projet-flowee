@@ -112,6 +112,7 @@ export default function ModalClient({
               {currentProjects && currentProjects.length > 0 ? (
                 currentProjects.map((project, index) => (
                   <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
                     className="bg-orange-100 text-orange-800 rounded px-3 py-1 inline-block mr-2 mb-2"
                   >
@@ -145,6 +146,7 @@ export default function ModalClient({
             <h3 className="text-base mb-3">Comments</h3>
             <div className="space-y-4">
               {hardcodedComments.map((comment, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <div key={index} className="flex items-start">
                   <div className=" flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3 text-orange-500 text-sm">
                     CD

@@ -89,21 +89,21 @@ export function createRateLimiterPlugin(
 ): ApolloServerPlugin {
   const rateLimiter = new RateLimiter(options);
 
-return {
-  async requestDidStart(requestContext: GraphQLRequestContext<BaseContext>) {
-    const now = Date.now();
-    const identifier = rateLimiter.getClientIdentifier(
-      requestContext as RequestContext,
-    );
-    const clientInfo = rateLimiter.getRateLimitInfo(identifier, now);
-    const { max } = options;
+  return {
+    async requestDidStart(requestContext: GraphQLRequestContext<BaseContext>) {
+      const now = Date.now();
+      const identifier = rateLimiter.getClientIdentifier(
+        requestContext as RequestContext,
+      );
+      const clientInfo = rateLimiter.getRateLimitInfo(identifier, now);
+      const { max } = options;
 
       // We increment the counter
-    rateLimiter.incrementCount(identifier, clientInfo);
+      rateLimiter.incrementCount(identifier, clientInfo);
 
       return {
         // we test whether the limit has been exceeded
-           async didResolveOperation() {
+        async didResolveOperation() {
           if (clientInfo.count > max) {
             console.warn(
               `[RateLimiter] Client "${identifier}" exceeded the rate limit.`,
@@ -112,7 +112,7 @@ return {
               "Too many requests. Please try again later.",
               {
                 extensions: { code: "RATE_LIMITED", http: { status: 429 } },
-              }
+              },
             );
           }
         },

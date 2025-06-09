@@ -13,7 +13,7 @@ export class AccountQueries {
   }
 
   @Query(() => Account, { nullable: true })
-  async getAccountById(@Arg("id") id: number): Promise<Account | null> {
+  async getAccountById(@Arg("id") id: string): Promise<Account | null> {
     const account: Account | null = await dataSource.manager.findOne(Account, {
       where: { id },
     });

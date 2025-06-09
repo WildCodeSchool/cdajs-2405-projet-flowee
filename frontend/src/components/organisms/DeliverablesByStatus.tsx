@@ -17,11 +17,7 @@ interface Props {
   onDelete: (id: number, name: string) => void;
 }
 
-export const DeliverablesByStatus = ({
-  deliverables,
-  projectSlug,
-  onDelete,
-}: Props) => {
+export const DeliverablesByStatus = ({ deliverables, onDelete }: Props) => {
   const [searchFilter, setSearchFilter] = useState("");
 
   const [selectedDeliverableId, setSelectedDeliverableId] = useState<
@@ -88,7 +84,7 @@ export const DeliverablesByStatus = ({
                     {deliverable.endDate && (
                       <p className="text-xs text-gray-400">
                         {new Date(deliverable.endDate).toLocaleDateString(
-                          "fr-FR"
+                          "fr-FR",
                         )}
                       </p>
                     )}

@@ -36,7 +36,7 @@ const ProjectDetails = () => {
   //ADD Modal
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState<"deliverable" | "task">(
-    "deliverable"
+    "deliverable",
   );
   const [createDeliverableMutation] = useCreateDeliverableMutation();
   const [createTaskMutation] = useCreateTaskMutation();
@@ -108,7 +108,7 @@ const ProjectDetails = () => {
   const openDeleteModal = (
     entity: "task" | "deliverable",
     id: number,
-    name: string
+    name: string,
   ) => {
     setModalState({ open: true, entity, id, name });
   };

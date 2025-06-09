@@ -11,7 +11,7 @@ import {
 } from "typeorm";
 import { Project } from "./Project";
 import { Account } from "./Account";
-import { Compagny } from "./Compagny";
+import { Company } from "./Company";
 
 @ObjectType()
 @Entity("company user")
@@ -40,12 +40,12 @@ export class CompanyUser extends BaseEntity {
   account?: Account;
 
   @ManyToOne(
-    () => Compagny,
+    () => Company,
     (company) => company.companyUsers,
     { nullable: true, onDelete: "SET NULL" },
   )
-  @Field(() => Compagny, { nullable: true })
-  company?: Compagny;
+  @Field(() => Company, { nullable: true })
+  company?: Company;
 
   constructor(firstname: string, lastname: string) {
     super();

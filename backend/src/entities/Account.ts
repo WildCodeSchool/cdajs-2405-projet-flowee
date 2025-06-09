@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -6,23 +6,25 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Client } from "./Client";
-import type { Role } from "../enums/Role";
 import { AccountStatus } from "../enums/AccountStatus";
+import type { Role } from "../enums/Role";
+import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
+import { IsEmail } from "class-validator";
 
 @ObjectType()
 @Entity("account")
 export class Account extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   @Field(() => ID)
-  id?: number;
+  id!: string;
 
   @Column()
   @Field()
+  @IsEmail({}, { message: "L'email n'est pas valide" })
   email: string;
 
-  @Column() // pas de @Field ici pour éviter de l'exposer
+  @Column() //no @Field  here to avoid being exposed in queries and mutations. Still available in backend
   password: string;
 
   @Column()
@@ -42,10 +44,13 @@ export class Account extends BaseEntity {
   @OneToOne(
     () => Client,
     (client) => client.account,
+    {
+      nullable: true,
+    },
   )
+  @Field(() => Client, { nullable: true })
   client?: Client;
 
-  //Beosin d'ajouter la relation avec Company User
   @OneToOne(
     () => CompanyUser,
     (companyUser) => companyUser.account,

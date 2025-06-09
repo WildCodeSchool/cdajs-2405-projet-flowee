@@ -13,6 +13,9 @@ describe("Project creation", () => {
   let projectMutations: ProjectMutations;
   let validInput: CreateProjectInput;
 
+  // Petite fonction utilitaire pour avoir des UUIDs propres
+  const mockUuid = () => faker.string.uuid();
+
   beforeEach(() => {
     projectMutations = new ProjectMutations();
 
@@ -28,26 +31,31 @@ describe("Project creation", () => {
 
   describe("Success cases", () => {
     it("should create a project successfully", async () => {
-      const mockCtx = {
+      const userId = mockUuid();
+      const clientId = mockUuid();
+      const projectId = mockUuid();
+
+      const mockCtx: MyContext = {
         user: {
-          id: 123,
+          id: userId,
           email: "admin@example.com",
           role: Role.ADMIN,
           password: "test",
           status: AccountStatus.ACTIVE,
         },
-      };
+        // Ajoute les autres champs obligatoires de MyContext ici si besoin (ex: redis)
+      } as MyContext;
 
       const savedProject = {
-        id: 1,
+        id: projectId,
         projectName: validInput.projectName,
         description: validInput.description,
         startDate: new Date().toISOString(),
         endDate: validInput.endDate,
         status: DeliverableStatus.IN_PROGRESS,
-        companyUserId: 123,
+        companyUserId: userId,
         client: {
-          id: 1,
+          id: clientId,
           name: validInput.clientName,
           email: validInput.clientEmail,
         },
@@ -57,7 +65,7 @@ describe("Project creation", () => {
 
       const createdProject: Project = await projectMutations.createProject(
         validInput,
-        mockCtx as MyContext
+        mockCtx,
       );
 
       expect(createdProject).toEqual(expect.anything());

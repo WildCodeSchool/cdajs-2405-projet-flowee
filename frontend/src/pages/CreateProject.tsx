@@ -6,10 +6,13 @@ import {
 } from "@generated/graphql-types";
 import { Input } from "@atoms/Input";
 import { Textarea } from "@atoms/TextArea";
-import { NavLink } from "react-router-dom";
+
 import ArrowIcon from "@components/atoms/Icons/Arrow";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function CreateProject() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -27,9 +30,12 @@ export default function CreateProject() {
             ...formData,
           },
         },
+        refetchQueries: ["GetProjectsByUser"],
+        awaitRefetchQueries: true,
       });
       alert("Projet créé avec succès !");
       reset();
+      navigate("/dashboard");
     } catch (e) {
       console.error("Erreur lors de la création du projet :", e);
     }
@@ -117,7 +123,7 @@ export default function CreateProject() {
             )}
             {data && (
               <div className="text-green-600 mt-2">
-                Projet créé : {data.createProject.projectName}
+                Projet créé avec succès: {data.createProject.projectName}
               </div>
             )}
           </div>

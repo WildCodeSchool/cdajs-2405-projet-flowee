@@ -32,6 +32,7 @@ const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
 
+console.info("VITE_GRAPHQL_URI =", import.meta.env.VITE_GRAPHQL_URI);
 const authHeaderFunction: ContextSetter = (_request, { headers }) => {
   const token: string | null = localStorage.getItem("AUTH_TOKEN");
 
@@ -135,7 +136,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
   console.error("Root element not found");
