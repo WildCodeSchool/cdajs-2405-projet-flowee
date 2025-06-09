@@ -18,9 +18,13 @@ RUN npm install
 # On copie tout le reste (src, public, etc.)
 COPY . .
 
-# Variable d'environnement (staging/prod passée par le docker-compose ou docker build)
-ARG NODE_ENV=production
-ENV NODE_ENV=$NODE_ENV
+# On récupère la variable pour GraphQL au build
+ARG VITE_GRAPHQL_URI=/graphql
+ENV VITE_GRAPHQL_URI=$VITE_GRAPHQL_URI
+
+# On crée le .env à la volée pour Vite
+RUN echo "VITE_GRAPHQL_URI=$VITE_GRAPHQL_URI" > .env
+
 
 RUN npm run build
 
@@ -33,6 +37,10 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Ajoute ta conf nginx custom si besoin (sinon retire cette ligne)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# (Optionnel) Passe NODE_ENV au runtime pour logs ou debug
+ARG NODE_ENV
+ENV NODE_ENV=$NODE_ENV
 
 # Démarre nginx
 CMD ["nginx", "-g", "daemon off;"]
