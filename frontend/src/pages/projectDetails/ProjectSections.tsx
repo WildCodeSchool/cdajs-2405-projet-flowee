@@ -1,57 +1,61 @@
-import PlusIcon from "@components/atoms/Icons/PlusIcon";
+import { AddButton } from "@components/atoms/AddButton";
 import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
 import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
-import type { Deliverable, Project } from "@generated/graphql-types";
+import type {
+  DeliverableStatus,
+  Deliverable,
+  Project,
+} from "@generated/graphql-types";
+import type { DeliverableFormData, FormData } from "@interfaces/FormData";
 
 type ProjectSectionsProps = {
   project: Project;
   slug: string;
   deliverables: Deliverable[];
-  setShowModal: (open: boolean) => void;
-  setModalType: (type: "task" | "deliverable") => void;
-  openDeleteModal: (
-    entity: "task" | "deliverable",
-    id: number,
-    name: string
-  ) => void;
+  openAdd: () => void;
+  openEdit: (data: DeliverableFormData) => void;
+  openDelete: (data: {
+    entity: "task" | "deliverable";
+    id: number;
+    name: string;
+  }) => void;
 };
-
-const AddButton = ({ onClick }: { onClick: () => void }) => (
-  <button
-    className="flex items-center justify-center w-6 h-6 border-2 border-theme-darkGray rounded-full"
-    type="button"
-    onClick={onClick}
-  >
-    <PlusIcon className="fill-theme-darkGray w-3 h-3" />
-  </button>
-);
 
 export default function ProjectSections({
   project,
   slug,
   deliverables,
-  setShowModal,
-  setModalType,
-  openDeleteModal,
+  openAdd,
+  openEdit,
+  openDelete,
 }: ProjectSectionsProps) {
   return (
     <section className="flex flex-col md:flex-row gap-4 w-full">
       <section className="flex flex-col gap-4 w-full">
         <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold ">
           <h2>Deliverables</h2>
-          <AddButton
-            onClick={() => {
-              setShowModal(true);
-              setModalType("deliverable");
-            }}
-          />
+          <AddButton onClick={openAdd} />
         </aside>
 
         {project?.deliverables && (
           <DeliverablesByStatus
             deliverables={project.deliverables}
             projectSlug={slug}
-            onDelete={(id, name) => openDeleteModal("deliverable", id, name)}
+            onDelete={(id, name) =>
+              openDelete({ entity: "deliverable", id, name })
+            }
+            onUpdate={(deliverable) =>
+              openEdit({
+                id: Number(deliverable.id),
+                name: deliverable.name,
+                perimeter: deliverable.perimeter ?? "",
+                deadline: deliverable.endDate ?? "",
+                status: deliverable.status as DeliverableStatus,
+                projectId: Number(project.id),
+                projectName: project.projectName,
+                type: "deliverable",
+              })
+            }
           />
         )}
       </section>
@@ -59,18 +63,13 @@ export default function ProjectSections({
       <section className="flex flex-col gap-4 w-full">
         <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold">
           <h2>Tasks</h2>
-          <AddButton
-            onClick={() => {
-              setShowModal(true);
-              setModalType("task");
-            }}
-          />
+          <AddButton onClick={openAdd} />
         </aside>
 
         <section className="mb-4">
           <TasksByDeliverable
             deliverables={deliverables}
-            onDelete={(id, name) => openDeleteModal("task", id, name)}
+            onDelete={(id, name) => openDelete({ entity: "task", id, name })}
           />
         </section>
       </section>

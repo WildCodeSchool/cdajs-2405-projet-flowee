@@ -1,24 +1,15 @@
-import type { FormData } from "@interfaces/FormData";
-import {
-  useCreateDeliverableMutation,
-  useCreateTaskMutation,
-  useGetProjectByIdQuery,
-  useDeleteDeliverableMutation,
-  useDeleteTaskMutation,
-  DeliverableStatus,
-  TaskStatus,
-} from "@generated/graphql-types";
+import type { DeliverableFormData, FormData } from "@interfaces/FormData";
+import { useGetProjectByIdQuery } from "@generated/graphql-types";
 import SignedInLayout from "@layout/SignedInLayout";
-import { useState } from "react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
-
 import DeleteModal from "@components/molecules/DeleteModal";
 import AddModal from "@components/molecules/AddModal";
-
 import ProjectHeader from "./ProjectHeader";
 import ProjectSections from "./ProjectSections";
-
 import { parseIdFromSlug, getProjectOptions } from "@utils/project";
+import EditModal from "@components/molecules/EditModal";
+import { useModalState } from "../../hooks/useModalState";
+import { useProjectHandlers } from "../../hooks/useProjectHandlers";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -33,103 +24,30 @@ const ProjectDetails = () => {
     },
   });
 
-  //ADD Modal
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<"deliverable" | "task">(
-    "deliverable",
+  // States and modals
+
+  const addModal = useModalState<FormData>();
+  const editModal = useModalState<DeliverableFormData>();
+  const deleteModal = useModalState<{
+    entity: "task" | "deliverable";
+    id: number;
+    name: string;
+  }>();
+
+  const { handleCreate, handleEdit, handleDelete } = useProjectHandlers(
+    refetch,
+    editModal.closeModal
   );
-  const [createDeliverableMutation] = useCreateDeliverableMutation();
-  const [createTaskMutation] = useCreateTaskMutation();
-
-  const handleSubmit = async (formData: FormData) => {
-    try {
-      if (formData.type === "deliverable") {
-        const { name, perimeter, deadline, projectId, status } = formData;
-        await createDeliverableMutation({
-          variables: {
-            newDeliverable: {
-              name,
-              perimeter,
-              deliveryDate: deadline,
-              projectId,
-              status: status ?? DeliverableStatus.NotStarted,
-            },
-          },
-        });
-      } else if (formData.type === "task") {
-        const { name, description, deadline, deliverableId, status } = formData;
-        await createTaskMutation({
-          variables: {
-            newTask: {
-              name,
-              description,
-              endDate: deadline,
-              deliverableId,
-              status: status ?? TaskStatus.NotStarted,
-            },
-          },
-        });
-      }
-
-      refetch();
-    } catch (error) {
-      console.error("Erreur de création :", error);
-    } finally {
-      setShowModal(false);
-    }
-  };
 
   const project = data?.getProjectById;
+  const deliverables = project?.deliverables ?? [];
+
   const availableProjects = getProjectOptions(project).map((p) => ({
-    id: String(p.id),
+    id: p.id,
     name: p.name,
   }));
 
-  //DELIVERABLES
-  const deliverables = project?.deliverables ?? [];
-  const [deleteDeliverableMutation] = useDeleteDeliverableMutation();
-
-  //TASKS
-  const [deleteTaskMutation] = useDeleteTaskMutation();
-
-  //MODAL
-  const [modalState, setModalState] = useState<{
-    open: boolean;
-    entity: "task" | "deliverable" | null;
-    id: number | null;
-    name: string;
-  }>({
-    open: false,
-    entity: null,
-    id: null,
-    name: "",
-  });
-
-  const openDeleteModal = (
-    entity: "task" | "deliverable",
-    id: number,
-    name: string,
-  ) => {
-    setModalState({ open: true, entity, id, name });
-  };
-
-  const confirmDelete = async () => {
-    const { entity, id } = modalState;
-    if (!id || !entity) return;
-
-    try {
-      if (entity === "task") {
-        await deleteTaskMutation({ variables: { id } });
-      } else {
-        await deleteDeliverableMutation({ variables: { id } });
-      }
-
-      setModalState({ open: false, entity: null, id: null, name: "" });
-      refetch();
-    } catch (err) {
-      console.error("Can't delete :", err);
-    }
-  };
+  //initial values
 
   return (
     <SignedInLayout>
@@ -145,27 +63,29 @@ const ProjectDetails = () => {
           project={project}
           slug={slug ?? ""}
           deliverables={deliverables}
-          setShowModal={setShowModal}
-          setModalType={setModalType}
-          openDeleteModal={openDeleteModal}
+          openAdd={() => addModal.openModal()}
+          openEdit={(data) => editModal.openModal(data)}
+          openDelete={(data) => deleteModal.openModal(data)}
         />
       )}
 
       <DeleteModal
-        open={modalState.open}
-        entityType={modalState.entity ?? "task"}
-        itemName={modalState.name}
-        onConfirm={confirmDelete}
-        onCancel={() =>
-          setModalState({ open: false, entity: null, id: null, name: "" })
-        }
+        open={deleteModal.open}
+        entityType={deleteModal.data?.entity ?? "task"}
+        itemName={deleteModal.data?.name ?? ""}
+        onConfirm={() => {
+          if (deleteModal.data) {
+            handleDelete(deleteModal.data.entity, deleteModal.data.id);
+          }
+        }}
+        onCancel={deleteModal.closeModal}
       />
 
       <AddModal
-        mode={modalType}
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        onSubmit={handleSubmit}
+        mode={addModal.data?.type ?? "deliverable"}
+        show={addModal.open}
+        onClose={addModal.closeModal}
+        onSubmit={handleCreate}
         projectOptions={availableProjects}
         deliverableOptions={deliverables.map((d) => ({
           id: d.id,
@@ -173,6 +93,19 @@ const ProjectDetails = () => {
         }))}
       />
 
+      <EditModal
+        initialMode={
+          editModal.data
+            ? "project" in editModal.data
+              ? "deliverable"
+              : "task"
+            : "deliverable"
+        }
+        show={editModal.open}
+        onClose={editModal.closeModal}
+        onSubmit={handleEdit}
+        initialValues={editModal.data}
+      />
       <Outlet />
     </SignedInLayout>
   );
