@@ -4,6 +4,7 @@ import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import { useState } from "react";
 import ItemDetails from "@pages/ItemDetails"; // Assure-toi que c’est le bon chemin
 import SearchBar from "./Search";
+import PencilIcon from "@components/atoms/Icons/PencilIcon";
 
 interface Props {
   deliverables: Deliverable[];
@@ -37,7 +38,7 @@ export const TasksByDeliverable = ({
             {deliverable.tasks?.length ? (
               (() => {
                 const filteredTasks = deliverable.tasks.filter((task) =>
-                  task.name.toLowerCase().includes(searchFilter.toLowerCase()),
+                  task.name.toLowerCase().includes(searchFilter.toLowerCase())
                 );
 
                 return filteredTasks.length > 0 ? (
@@ -48,6 +49,12 @@ export const TasksByDeliverable = ({
                         className="bg-white roundedshadow-sm flex justify-between"
                       >
                         <aside className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => onDelete(Number(task.id), task.name)}
+                          >
+                            <PencilIcon className="w-3 h-3 fill-red" />
+                          </button>
                           <button
                             type="button"
                             onClick={() => onDelete(Number(task.id), task.name)}

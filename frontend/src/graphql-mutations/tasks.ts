@@ -22,3 +22,20 @@ export const CREATE_TASK_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_TASK_MUTATION = gql`
+  mutation UpdateTask($id: Float!, $data: UpdateTaskInput!) {
+    updateTask(id: $id, data: $data) {
+      id
+      name
+      description
+      status
+      startDate
+      endDate
+      deliverable {
+        id
+        name
+      }
+    }
+  }
+`;

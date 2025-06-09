@@ -6,7 +6,7 @@ import type {
   Deliverable,
   Project,
 } from "@generated/graphql-types";
-import type { DeliverableFormData, FormData } from "@interfaces/FormData";
+import type { DeliverableFormData } from "@interfaces/FormData";
 
 type ProjectSectionsProps = {
   project: Project;

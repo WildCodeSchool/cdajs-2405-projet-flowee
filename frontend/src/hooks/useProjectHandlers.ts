@@ -6,6 +6,7 @@ import {
   useDeleteDeliverableMutation,
   useDeleteTaskMutation,
   useUpdateDeliverableMutation,
+  useUpdateTaskMutation,
 } from "@generated/graphql-types";
 import type { FormData } from "@interfaces/FormData";
 import { useCallback } from "react";
@@ -17,6 +18,7 @@ export const useProjectHandlers = (
   const [createDeliverable] = useCreateDeliverableMutation();
   const [createTask] = useCreateTaskMutation();
   const [updateDeliverable] = useUpdateDeliverableMutation();
+  const [updateTask] = useUpdateTaskMutation();
   const [deleteDeliverable] = useDeleteDeliverableMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
@@ -60,10 +62,10 @@ export const useProjectHandlers = (
 
   const handleEdit = useCallback(
     async (formData: FormData) => {
-      if (formData.type === "deliverable") {
-        if (!formData.id) return console.error("Missing deliverable ID");
+      try {
+        if (formData.type === "deliverable") {
+          if (!formData.id) return console.error("Missing deliverable ID");
 
-        try {
           await updateDeliverable({
             variables: {
               id: formData.id,
@@ -76,17 +78,29 @@ export const useProjectHandlers = (
               },
             },
           });
-          refetch();
-        } catch (err) {
-          console.error("Update error:", err);
-        } finally {
-          closeModal();
+        } else {
+          if (!formData.id) return console.error("Missing task ID");
+          await updateTask({
+            variables: {
+              id: formData.id,
+              data: {
+                name: formData.name,
+                description: formData.description,
+                endDate: formData.deadline,
+                deliverableId: formData.deliverableId,
+                status: formData.status as TaskStatus,
+              },
+            },
+          });
         }
+        refetch();
+      } catch (err) {
+        console.error("Update error:", err);
+      } finally {
+        closeModal();
       }
-
-      // ajouter pour updateTask
     },
-    [updateDeliverable, refetch, closeModal]
+    [updateDeliverable, updateTask, refetch, closeModal]
   );
 
   const handleDelete = useCallback(

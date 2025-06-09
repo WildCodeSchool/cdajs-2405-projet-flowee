@@ -249,12 +249,8 @@ export type MutationUpdatePasswordArgs = {
 
 
 export type MutationUpdateTaskArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  endDate?: InputMaybe<Scalars['String']['input']>;
+  data: UpdateTaskInput;
   id: Scalars['Float']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
-  startDate?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Project = {
@@ -353,6 +349,14 @@ export type UpdateDeliverableInput = {
   projectId?: InputMaybe<Scalars['Float']['input']>;
   reviewTimes?: InputMaybe<Scalars['Float']['input']>;
   status?: InputMaybe<DeliverableStatus>;
+};
+
+export type UpdateTaskInput = {
+  deliverableId?: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<TaskStatus>;
 };
 
 export type CreateAccountMutationVariables = Exact<{
@@ -461,6 +465,14 @@ export type CreateTaskMutationVariables = Exact<{
 
 
 export type CreateTaskMutation = { __typename?: 'Mutation', createTask: { __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null, deliverable?: { __typename?: 'Deliverable', id: string, name: string } | null } };
+
+export type UpdateTaskMutationVariables = Exact<{
+  id: Scalars['Float']['input'];
+  data: UpdateTaskInput;
+}>;
+
+
+export type UpdateTaskMutation = { __typename?: 'Mutation', updateTask: { __typename?: 'Task', id: string, name: string, description?: string | null, status?: string | null, startDate?: string | null, endDate?: string | null, deliverable?: { __typename?: 'Deliverable', id: string, name: string } | null } };
 
 export type GetAllClientsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1039,6 +1051,49 @@ export function useCreateTaskMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
 export type CreateTaskMutationResult = Apollo.MutationResult<CreateTaskMutation>;
 export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const UpdateTaskDocument = gql`
+    mutation UpdateTask($id: Float!, $data: UpdateTaskInput!) {
+  updateTask(id: $id, data: $data) {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+    deliverable {
+      id
+      name
+    }
+  }
+}
+    `;
+export type UpdateTaskMutationFn = Apollo.MutationFunction<UpdateTaskMutation, UpdateTaskMutationVariables>;
+
+/**
+ * __useUpdateTaskMutation__
+ *
+ * To run a mutation, you first call `useUpdateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTaskMutation, { data, loading, error }] = useUpdateTaskMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTaskMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTaskMutation, UpdateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTaskMutation, UpdateTaskMutationVariables>(UpdateTaskDocument, options);
+      }
+export type UpdateTaskMutationHookResult = ReturnType<typeof useUpdateTaskMutation>;
+export type UpdateTaskMutationResult = Apollo.MutationResult<UpdateTaskMutation>;
+export type UpdateTaskMutationOptions = Apollo.BaseMutationOptions<UpdateTaskMutation, UpdateTaskMutationVariables>;
 export const GetAllClientsDocument = gql`
     query GetAllClients {
   getAllClients {
