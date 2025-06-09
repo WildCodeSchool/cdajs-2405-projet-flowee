@@ -1,6 +1,7 @@
 import type { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
 
 export type DeliverableFormData = {
+  id?: number;
   type: "deliverable";
   name: string;
   deadline?: string;
