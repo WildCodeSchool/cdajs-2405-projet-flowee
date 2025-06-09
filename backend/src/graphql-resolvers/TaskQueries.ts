@@ -14,6 +14,7 @@ export class TaskQueries {
   async getTask(@Arg("id") id: number): Promise<Task | null> {
     const task: Task | null = await dataSource.manager.findOne(Task, {
       where: { id },
+      relations: ["deliverable"],
     });
     return task;
   }

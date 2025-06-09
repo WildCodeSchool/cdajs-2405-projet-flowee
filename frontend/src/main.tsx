@@ -32,6 +32,7 @@ const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
 
+console.info("VITE_GRAPHQL_URI =", import.meta.env.VITE_GRAPHQL_URI);
 const authHeaderFunction: ContextSetter = (_request, { headers }) => {
   const token: string | null = localStorage.getItem("AUTH_TOKEN");
 
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
         path: "/projects/:slug",
         element: <ProjectDetails />,
       },
+
       {
         path: "/clients",
         element: <Clients />,

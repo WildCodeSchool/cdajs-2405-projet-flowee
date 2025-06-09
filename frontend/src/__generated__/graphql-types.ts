@@ -83,12 +83,31 @@ export type CompanyUser = {
   lastname: Scalars["String"]["output"];
 };
 
+export type CreateDeliverableInput = {
+  createdAt?: InputMaybe<Scalars["String"]["input"]>;
+  deliveryDate?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  perimeter?: InputMaybe<Scalars["String"]["input"]>;
+  projectId: Scalars["Float"]["input"];
+  reviewTimes?: InputMaybe<Scalars["Float"]["input"]>;
+  status?: InputMaybe<DeliverableStatus>;
+};
+
 export type CreateProjectInput = {
   clientEmail: Scalars["String"]["input"];
   clientName: Scalars["String"]["input"];
   description?: InputMaybe<Scalars["String"]["input"]>;
   endDate?: InputMaybe<Scalars["String"]["input"]>;
   projectName: Scalars["String"]["input"];
+};
+
+export type CreateTaskInput = {
+  deliverableId: Scalars["Float"]["input"];
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  endDate?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  startDate?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<TaskStatus>;
 };
 
 export type Deliverable = {
@@ -104,6 +123,16 @@ export type Deliverable = {
   tasks?: Maybe<Array<Task>>;
 };
 
+/** The status of a deliverable */
+export enum DeliverableStatus {
+  Approved = "APPROVED",
+  Blocked = "BLOCKED",
+  InProgress = "IN_PROGRESS",
+  InReview = "IN_REVIEW",
+  Late = "LATE",
+  NotStarted = "NOT_STARTED",
+}
+
 export type Mutation = {
   __typename?: "Mutation";
   activateAccountAndReturnToken: Scalars["String"]["output"];
@@ -117,7 +146,7 @@ export type Mutation = {
   deleteClient: Scalars["Boolean"]["output"];
   deleteCompany: Scalars["Boolean"]["output"];
   deleteDeliverable: Scalars["Boolean"]["output"];
-  deleteTask: Task;
+  deleteTask: Scalars["Boolean"]["output"];
   login: Scalars["String"]["output"];
   setPasswordFromActivation: Scalars["Boolean"]["output"];
   updateClient: Client;
@@ -143,7 +172,7 @@ export type MutationCreateAccountArgs = {
 
 export type MutationCreateClientArgs = {
   Name: Scalars["String"]["input"];
-  accountId: Scalars["Float"]["input"];
+  accountId: Scalars["String"]["input"];
 };
 
 export type MutationCreateCompanyArgs = {
@@ -153,12 +182,7 @@ export type MutationCreateCompanyArgs = {
 };
 
 export type MutationCreateDeliverableArgs = {
-  createdAt?: InputMaybe<Scalars["String"]["input"]>;
-  deliveryDate?: InputMaybe<Scalars["String"]["input"]>;
-  name: Scalars["String"]["input"];
-  perimeter?: InputMaybe<Scalars["String"]["input"]>;
-  reviewTimes?: InputMaybe<Scalars["Float"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
+  newDeliverable: CreateDeliverableInput;
 };
 
 export type MutationCreateProjectArgs = {
@@ -166,11 +190,7 @@ export type MutationCreateProjectArgs = {
 };
 
 export type MutationCreateTaskArgs = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  endDate?: InputMaybe<Scalars["String"]["input"]>;
-  name: Scalars["String"]["input"];
-  startDate?: InputMaybe<Scalars["String"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
+  newTask: CreateTaskInput;
 };
 
 export type MutationDeleteClientArgs = {
@@ -267,7 +287,7 @@ export type Query = {
 };
 
 export type QueryGetAccountByIdArgs = {
-  id: Scalars["Float"]["input"];
+  id: Scalars["String"]["input"];
 };
 
 export type QueryGetClientByIdArgs = {
@@ -300,6 +320,14 @@ export type Task = {
   startDate?: Maybe<Scalars["String"]["output"]>;
   status?: Maybe<Scalars["String"]["output"]>;
 };
+
+/** The status of a Task */
+export enum TaskStatus {
+  Blocked = "BLOCKED",
+  Completed = "COMPLETED",
+  InProgress = "IN_PROGRESS",
+  NotStarted = "NOT_STARTED",
+}
 
 export type TrackerStats = {
   __typename?: "TrackerStats";
@@ -339,7 +367,7 @@ export type SetPasswordFromActivationMutation = {
 };
 
 export type MutationMutationVariables = Exact<{
-  accountId: Scalars["Float"]["input"];
+  accountId: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
 }>;
 
@@ -411,12 +439,80 @@ export type CreateProjectMutation = {
   };
 };
 
+export type DeleteDeliverableMutationVariables = Exact<{
+  id: Scalars["Float"]["input"];
+}>;
+
+export type DeleteDeliverableMutation = {
+  __typename?: "Mutation";
+  deleteDeliverable: boolean;
+};
+
+export type CreateDeliverableMutationVariables = Exact<{
+  newDeliverable: CreateDeliverableInput;
+}>;
+
+export type CreateDeliverableMutation = {
+  __typename?: "Mutation";
+  createDeliverable: {
+    __typename?: "Deliverable";
+    id: string;
+    name: string;
+    perimeter?: string | null;
+    endDate?: string | null;
+    status?: string | null;
+    createdAt?: string | null;
+    reviewTimes?: number | null;
+    project?: {
+      __typename?: "Project";
+      id: string;
+      projectName: string;
+      companyUserId: number;
+      description?: string | null;
+      startDate?: string | null;
+      endDate?: string | null;
+      status?: string | null;
+    } | null;
+  };
+};
+
 export type LoginMutationVariables = Exact<{
   password: Scalars["String"]["input"];
   email: Scalars["String"]["input"];
 }>;
 
 export type LoginMutation = { __typename?: "Mutation"; login: string };
+
+export type DeleteTaskMutationVariables = Exact<{
+  id: Scalars["Float"]["input"];
+}>;
+
+export type DeleteTaskMutation = {
+  __typename?: "Mutation";
+  deleteTask: boolean;
+};
+
+export type CreateTaskMutationVariables = Exact<{
+  newTask: CreateTaskInput;
+}>;
+
+export type CreateTaskMutation = {
+  __typename?: "Mutation";
+  createTask: {
+    __typename?: "Task";
+    id: string;
+    name: string;
+    description?: string | null;
+    status?: string | null;
+    startDate?: string | null;
+    endDate?: string | null;
+    deliverable?: {
+      __typename?: "Deliverable";
+      id: string;
+      name: string;
+    } | null;
+  };
+};
 
 export type GetAllClientsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -452,6 +548,33 @@ export type GetAllDeliverablesQuery = {
       status?: string | null;
     }> | null;
   }>;
+};
+
+export type GetDeliverableByIdQueryVariables = Exact<{
+  id: Scalars["Float"]["input"];
+}>;
+
+export type GetDeliverableByIdQuery = {
+  __typename?: "Query";
+  getDeliverable?: {
+    __typename?: "Deliverable";
+    id: string;
+    name: string;
+    perimeter?: string | null;
+    endDate?: string | null;
+    status?: string | null;
+    createdAt?: string | null;
+    reviewTimes?: number | null;
+    tasks?: Array<{
+      __typename?: "Task";
+      id: string;
+      name: string;
+      description?: string | null;
+      status?: string | null;
+      startDate?: string | null;
+      endDate?: string | null;
+    }> | null;
+  } | null;
 };
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
@@ -530,8 +653,6 @@ export type GetProjectsByUserQueryVariables = Exact<{ [key: string]: never }>;
 export type GetProjectsByUserQuery = {
   __typename?: "Query";
   getProjectsByUser: Array<{
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    currentUserRole: any;
     __typename?: "Project";
     id: string;
     projectName: string;
@@ -598,6 +719,48 @@ export type GetProjectByIdQuery = {
         endDate?: string | null;
       }> | null;
     }> | null;
+  } | null;
+};
+
+export type GetAllTasksQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllTasksQuery = {
+  __typename?: "Query";
+  getAllTasks: Array<{
+    __typename?: "Task";
+    id: string;
+    name: string;
+    description?: string | null;
+    status?: string | null;
+    startDate?: string | null;
+    endDate?: string | null;
+  }>;
+};
+
+export type GetTaskByIdQueryVariables = Exact<{
+  id: Scalars["Float"]["input"];
+}>;
+
+export type GetTaskByIdQuery = {
+  __typename?: "Query";
+  getTask?: {
+    __typename?: "Task";
+    id: string;
+    name: string;
+    description?: string | null;
+    status?: string | null;
+    startDate?: string | null;
+    endDate?: string | null;
+    deliverable?: {
+      __typename?: "Deliverable";
+      id: string;
+      name: string;
+      perimeter?: string | null;
+      endDate?: string | null;
+      status?: string | null;
+      createdAt?: string | null;
+      reviewTimes?: number | null;
+    } | null;
   } | null;
 };
 
@@ -775,7 +938,7 @@ export type SetPasswordFromActivationMutationOptions =
     SetPasswordFromActivationMutationVariables
   >;
 export const MutationDocument = gql`
-    mutation Mutation($accountId: Float!, $name: String!) {
+    mutation Mutation($accountId: String!, $name: String!) {
   createClient(accountId: $accountId, Name: $name) {
     id
     clientName
@@ -1042,6 +1205,119 @@ export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<
   CreateProjectMutation,
   CreateProjectMutationVariables
 >;
+export const DeleteDeliverableDocument = gql`
+    mutation DeleteDeliverable($id: Float!) {
+  deleteDeliverable(id: $id)
+}
+    `;
+export type DeleteDeliverableMutationFn = Apollo.MutationFunction<
+  DeleteDeliverableMutation,
+  DeleteDeliverableMutationVariables
+>;
+
+/**
+ * __useDeleteDeliverableMutation__
+ *
+ * To run a mutation, you first call `useDeleteDeliverableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteDeliverableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteDeliverableMutation, { data, loading, error }] = useDeleteDeliverableMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteDeliverableMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteDeliverableMutation,
+    DeleteDeliverableMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteDeliverableMutation,
+    DeleteDeliverableMutationVariables
+  >(DeleteDeliverableDocument, options);
+}
+export type DeleteDeliverableMutationHookResult = ReturnType<
+  typeof useDeleteDeliverableMutation
+>;
+export type DeleteDeliverableMutationResult =
+  Apollo.MutationResult<DeleteDeliverableMutation>;
+export type DeleteDeliverableMutationOptions = Apollo.BaseMutationOptions<
+  DeleteDeliverableMutation,
+  DeleteDeliverableMutationVariables
+>;
+export const CreateDeliverableDocument = gql`
+    mutation CreateDeliverable($newDeliverable: CreateDeliverableInput!) {
+  createDeliverable(newDeliverable: $newDeliverable) {
+    id
+    name
+    perimeter
+    endDate
+    status
+    createdAt
+    reviewTimes
+    project {
+      id
+      projectName
+      companyUserId
+      description
+      startDate
+      endDate
+      status
+    }
+  }
+}
+    `;
+export type CreateDeliverableMutationFn = Apollo.MutationFunction<
+  CreateDeliverableMutation,
+  CreateDeliverableMutationVariables
+>;
+
+/**
+ * __useCreateDeliverableMutation__
+ *
+ * To run a mutation, you first call `useCreateDeliverableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDeliverableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDeliverableMutation, { data, loading, error }] = useCreateDeliverableMutation({
+ *   variables: {
+ *      newDeliverable: // value for 'newDeliverable'
+ *   },
+ * });
+ */
+export function useCreateDeliverableMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateDeliverableMutation,
+    CreateDeliverableMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateDeliverableMutation,
+    CreateDeliverableMutationVariables
+  >(CreateDeliverableDocument, options);
+}
+export type CreateDeliverableMutationHookResult = ReturnType<
+  typeof useCreateDeliverableMutation
+>;
+export type CreateDeliverableMutationResult =
+  Apollo.MutationResult<CreateDeliverableMutation>;
+export type CreateDeliverableMutationOptions = Apollo.BaseMutationOptions<
+  CreateDeliverableMutation,
+  CreateDeliverableMutationVariables
+>;
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(password: $password, email: $email)
@@ -1087,6 +1363,113 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>;
+export const DeleteTaskDocument = gql`
+    mutation DeleteTask($id: Float!) {
+  deleteTask(id: $id)
+}
+    `;
+export type DeleteTaskMutationFn = Apollo.MutationFunction<
+  DeleteTaskMutation,
+  DeleteTaskMutationVariables
+>;
+
+/**
+ * __useDeleteTaskMutation__
+ *
+ * To run a mutation, you first call `useDeleteTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTaskMutation, { data, loading, error }] = useDeleteTaskMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTaskMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteTaskMutation,
+    DeleteTaskMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(
+    DeleteTaskDocument,
+    options,
+  );
+}
+export type DeleteTaskMutationHookResult = ReturnType<
+  typeof useDeleteTaskMutation
+>;
+export type DeleteTaskMutationResult =
+  Apollo.MutationResult<DeleteTaskMutation>;
+export type DeleteTaskMutationOptions = Apollo.BaseMutationOptions<
+  DeleteTaskMutation,
+  DeleteTaskMutationVariables
+>;
+export const CreateTaskDocument = gql`
+    mutation CreateTask($newTask: CreateTaskInput!) {
+  createTask(newTask: $newTask) {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+    deliverable {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateTaskMutationFn = Apollo.MutationFunction<
+  CreateTaskMutation,
+  CreateTaskMutationVariables
+>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      newTask: // value for 'newTask'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateTaskMutation,
+    CreateTaskMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(
+    CreateTaskDocument,
+    options,
+  );
+}
+export type CreateTaskMutationHookResult = ReturnType<
+  typeof useCreateTaskMutation
+>;
+export type CreateTaskMutationResult =
+  Apollo.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<
+  CreateTaskMutation,
+  CreateTaskMutationVariables
 >;
 export const GetAllClientsDocument = gql`
     query GetAllClients {
@@ -1258,6 +1641,102 @@ export type GetAllDeliverablesSuspenseQueryHookResult = ReturnType<
 export type GetAllDeliverablesQueryResult = Apollo.QueryResult<
   GetAllDeliverablesQuery,
   GetAllDeliverablesQueryVariables
+>;
+export const GetDeliverableByIdDocument = gql`
+    query GetDeliverableById($id: Float!) {
+  getDeliverable(id: $id) {
+    id
+    name
+    perimeter
+    endDate
+    status
+    createdAt
+    reviewTimes
+    tasks {
+      id
+      name
+      description
+      status
+      startDate
+      endDate
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDeliverableByIdQuery__
+ *
+ * To run a query within a React component, call `useGetDeliverableByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDeliverableByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDeliverableByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetDeliverableByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetDeliverableByIdQuery,
+    GetDeliverableByIdQueryVariables
+  > &
+    (
+      | { variables: GetDeliverableByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetDeliverableByIdQuery,
+    GetDeliverableByIdQueryVariables
+  >(GetDeliverableByIdDocument, options);
+}
+export function useGetDeliverableByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetDeliverableByIdQuery,
+    GetDeliverableByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetDeliverableByIdQuery,
+    GetDeliverableByIdQueryVariables
+  >(GetDeliverableByIdDocument, options);
+}
+export function useGetDeliverableByIdSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetDeliverableByIdQuery,
+        GetDeliverableByIdQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetDeliverableByIdQuery,
+    GetDeliverableByIdQueryVariables
+  >(GetDeliverableByIdDocument, options);
+}
+export type GetDeliverableByIdQueryHookResult = ReturnType<
+  typeof useGetDeliverableByIdQuery
+>;
+export type GetDeliverableByIdLazyQueryHookResult = ReturnType<
+  typeof useGetDeliverableByIdLazyQuery
+>;
+export type GetDeliverableByIdSuspenseQueryHookResult = ReturnType<
+  typeof useGetDeliverableByIdSuspenseQuery
+>;
+export type GetDeliverableByIdQueryResult = Apollo.QueryResult<
+  GetDeliverableByIdQuery,
+  GetDeliverableByIdQueryVariables
 >;
 export const MeDocument = gql`
     query Me {
@@ -1709,6 +2188,180 @@ export type GetProjectByIdSuspenseQueryHookResult = ReturnType<
 export type GetProjectByIdQueryResult = Apollo.QueryResult<
   GetProjectByIdQuery,
   GetProjectByIdQueryVariables
+>;
+export const GetAllTasksDocument = gql`
+    query GetAllTasks {
+  getAllTasks {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+  }
+}
+    `;
+
+/**
+ * __useGetAllTasksQuery__
+ *
+ * To run a query within a React component, call `useGetAllTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTasksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTasksQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllTasksQuery,
+    GetAllTasksQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllTasksQuery, GetAllTasksQueryVariables>(
+    GetAllTasksDocument,
+    options,
+  );
+}
+export function useGetAllTasksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllTasksQuery,
+    GetAllTasksQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAllTasksQuery, GetAllTasksQueryVariables>(
+    GetAllTasksDocument,
+    options,
+  );
+}
+export function useGetAllTasksSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAllTasksQuery,
+        GetAllTasksQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetAllTasksQuery, GetAllTasksQueryVariables>(
+    GetAllTasksDocument,
+    options,
+  );
+}
+export type GetAllTasksQueryHookResult = ReturnType<typeof useGetAllTasksQuery>;
+export type GetAllTasksLazyQueryHookResult = ReturnType<
+  typeof useGetAllTasksLazyQuery
+>;
+export type GetAllTasksSuspenseQueryHookResult = ReturnType<
+  typeof useGetAllTasksSuspenseQuery
+>;
+export type GetAllTasksQueryResult = Apollo.QueryResult<
+  GetAllTasksQuery,
+  GetAllTasksQueryVariables
+>;
+export const GetTaskByIdDocument = gql`
+    query GetTaskById($id: Float!) {
+  getTask(id: $id) {
+    id
+    name
+    description
+    status
+    startDate
+    endDate
+    deliverable {
+      id
+      name
+      perimeter
+      endDate
+      status
+      createdAt
+      reviewTimes
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTaskByIdQuery__
+ *
+ * To run a query within a React component, call `useGetTaskByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTaskByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTaskByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTaskByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetTaskByIdQuery,
+    GetTaskByIdQueryVariables
+  > &
+    (
+      | { variables: GetTaskByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(
+    GetTaskByIdDocument,
+    options,
+  );
+}
+export function useGetTaskByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTaskByIdQuery,
+    GetTaskByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(
+    GetTaskByIdDocument,
+    options,
+  );
+}
+export function useGetTaskByIdSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetTaskByIdQuery,
+        GetTaskByIdQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetTaskByIdQuery, GetTaskByIdQueryVariables>(
+    GetTaskByIdDocument,
+    options,
+  );
+}
+export type GetTaskByIdQueryHookResult = ReturnType<typeof useGetTaskByIdQuery>;
+export type GetTaskByIdLazyQueryHookResult = ReturnType<
+  typeof useGetTaskByIdLazyQuery
+>;
+export type GetTaskByIdSuspenseQueryHookResult = ReturnType<
+  typeof useGetTaskByIdSuspenseQuery
+>;
+export type GetTaskByIdQueryResult = Apollo.QueryResult<
+  GetTaskByIdQuery,
+  GetTaskByIdQueryVariables
 >;
 export const GetTrackerStatsDocument = gql`
     query GetTrackerStats {

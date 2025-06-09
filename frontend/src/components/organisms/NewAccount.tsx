@@ -19,18 +19,18 @@ interface FormData {
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation CreateAccount($role: String!, $password: String!, $email: String!) {
     createAccount(role: $role, password: $password, email: $email) {
-      id   
+      id
     }
-  } 
+  }
 `;
 
 const CREATE_CLIENT_MUTATION = gql`
- mutation Mutation($accountId: Float!, $name: String!) {
-  createClient(accountId: $accountId, name: $name) {
-    id
-    name  
+  mutation Mutation($accountId: Float!, $name: String!) {
+    createClient(accountId: $accountId, name: $name) {
+      id
+      name
+    }
   }
-}
 `;
 
 export default function NewAccount({ user, color }: PropsType) {
@@ -106,14 +106,20 @@ export default function NewAccount({ user, color }: PropsType) {
       {user === "admin" ? <LogoEntrepriseIcon className="h-20 w-20" /> : null}
 
       <div
-        className={`${user === "admin" ? "bg-orangelight" : "bg-bluelight"} w-full rounded-t-3xl `}
+        className={`${
+          user === "admin" ? "bg-orangelight" : "bg-bluelight"
+        } w-full rounded-t-3xl `}
       >
         <div
-          className={`${user === "admin" ? "bg-orangelight" : "bg-bluelight"} w-full h-14 rounded-t-[3rem] left-0`}
+          className={`${
+            user === "admin" ? "bg-orangelight" : "bg-bluelight"
+          } w-full h-14 rounded-t-[3rem] left-0`}
         />
 
         <div
-          className={`${user === "admin" ? "bg-midorange" : "bg-midblue"} w-full h-14 rounded-t-[3rem] left-0`}
+          className={`${
+            user === "admin" ? "bg-midorange" : "bg-midblue"
+          } w-full h-14 rounded-t-[3rem] left-0`}
         />
         <div className={`${user === "admin" ? "bg-midorange" : "bg-midblue"}`}>
           <div className="bg-white flex flex-col items-center gap-10 rounded-t-[3rem] py-10">

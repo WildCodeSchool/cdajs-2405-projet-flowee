@@ -6,8 +6,9 @@ import {
 } from "@generated/graphql-types";
 import { Input } from "@atoms/Input";
 import { Textarea } from "@atoms/TextArea";
+
+import ArrowIcon from "@components/atoms/Icons/Arrow";
 import { NavLink, useNavigate } from "react-router-dom";
-import ArrowIcon from "@atoms/Icons/Arrow";
 
 export default function CreateProject() {
   const navigate = useNavigate();

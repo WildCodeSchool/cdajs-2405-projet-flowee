@@ -1,5 +1,3 @@
-// backend/src/scripts/init_db_user.ts
-
 import { Client } from "pg";
 import dotenv from "dotenv";
 dotenv.config();
@@ -14,7 +12,13 @@ const {
   DB_SUPERUSER_PASSWORD,
 } = process.env;
 
-if (!DB_SUPERUSER || !DB_PASSWORD || !DB_USER || !DB_NAME) {
+if (
+  !DB_SUPERUSER ||
+  !DB_PASSWORD ||
+  !DB_USER ||
+  !DB_NAME ||
+  !DB_SUPERUSER_PASSWORD
+) {
   console.error("Missing DB env variables.");
   process.exit(1);
 }
@@ -58,11 +62,28 @@ async function init_db_user() {
     `);
     console.log(`Database "${DB_NAME}" checked/created.`);
 
-    // 3. Droits sur la BDD (optionnel, à adapter si besoin)
+    // 3. Droits sur la BDD
     await client.query(
       `GRANT ALL PRIVILEGES ON DATABASE "${DB_NAME}" TO "${DB_USER}";`,
     );
     console.log("✅ Privileges granted on database.");
+    // 4. Droits sur le schéma public
+    // Pour accorder les droits sur le schéma public, il faut se connecter à la bonne base
+    const dbClient = new Client({
+      host: DB_HOST,
+      port: Number.parseInt(DB_PORT ?? "5432", 10),
+      user: DB_SUPERUSER,
+      password: DB_SUPERUSER_PASSWORD,
+      database: DB_NAME,
+    });
+
+    await dbClient.connect();
+
+    await dbClient.query(`GRANT ALL ON SCHEMA public TO "${DB_USER}";`);
+    await dbClient.query(`ALTER SCHEMA public OWNER TO "${DB_USER}";`);
+    console.log("✅ Privileges granted on schema public.");
+
+    await dbClient.end();
   } catch (err) {
     console.error("❌ Error during DB init:", err);
     process.exit(1);

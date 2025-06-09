@@ -3,6 +3,7 @@ import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
 import { Deliverable } from "../../entities/Deliverable";
 import { DeliverableStatus } from "../../enums/DeliverableStatus";
 import { DeliverableMutations } from "../../graphql-resolvers/DeliverableMutations";
+import type { MyContext } from "../../types/MyContext";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
@@ -29,23 +30,34 @@ describe("deliverable Mutations", () => {
     it("should create a new deliverable", async () => {
       mockTypeOrm().onMock(Deliverable).toReturn(deliverable, "save");
 
-      const createdDeliverable: Deliverable =
-        await deliverableMutations.createDeliverable(
-          deliverable.name,
-          deliverable.perimeter,
-          deliverable.endDate,
-          deliverable.status,
-          deliverable.createdAt,
-          deliverable.reviewTimes,
-        );
-
-      expect(createdDeliverable).toMatchObject({
+      const input = {
         name: deliverable.name,
         perimeter: deliverable.perimeter,
-        endDate: deliverable.endDate,
+        deliveryDate: deliverable.endDate,
         status: deliverable.status,
         createdAt: deliverable.createdAt,
         reviewTimes: deliverable.reviewTimes,
+        projectId: faker.number.int(),
+      };
+
+      const mockCtx = {
+        user: {
+          role: "ADMIN",
+        },
+      } as MyContext;
+
+      const createdDeliverable = await deliverableMutations.createDeliverable(
+        input,
+        mockCtx,
+      );
+
+      expect(createdDeliverable).toMatchObject({
+        name: input.name,
+        perimeter: input.perimeter,
+        deliveryDate: input.deliveryDate,
+        status: input.status,
+        createdAt: input.createdAt,
+        reviewTimes: input.reviewTimes,
       });
     });
   });
