@@ -29,6 +29,7 @@
       "@molecules/*": ["components/molecules/*"],
       "@organisms/*": ["components/organisms/*"],
       "@icons/*": ["components/atoms/Icons/*"],
+      "@hooks/*": ["hooks/*"],
       "@illustrations/*": ["components/atoms/illustrations/*"],
       "@pages/*": ["pages/*"],
       "@context/*": ["context/*"],
