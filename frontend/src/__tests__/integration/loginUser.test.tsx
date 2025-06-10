@@ -4,7 +4,20 @@ import LoginForm from "@organisms/LoginForm";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Suppression des avertissements React Router
+const originalConsoleWarn = console.warn;
+beforeAll(() => {
+  console.warn = (msg, ...args) => {
+    if (!msg.includes("React Router Future Flag Warning")) {
+      originalConsoleWarn(msg, ...args);
+    }
+  };
+});
+afterAll(() => {
+  console.warn = originalConsoleWarn;
+});
 
 //Mock du context d'authentification
 const setToken = vi.fn();
@@ -30,6 +43,7 @@ describe("LoginForm", () => {
         variables: { email, password },
       },
       result: { data: { login: "mocked-jwt-token" } },
+      delay: 100,
     },
   ];
 
@@ -229,6 +243,7 @@ describe("LoginForm", () => {
           variables: { email, password },
         },
         result: { data: { login: "mocked-jwt-token" } },
+        delay: 100,
       },
     ];
 
@@ -254,6 +269,8 @@ describe("LoginForm", () => {
   });
 
   it("ne traite qu'une seule soumission même si l'utilisateur clique plusieurs fois rapidement", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const router = createMemoryRouter(
       [
         {
@@ -266,19 +283,19 @@ describe("LoginForm", () => {
 
     const email = "user@mail.com";
     const password = "1234";
-    const mocksWithDelay = [
+    const mocks = [
       {
         request: {
           query: LoginDocument,
           variables: { email, password },
         },
         result: { data: { login: "mocked-jwt-token" } },
-        delay: 30,
+        delay: 100,
       },
     ];
 
     render(
-      <MockedProvider mocks={mocksWithDelay} addTypename={false}>
+      <MockedProvider mocks={mocks} addTypename={false}>
         <RouterProvider router={router} />
       </MockedProvider>,
     );
@@ -286,9 +303,17 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText(/email/i), email);
     await userEvent.type(screen.getByLabelText(/password/i), password);
 
-    // Double (ou triple) clic rapide sur le bouton
     const button = screen.getByRole("button", { name: /sign in/i });
+
+    // Premier clic (le seul qui doit être pris en compte)
     await userEvent.click(button);
+
+    // Attends que le bouton soit disabled (mutation en cours)
+    await waitFor(() => {
+      expect(button).toBeDisabled();
+    });
+
+    // Clics supplémentaires (ne doivent rien faire)
     await userEvent.click(button);
     await userEvent.click(button);
 
@@ -298,11 +323,12 @@ describe("LoginForm", () => {
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
     });
+
+    errorSpy.mockRestore();
   });
 
   it("affiche un message générique si le compte est désactivé", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
     const router = createMemoryRouter(
       [
         {
@@ -430,7 +456,6 @@ describe("LoginForm", () => {
 
   it("affiche un message d'erreur générique pour une tentative d'injection SQL", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
     const router = createMemoryRouter(
       [
         {
@@ -473,8 +498,6 @@ describe("LoginForm", () => {
   });
 
   it("n'affiche pas de code HTML ou script dans les messages d'erreur (protection XSS)", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
     const router = createMemoryRouter(
       [
         {
@@ -520,6 +543,5 @@ describe("LoginForm", () => {
     ).not.toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
-    errorSpy.mockRestore();
   });
 });
