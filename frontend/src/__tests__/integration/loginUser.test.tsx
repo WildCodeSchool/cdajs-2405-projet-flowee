@@ -266,18 +266,19 @@ describe("LoginForm", () => {
 
     const email = "user@mail.com";
     const password = "1234";
-    const mocks = [
+    const mocksWithDelay = [
       {
         request: {
           query: LoginDocument,
           variables: { email, password },
         },
         result: { data: { login: "mocked-jwt-token" } },
+        delay: 30,
       },
     ];
 
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
+      <MockedProvider mocks={mocksWithDelay} addTypename={false}>
         <RouterProvider router={router} />
       </MockedProvider>,
     );
@@ -300,6 +301,8 @@ describe("LoginForm", () => {
   });
 
   it("affiche un message générique si le compte est désactivé", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const router = createMemoryRouter(
       [
         {
@@ -338,6 +341,7 @@ describe("LoginForm", () => {
     ).toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 
   it("permet la connexion en appuyant sur la touche Entrée", async () => {
@@ -425,6 +429,8 @@ describe("LoginForm", () => {
   });
 
   it("affiche un message d'erreur générique pour une tentative d'injection SQL", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const router = createMemoryRouter(
       [
         {
@@ -463,9 +469,12 @@ describe("LoginForm", () => {
     ).toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 
   it("n'affiche pas de code HTML ou script dans les messages d'erreur (protection XSS)", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const router = createMemoryRouter(
       [
         {
@@ -511,5 +520,6 @@ describe("LoginForm", () => {
     ).not.toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });
