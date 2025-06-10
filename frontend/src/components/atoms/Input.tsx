@@ -13,6 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         <input
           ref={ref}
+          id={props.name}
           {...props}
           className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue focus:invalid:border-red focus:invalid:outline-red"
         />

@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
-import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Task } from "../entities/Task";
-import { TaskMutations } from "../graphql-resolvers/TaskMutations";
-import { TaskStatus } from "../enums/TaskStatus";
-import type { CreateTaskInput } from "../inputs/CreateTaskInput";
+import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Task } from "../../entities/Task";
+import { TaskStatus } from "../../enums/TaskStatus";
+import { TaskMutations } from "../../graphql-resolvers/TaskMutations";
+import type { CreateTaskInput } from "../../inputs/CreateTaskInput";
 
 describe("Task Mutations", () => {
   let taskMutations: TaskMutations;
@@ -24,13 +24,9 @@ describe("Task Mutations", () => {
         .toISOString(), // endDate (string)
       TaskStatus.IN_PROGRESS, // Status FIXE pour (tests déterministes)
     );
-
-    // On peut aussi attribuer un ID fictif pour simuler un objet existant lors de l'update/delete
-    // Mais on le fera dans les tests qui en ont besoin
   });
 
   // 1) Tests pour createTask
-
   describe("createTask", () => {
     it("should create a new task", async () => {
       mockTypeOrm().onMock(Task).toReturn(task, "save");

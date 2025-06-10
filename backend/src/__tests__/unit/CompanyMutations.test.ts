@@ -1,7 +1,15 @@
+jest.mock("sib-api-v3-sdk", () => ({
+  ApiClient: { instance: { authentications: { "api-key": {} } } },
+  TransactionalEmailsApi: jest.fn().mockImplementation(() => ({
+    sendTransacEmail: jest.fn().mockResolvedValue({}),
+  })),
+}));
+
 import { faker } from "@faker-js/faker";
-import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Company } from "../entities/Company";
-import { CompanyMutations } from "../graphql-resolvers/CompanyMutations";
+import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Company } from "../../entities/Company";
+import { CompanyUser } from "../../entities/CompanyUser";
+import { CompanyMutations } from "../../graphql-resolvers/CompanyMutations";
 
 describe("Company Mutations", () => {
   let companyMutations: CompanyMutations;
@@ -19,6 +27,7 @@ describe("Company Mutations", () => {
   describe("createCompany", () => {
     it("should create a new company", async () => {
       mockTypeOrm().onMock(Company).toReturn(company, "save");
+      mockTypeOrm().onMock(CompanyUser).toReturn({ id: 456 }, "findOne");
       const createdCompany: Company = await companyMutations.createCompany(
         company.name,
         company.address,

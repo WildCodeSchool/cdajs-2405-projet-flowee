@@ -4,7 +4,7 @@ import {
   createComplexityRule,
   createMaxDepthRule,
   createNoIntrospectionRule,
-} from "../utils/securityRules";
+} from "../../utils/securityRules";
 
 type ASTVisitorWithOperations = {
   OperationDefinition?: {

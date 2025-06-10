@@ -10,7 +10,7 @@
     "lint": "biome lint --write ./src",
     "format": "biome format --write ./src",
     "preview": "vite preview",
-    "test": "vitest",
+    "test":  "vitest --reporter verbose",
     "test:watch": "vitest --watch",
     "generate": "graphql-codegen -w"
   },
