@@ -16,7 +16,7 @@ export class DeliverableMutations {
   async createDeliverable(
     @Arg("newDeliverable", () => CreateDeliverableInput)
     newDeliverableInput: CreateDeliverableInput,
-    @Ctx() ctx: MyContext
+    @Ctx() ctx: MyContext,
   ): Promise<Deliverable> {
     const user = ctx.user;
 
@@ -51,7 +51,7 @@ export class DeliverableMutations {
         deliveryDate,
         status,
         createdAt,
-        reviewTimes
+        reviewTimes,
       );
 
       deliverable.project = project;
@@ -73,7 +73,7 @@ export class DeliverableMutations {
   @Mutation((_) => Deliverable)
   async updateDeliverable(
     @Arg("id") id: number,
-    @Arg("data", () => UpdateDeliverableInput) data: UpdateDeliverableInput
+    @Arg("data", () => UpdateDeliverableInput) data: UpdateDeliverableInput,
   ): Promise<Deliverable> {
     const deliverable = await dataSource.manager.findOne(Deliverable, {
       where: { id },

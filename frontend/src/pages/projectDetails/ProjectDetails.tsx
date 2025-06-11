@@ -45,7 +45,7 @@ const ProjectDetails = () => {
       addModal.closeModal();
       editModal.closeModal();
       deleteModal.closeModal();
-    }
+    },
   );
 
   const project = data?.getProjectById;

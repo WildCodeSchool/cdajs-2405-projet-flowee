@@ -9,8 +9,13 @@ import { Textarea } from "@atoms/TextArea";
 
 import ArrowIcon from "@components/atoms/Icons/Arrow";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import RoleToast from "@components/organisms/RoleToast";
+import { useAuth } from "@context/authContext";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CreateProject() {
+  const { authUserData } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -33,7 +38,16 @@ export default function CreateProject() {
         refetchQueries: ["GetProjectsByUser"],
         awaitRefetchQueries: true,
       });
-      alert("Projet créé avec succès !");
+
+      toast(
+        <RoleToast
+          message="Projet créé avec succès"
+          role={authUserData.role}
+        />,
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
       reset();
       navigate("/dashboard");
     } catch (e) {

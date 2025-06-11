@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useSetPasswordFromActivationMutation } from "@generated/graphql-types";
+import LogoClientIcon from "@components/atoms/Icons/LogoClient";
+import { toast } from "react-toastify";
 
 type JWTContent = {
   accountId: string;
@@ -34,19 +36,20 @@ export function SetPasswordPage() {
     if (token) {
       const decoded = jwtDecode<JWTContent>(token);
       if (decoded.purpose !== "activation") {
-        alert("Token invalide");
+        toast.error("Token invalide");
         navigate("/activation-error");
         return;
       }
       setClientName(decoded.clientName || "");
       setEmail(decoded.email);
+      toast.info("coucou");
     }
   }, [navigate]);
 
   const onSubmit = async (data: FormValues) => {
     const token = sessionStorage.getItem("activationJwt");
     if (!token) {
-      alert("Session expirée ou invalide.");
+      toast.warn("Session expirée ou invalide.");
       return;
     }
 
@@ -56,67 +59,83 @@ export function SetPasswordPage() {
       navigate("/login");
     } catch (err) {
       console.error(err);
-      alert("Erreur : mot de passe non défini");
+      toast.warn("Erreur : mot de passe non défini");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 max-w-md mx-auto p-4"
-    >
-      <h2 className="text-xl font-bold">Définis ton mot de passe</h2>
+    <div className="bg-blueBg min-h-screen flex flex-col items-center justify-center">
+      <LogoClientIcon className="h-20 w-20" />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 space-y-4 max-w-lg mx-auto p-4"
+      >
+        <h2 className="text-3xl text-center font-bold">
+          Please enter you new password
+        </h2>
 
-      <div>
-        <label>
-          Nom
-          <input value={clientName} readOnly className="input bg-gray-100" />
-        </label>
-      </div>
+        <div>
+          <label className="flex flex-col w-full ">
+            Name :
+            <input
+              value={clientName}
+              readOnly
+              className="text-left p-2 border border-gray-300 rounded-md w-full"
+            />
+          </label>
+        </div>
 
-      <div>
-        <label>
-          Email
-          <input value={email} readOnly className="input bg-gray-100" />
-        </label>
-      </div>
+        <div>
+          <label className="flex flex-col w-full ">
+            Email :
+            <input
+              value={email}
+              readOnly
+              className="text-left p-2 border border-gray-300 rounded-md w-full"
+            />
+          </label>
+        </div>
 
-      <div>
-        <label>
-          Mot de passe
-          <input
-            type="password"
-            {...register("password", { required: true, minLength: 6 })}
-            className="input"
-          />
-        </label>
-        {errors.password && (
-          <p className="text-red-500">Mot de passe trop court</p>
-        )}
-      </div>
+        <div>
+          <label className="flex flex-col w-full ">
+            Password
+            <input
+              type="password"
+              {...register("password", { required: true, minLength: 6 })}
+              className="text-left p-2 border border-gray-300 rounded-md w-full"
+            />
+          </label>
+          {errors.password && (
+            <p className="text-red-500">Mot de passe trop court</p>
+          )}
+        </div>
 
-      <div>
-        <label>
-          Confirmation
-          <input
-            type="password"
-            {...register("confirmPassword", {
-              required: true,
-              validate: (val) =>
-                val === watch("password") ||
-                "Les mots de passe ne correspondent pas",
-            })}
-            className="input"
-          />
-        </label>
-        {errors.confirmPassword && (
-          <p className="text-red-500">{errors.confirmPassword.message}</p>
-        )}
-      </div>
+        <div>
+          <label>
+            Password Confirmation
+            <input
+              type="password"
+              {...register("confirmPassword", {
+                required: true,
+                validate: (val) =>
+                  val === watch("password") ||
+                  "Les mots de passe ne correspondent pas",
+              })}
+              className="text-left p-2 border border-gray-300 rounded-md w-full"
+            />
+          </label>
+          {errors.confirmPassword && (
+            <p className="text-red-500">{errors.confirmPassword.message}</p>
+          )}
+        </div>
 
-      <button type="submit" className="btn w-full">
-        Valider
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="bg-blueDark w-56 inline-block rounded-lg py-2 px-4 text-white text-base self-center"
+        >
+          Valider
+        </button>
+      </form>
+    </div>
   );
 }

@@ -7,7 +7,7 @@ export const parseIdFromSlug = (slug: string | undefined): number | null => {
 };
 
 export function getProjectOptions(
-  project?: { id: string | number; projectName: string } | null
+  project?: { id: string | number; projectName: string } | null,
 ): ProjectOption[] {
   if (!project) return [];
   return [{ id: String(project.id), name: project.projectName }];

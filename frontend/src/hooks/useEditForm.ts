@@ -38,8 +38,8 @@ export const useEditForm = (initialValues?: {
 
     setLabelValue(
       mode === "deliverable"
-        ? initialValues.projectName ?? ""
-        : initialValues.deliverableName ?? ""
+        ? (initialValues.projectName ?? "")
+        : (initialValues.deliverableName ?? ""),
     );
   }, [initialValues, mode]);
 
@@ -48,7 +48,7 @@ export const useEditForm = (initialValues?: {
     (
       e: React.ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >
+      >,
     ) => {
       setForm((prev) => ({ ...prev, [field]: e.target.value }));
     };

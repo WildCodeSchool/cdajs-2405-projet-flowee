@@ -73,7 +73,7 @@ export default function ProjectSections({
             onDelete={(id, name) => openDelete({ entity: "task", id, name })}
             onUpdate={(task) => {
               const deliverable = deliverables.find((del) =>
-                del.tasks?.some((t) => t.id === task.id)
+                del.tasks?.some((t) => t.id === task.id),
               );
               if (!deliverable) return;
 
