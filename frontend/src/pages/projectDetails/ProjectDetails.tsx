@@ -66,6 +66,7 @@ const ProjectDetails = () => {
         endDate={project?.endDate ?? ""}
         clientName={project?.client.clientName ?? ""}
         description={project?.description ?? ""}
+        status={project?.status ?? "NOT_STARTED"}
       />
       {project && (
         <ProjectSections
