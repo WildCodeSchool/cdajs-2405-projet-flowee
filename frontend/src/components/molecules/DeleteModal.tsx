@@ -4,6 +4,7 @@ type DeleteModalProps = {
   itemName: string;
   onCancel: () => void;
   onConfirm: () => void;
+  onClose?: () => void;
 };
 
 export default function DeleteModal({
@@ -11,6 +12,7 @@ export default function DeleteModal({
   entityType,
   itemName,
   onCancel,
+
   onConfirm,
 }: DeleteModalProps) {
   if (!open) return null;

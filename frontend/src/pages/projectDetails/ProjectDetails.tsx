@@ -41,7 +41,11 @@ const ProjectDetails = () => {
 
   const { handleCreate, handleEdit, handleDelete } = useProjectHandlers(
     refetch,
-    editModal.closeModal
+    () => {
+      addModal.closeModal();
+      editModal.closeModal();
+      deleteModal.closeModal();
+    }
   );
 
   const project = data?.getProjectById;
@@ -81,6 +85,7 @@ const ProjectDetails = () => {
         onConfirm={() => {
           if (deleteModal.data) {
             handleDelete(deleteModal.data.entity, deleteModal.data.id);
+            deleteModal.closeModal();
           }
         }}
         onCancel={deleteModal.closeModal}
