@@ -122,9 +122,8 @@ export default function Projects() {
         sortOptions={sortOptions}
       />
       <SearchBar setSearchFilter={setSearchFilter} />
-      <div className="flex flex-col md:flex-row h-screen flex-wrap">
+      <div className="flex flex-col md:flex-row min-h-screen flex-wrap">
         <DisplayCards
-          limit={5}
           items={filteredProjects}
           loading={loading}
           variant="projects"
