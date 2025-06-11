@@ -1,11 +1,36 @@
 import { useRoleTheme } from "@context/roleThemeContext";
-import { useGetTrackerStatsQuery } from "@generated/graphql-types";
+import {
+  type Project,
+  useGetProjectsByUserQuery,
+  useGetTrackerStatsQuery,
+} from "@generated/graphql-types";
+
+import { useNavigate } from "react-router-dom";
 
 export default function Tracker() {
   const role = useRoleTheme();
-
+  const navigate = useNavigate();
   const { data, loading, error } = useGetTrackerStatsQuery();
+  const { data: projectsData } = useGetProjectsByUserQuery();
+
   if (!role || loading || error || !data) return null;
+
+  const today = new Date();
+  const lateProjectList: Project[] =
+    projectsData?.getProjectsByUser.filter((project) => {
+      const endDate = project.endDate ? new Date(project.endDate) : null;
+      return (
+        endDate !== null && endDate < today && project.status !== "COMPLETED"
+      );
+    }) ?? [];
+  const handleClickLateProjects = () => {
+    if (lateProjectList.length === 1) {
+      const project = lateProjectList[0];
+      navigate(`/projects/${project.projectName?.toLowerCase()}-${project.id}`);
+    } else {
+      navigate("/projects?filter=late");
+    }
+  };
   const getLabel = (
     count: number,
     labels: { full: string; singular: string; short: string }
@@ -33,6 +58,7 @@ export default function Tracker() {
               short: "Late",
             },
             color: "text-theme-error",
+            onClick: handleClickLateProjects,
           },
         ]
       : []),
@@ -63,6 +89,14 @@ export default function Tracker() {
           <div
             key={labelItem.short}
             className="flex flex-row items-center gap-5"
+            onClick={item.onClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                item.onClick?.();
+              }
+            }}
           >
             <article className="flex flex-row gap-3 items-center text-start px-1">
               <span

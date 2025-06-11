@@ -3,7 +3,7 @@ import { ProjectStatus } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
 import DisplayCards from "@organisms/DisplayCards";
 import SearchBar from "@organisms/Search";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@organisms/Cards";
 import { NavLink } from "react-router-dom";
 import ArrowIcon from "@components/atoms/Icons/Arrow";
@@ -13,17 +13,25 @@ import { useAuth } from "@context/authContext";
 import UnauthorizedAccess from "./UnauthorizedAcess";
 import Filters from "@components/molecules/Filters";
 import type { SortOrder, FilterOption } from "@components/molecules/Filters";
-
+import { useLocation } from "react-router-dom";
 export default function Projects() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
-  const { authUserData } = useAuth(); // 👈 Récupère le user et le rôle
-  const allowedRoles = ["ADMIN", "CLIENT"];
+  const [sort, setSort] = useState<SortOrder>("DATE_ASC");
+  const [status, setStatus] = useState<ProjectStatus | "All">("All");
 
-  // Refetch à chaque navigation (pour que la liste soit toujours à jour)
+  const { authUserData } = useAuth();
+  const location = useLocation();
   const { data, loading, error } = useGetProjectsByUserQuery({});
 
-  // ⚡ Contrôle du rôle utilisateur (instantané, sans attendre la query)
+  const allowedRoles = ["ADMIN", "CLIENT"];
+  const today = useMemo(() => new Date(), []);
+
+  const isLateFilter = useMemo(() => {
+    const urlParams = new URLSearchParams(location.search);
+    return urlParams.get("filter") === "late";
+  }, [location.search]);
+
   if (!authUserData?.role || !allowedRoles.includes(authUserData.role)) {
     return <UnauthorizedAccess />;
   }
@@ -46,11 +54,15 @@ export default function Projects() {
     { label: "Furthest deadline", value: "DATE_DESC" },
   ];
 
-  const [sort, setSort] = useState<SortOrder>("DATE_ASC");
-  const [status, setStatus] = useState<ProjectStatus | "All">("All");
   const projects = data?.getProjectsByUser ?? [];
   const filteredProjects = projects
     .filter((project) => {
+      if (isLateFilter) {
+        const endDate = project.endDate ? new Date(project.endDate) : null;
+        if (!endDate || endDate > today || project.status === "COMPLETED") {
+          return false;
+        }
+      }
       if (status !== "All" && project.status !== status) return false;
       if (
         searchFilter.trim() !== "" &&
