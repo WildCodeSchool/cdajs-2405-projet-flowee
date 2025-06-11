@@ -13,7 +13,7 @@ import CardsClient from "./CardsClient";
 interface DisplayClientsProps {
   searchFilter: string;
   sortOrder: "NONE" | "AZ" | "ZA";
-  statusFilter: ClientStatus | "ALL";
+  statusFilter: ClientStatus | "All";
 }
 
 export default function DisplayClientsCard({
@@ -55,26 +55,26 @@ export default function DisplayClientsCard({
   });
 
   // Status filter
-  if (statusFilter !== "ALL") {
+  if (statusFilter !== "All") {
     filteredClients = filteredClients.filter(
-      (client) => client.status === statusFilter,
+      (client) => client.status === statusFilter
     );
   }
 
   // Sorter by name
   if (sortOrder === "AZ") {
     filteredClients.sort((a, b) =>
-      (a.clientName ?? "").localeCompare(b.clientName ?? ""),
+      (a.clientName ?? "").localeCompare(b.clientName ?? "")
     );
   } else if (sortOrder === "ZA") {
     filteredClients.sort((a, b) =>
-      (b.clientName ?? "").localeCompare(a.clientName ?? ""),
+      (b.clientName ?? "").localeCompare(a.clientName ?? "")
     );
   }
 
   const handleDelete = (id: number) => {
     if (window.confirm("Are you sure you want to delete this client?")) {
-      setOperationError(null); // Réinitialiser l'erreur précédente
+      setOperationError(null);
 
       deleteClient({ variables: { id } })
         .then(() => {
@@ -84,7 +84,7 @@ export default function DisplayClientsCard({
         .catch((err: unknown) => {
           console.error("Delete error:", err);
           setOperationError(
-            "Deletion of the client failed. This client could be associated with existing projects.",
+            "Deletion of the client failed. This client could be associated with existing projects."
           );
         });
     }
@@ -92,7 +92,7 @@ export default function DisplayClientsCard({
 
   const handleArchive = (id: number) => {
     if (window.confirm("Are you sure you want to archive this client?")) {
-      setOperationError(null); // Réinitialiser l'erreur précédente
+      setOperationError(null);
 
       archiveClient({ variables: { id } })
         .then(() => {

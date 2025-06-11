@@ -1,28 +1,34 @@
-import type { ClientStatus } from "@generated/graphql-types";
-
 export type SortOrder = "NONE" | "AZ" | "ZA";
 
-interface GenericFilterProps {
-  sortOrder: SortOrder;
-  onSortOrderChange: (order: SortOrder) => void;
-  statusValue: ClientStatus | "ALL";
-  onStatusChange: (status: ClientStatus | "ALL") => void;
+export interface FilterOption<T> {
+  label: string;
+  value: T;
 }
 
-export default function GenericFilter({
+export interface FilterBarProps<T extends string> {
+  sortOrder: SortOrder;
+  onSortOrderChange: (order: SortOrder) => void;
+  filterValue: T;
+  onFilterChange: (value: T) => void;
+  filterOptions: FilterOption<T>[];
+  label?: string;
+  show?: boolean;
+}
+export default function FilterBar<T extends string>({
   sortOrder,
   onSortOrderChange,
-  statusValue,
-  onStatusChange,
-}: GenericFilterProps) {
+  filterValue,
+  onFilterChange,
+  filterOptions,
+  label = "Status",
+  show = false,
+}: FilterBarProps<T>) {
+  if (!show) return null;
   return (
     <div className="flex flex-wrap items-center gap-6">
-      {/* Sorting zone*/}
+      {/* Sorting */}
       <div className="flex flex-col sm:flex-row sm:items-center">
-        <label
-          htmlFor="sortSelect"
-          className=" md:flex-row flex mr-2 font-semibold"
-        >
+        <label htmlFor="sortSelect" className="mr-2 font-semibold">
           Sort
         </label>
         <select
@@ -37,23 +43,22 @@ export default function GenericFilter({
         </select>
       </div>
 
-      {/* Filter by status */}
+      {/* Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center">
-        <label htmlFor="statusSelect" className="font-semibold block mr-2">
-          Status
+        <label htmlFor="filterSelect" className="mr-2 font-semibold">
+          {label}
         </label>
         <select
-          id="statusSelect"
+          id="filterSelect"
           className="border border-theme-gray hover:border-theme-darkGray rounded px-3 py-0 text-sm w-[200px] h-[32px]"
-          value={statusValue}
-          onChange={(e) =>
-            onStatusChange(e.target.value as ClientStatus | "ALL")
-          }
+          value={filterValue}
+          onChange={(e) => onFilterChange(e.target.value as T)}
         >
-          <option value="ALL">All</option>
-          <option value="ACTIVE">Active</option>
-          <option value="INACTIVE">Inactive</option>
-          <option value="ARCHIVED">Archived</option>
+          {filterOptions.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
     </div>

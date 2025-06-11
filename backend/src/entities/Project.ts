@@ -44,33 +44,22 @@ export class Project extends BaseEntity {
   endDate?: string;
 
   @Column({ default: ProjectStatus.NOT_STARTED })
-  @Field({ nullable: true })
+  @Field(() => ProjectStatus, { nullable: true })
   status?: ProjectStatus;
 
   //relations
-  @OneToMany(
-    () => Deliverable,
-    (deliverable) => deliverable.project,
-  )
+  @OneToMany(() => Deliverable, (deliverable) => deliverable.project)
   @Field(() => [Deliverable], { nullable: true })
   deliverables?: Deliverable[];
 
-  @ManyToOne(
-    () => Client,
-    (client) => client.projects,
-    { nullable: false },
-  )
+  @ManyToOne(() => Client, (client) => client.projects, { nullable: false })
   @Field(() => Client)
   client?: Client;
 
-  @ManyToOne(
-    () => CompanyUser,
-    (companyUser) => companyUser.projects,
-    {
-      nullable: true,
-      onDelete: "SET NULL",
-    },
-  )
+  @ManyToOne(() => CompanyUser, (companyUser) => companyUser.projects, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
   @Field(() => CompanyUser, { nullable: true })
   companyUser?: CompanyUser;
 
@@ -80,7 +69,7 @@ export class Project extends BaseEntity {
     description?: string,
     startDate?: string,
     endDate?: string,
-    status?: ProjectStatus,
+    status?: ProjectStatus
   ) {
     super();
 
