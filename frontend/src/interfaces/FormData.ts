@@ -19,5 +19,6 @@ export type TaskFormData = {
   deadline?: string;
   deliverableId: number;
   status?: TaskStatus;
+  deliverableName?: string;
 };
 export type FormData = DeliverableFormData | TaskFormData;

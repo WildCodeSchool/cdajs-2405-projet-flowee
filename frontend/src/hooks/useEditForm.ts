@@ -4,21 +4,18 @@ import type { TaskStatus } from "@generated/graphql-types";
 
 type Mode = "deliverable" | "task";
 
-export const useEditForm = (
-  defaultMode: Mode = "deliverable",
-  initialValues?: {
-    id: number;
-    name: string;
-    perimeter?: string;
-    deadline?: string;
-    status: DeliverableStatus | TaskStatus;
-    projectId?: number;
-    projectName?: string;
-    deliverableId?: number;
-    deliverableName?: string;
-  }
-) => {
-  const [mode, setMode] = useState<Mode>(defaultMode);
+export const useEditForm = (initialValues?: {
+  id: number;
+  name: string;
+  perimeter?: string;
+  deadline?: string;
+  status: DeliverableStatus | TaskStatus;
+  projectId?: number;
+  projectName?: string;
+  deliverableId?: number;
+  deliverableName?: string;
+}) => {
+  const [mode, setMode] = useState<Mode>();
   const isDeliverable = mode === "deliverable";
   const [form, setForm] = useState({
     name: "",

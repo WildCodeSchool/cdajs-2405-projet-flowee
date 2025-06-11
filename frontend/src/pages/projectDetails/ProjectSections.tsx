@@ -5,15 +5,16 @@ import type {
   DeliverableStatus,
   Deliverable,
   Project,
+  TaskStatus,
 } from "@generated/graphql-types";
-import type { DeliverableFormData } from "@interfaces/FormData";
+import type { DeliverableFormData, TaskFormData } from "@interfaces/FormData";
 
 type ProjectSectionsProps = {
   project: Project;
   slug: string;
   deliverables: Deliverable[];
   openAdd: () => void;
-  openEdit: (data: DeliverableFormData) => void;
+  openEdit: (data: DeliverableFormData | TaskFormData) => void;
   openDelete: (data: {
     entity: "task" | "deliverable";
     id: number;
@@ -65,11 +66,28 @@ export default function ProjectSections({
           <h2>Tasks</h2>
           <AddButton onClick={openAdd} />
         </aside>
-
+        {}
         <section className="mb-4">
           <TasksByDeliverable
             deliverables={deliverables}
             onDelete={(id, name) => openDelete({ entity: "task", id, name })}
+            onUpdate={(task) => {
+              const deliverable = deliverables.find((del) =>
+                del.tasks?.some((t) => t.id === task.id)
+              );
+              if (!deliverable) return;
+
+              openEdit({
+                type: "task",
+                id: Number(task.id),
+                name: task.name,
+                description: task.description ?? "",
+                deadline: task.endDate ?? "",
+                deliverableId: Number(deliverable.id),
+                deliverableName: deliverable.name,
+                status: task.status as TaskStatus,
+              });
+            }}
           />
         </section>
       </section>

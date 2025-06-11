@@ -3,34 +3,25 @@ import { Textarea } from "@components/atoms/TextArea";
 import { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
 import { useEditForm } from "../../hooks/useEditForm";
 import type { FormData } from "@interfaces/FormData";
+import type { InitialValues } from "@interfaces/type";
 
 export type EditModalProps = {
-  initialMode: "deliverable" | "task";
+  mode: "deliverable" | "task";
   show: boolean;
   onClose: () => void;
   onSubmit: (formData: FormData) => void;
-  initialValues?: {
-    id: number;
-    name: string;
-    perimeter?: string;
-    deadline?: string;
-    status: DeliverableStatus | TaskStatus;
-    projectId?: number;
-    projectName?: string;
-    deliverableId?: number;
-    deliverableName?: string;
-  };
+  initialValues: InitialValues;
 };
 
 export default function EditModal({
-  initialMode,
+  mode,
   show,
   onClose,
   onSubmit,
   initialValues,
 }: EditModalProps) {
-  const { mode, setMode, form, handleChange, isDeliverable, labelValue } =
-    useEditForm(initialMode, initialValues);
+  const { setMode, form, handleChange, isDeliverable } =
+    useEditForm(initialValues);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +66,7 @@ export default function EditModal({
   if (!show) return null;
 
   const StatusEnum = isDeliverable ? DeliverableStatus : TaskStatus;
-  console.log("EditModal initialValues", initialValues);
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end h-full">
       <section className="bg-white w-full h-full md:max-w-sm p-6 flex flex-col gap-4 overflow-y-auto">
@@ -88,27 +79,39 @@ export default function EditModal({
         </button>
 
         <aside className="flex justify-evenly items-center mb-4 w-full">
-          {(["deliverable", "task"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              className={`mt-4 px-6 py-2 rounded-lg font-medium text-sm transition-all ${
-                mode === m
-                  ? "bg-theme-base text-white"
-                  : "bg-gray-100 text-black hover:bg-gray-200"
-              }`}
-              onClick={() => setMode(m)}
-            >
-              Update {m}
-            </button>
-          ))}
+          <button
+            type="button"
+            className={` mt-4 px-6 py-2 rounded-lg font-medium text-sm transition-all ${
+              isDeliverable
+                ? "bg-theme-base text-white"
+                : "bg-gray-100 text-black hover:bg-gray-200"
+            }`}
+            onClick={() => setMode("deliverable")}
+          >
+            Update Deliverable
+          </button>
+          <button
+            type="button"
+            className={` mt-4 px-6 py-2 rounded-lg font-medium text-sm transition-all ${
+              !isDeliverable
+                ? "bg-theme-base text-white"
+                : "bg-gray-100 text-black hover:bg-gray-200"
+            }`}
+            onClick={() => setMode("task")}
+          >
+            update Task
+          </button>
         </aside>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
             label={isDeliverable ? "Project" : "Deliverable"}
             type="text"
-            value={initialValues?.projectName}
+            value={
+              isDeliverable
+                ? initialValues?.projectName
+                : initialValues?.deliverableName
+            }
             disabled
             readOnly
           />

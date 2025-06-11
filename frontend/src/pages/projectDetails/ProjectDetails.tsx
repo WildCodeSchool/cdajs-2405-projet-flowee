@@ -1,4 +1,8 @@
-import type { DeliverableFormData, FormData } from "@interfaces/FormData";
+import type {
+  DeliverableFormData,
+  FormData,
+  TaskFormData,
+} from "@interfaces/FormData";
 import { useGetProjectByIdQuery } from "@generated/graphql-types";
 import SignedInLayout from "@layout/SignedInLayout";
 import { NavLink, Outlet, useParams } from "react-router-dom";
@@ -10,6 +14,7 @@ import { parseIdFromSlug, getProjectOptions } from "@utils/project";
 import EditModal from "@components/molecules/EditModal";
 import { useModalState } from "../../hooks/useModalState";
 import { useProjectHandlers } from "../../hooks/useProjectHandlers";
+import type { InitialValues } from "@interfaces/type";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -27,7 +32,7 @@ const ProjectDetails = () => {
   // States and modals
 
   const addModal = useModalState<FormData>();
-  const editModal = useModalState<DeliverableFormData>();
+  const editModal = useModalState<DeliverableFormData | TaskFormData>();
   const deleteModal = useModalState<{
     entity: "task" | "deliverable";
     id: number;
@@ -94,17 +99,11 @@ const ProjectDetails = () => {
       />
 
       <EditModal
-        initialMode={
-          editModal.data
-            ? "project" in editModal.data
-              ? "deliverable"
-              : "task"
-            : "deliverable"
-        }
+        mode={editModal.data?.type ?? "deliverable"}
         show={editModal.open}
         onClose={editModal.closeModal}
         onSubmit={handleEdit}
-        initialValues={editModal.data}
+        initialValues={editModal.data as InitialValues}
       />
       <Outlet />
     </SignedInLayout>
