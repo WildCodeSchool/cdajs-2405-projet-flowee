@@ -1,28 +1,32 @@
-interface Props {
+type DeleteModalProps = {
   open: boolean;
-  header: string;
+  entityType: "task" | "deliverable";
   itemName: string;
-  onConfirm: () => void;
   onCancel: () => void;
-}
+  onConfirm: () => void;
+  onClose?: () => void;
+};
 
-export default function ModalConfirmDelete({
+export default function DeleteModal({
   open,
-  header,
+  entityType,
   itemName,
-  onConfirm,
   onCancel,
-}: Props) {
+
+  onConfirm,
+}: DeleteModalProps) {
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-md w-1/5 flex flex-col gap-4 items-center">
-        <aside className="flex items-center gap-3 mb-4 whitespace-pre-line flex-col">
-          <h2 className="font-semibold text-lg text-center px-8">{header}</h2>
-          <p className="">{itemName}</p>
+      <div className="bg-white p-6 rounded-lg shadow-md w-[90%] max-w-md flex flex-col gap-4 items-center">
+        <aside className="text-center">
+          <h2 className="font-semibold text-lg">
+            Are you sure you want to delete this {entityType}?
+          </h2>
+          <p className="mt-2 font-medium">{itemName}</p>
         </aside>
-        <aside className="flex justify-end gap-4">
+        <div className="flex gap-4 mt-6">
           <button
             type="button"
             className="px-4 py-2 bg-theme-lightGray text-gray-800 rounded-lg border border-theme-gray"
@@ -37,7 +41,7 @@ export default function ModalConfirmDelete({
           >
             Delete
           </button>
-        </aside>
+        </div>
       </div>
     </div>
   );

@@ -28,3 +28,16 @@ export const CREATE_DELIVERABLE_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_DELIVERABLE_MUTATION = gql`
+  mutation UpdateDeliverable($id: Float!, $data: UpdateDeliverableInput!) {
+    updateDeliverable(id: $id, data: $data) {
+      id
+      name
+      perimeter
+      endDate
+      status
+      reviewTimes
+    }
+  }
+`;

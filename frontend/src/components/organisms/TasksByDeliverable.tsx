@@ -1,20 +1,22 @@
 import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
-import type { Deliverable } from "@generated/graphql-types";
+import type { Deliverable, Task } from "@generated/graphql-types";
 import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import { useState } from "react";
-import ItemDetails from "@pages/ItemDetails"; // Assure-toi que c’est le bon chemin
+import ItemDetails from "@pages/ItemDetails";
 import SearchBar from "./Search";
+import PencilIcon from "@components/atoms/Icons/PencilIcon";
 
 interface Props {
   deliverables: Deliverable[];
 
   onDelete: (id: number, name: string) => void;
+  onUpdate: (task: Task) => void;
 }
 
 export const TasksByDeliverable = ({
   deliverables,
-
   onDelete,
+  onUpdate,
 }: Props) => {
   const [searchFilter, setSearchFilter] = useState("");
 
@@ -37,7 +39,7 @@ export const TasksByDeliverable = ({
             {deliverable.tasks?.length ? (
               (() => {
                 const filteredTasks = deliverable.tasks.filter((task) =>
-                  task.name.toLowerCase().includes(searchFilter.toLowerCase()),
+                  task.name.toLowerCase().includes(searchFilter.toLowerCase())
                 );
 
                 return filteredTasks.length > 0 ? (
@@ -48,6 +50,9 @@ export const TasksByDeliverable = ({
                         className="bg-white roundedshadow-sm flex justify-between"
                       >
                         <aside className="flex gap-2">
+                          <button type="button" onClick={() => onUpdate(task)}>
+                            <PencilIcon className="w-3 h-3 fill-red" />
+                          </button>
                           <button
                             type="button"
                             onClick={() => onDelete(Number(task.id), task.name)}
@@ -70,7 +75,7 @@ export const TasksByDeliverable = ({
                       </li>
                     ))}
                   </ul>
-                ) : null; // Ne rien afficher si aucune tâche ne correspond dans ce deliverable
+                ) : null;
               })()
             ) : (
               <p className="text-gray-400">No tasks</p>

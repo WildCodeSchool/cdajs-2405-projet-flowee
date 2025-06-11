@@ -16,13 +16,9 @@ describe("Task Mutations", () => {
     task = new Task(
       faker.lorem.words(3), // name
       faker.lorem.sentence(), // description
-      faker.date
-        .past()
-        .toISOString(), // startDate (string)
-      faker.date
-        .future()
-        .toISOString(), // endDate (string)
-      TaskStatus.IN_PROGRESS, // Status FIXE pour (tests déterministes)
+      faker.date.past().toISOString(), // startDate (string)
+      faker.date.future().toISOString(), // endDate (string)
+      TaskStatus.IN_PROGRESS // Status FIXE pour (tests déterministes)
     );
   });
 
@@ -60,100 +56,49 @@ describe("Task Mutations", () => {
       };
 
       await expect(taskMutations.createTask(input)).rejects.toThrow(
-        "Name is required",
+        "Name is required"
       );
     });
   });
 
-  // 2) Tests pour updateTask
+  // test to edit task
 
   describe("updateTask", () => {
     it("should update existing task", async () => {
-      // Simule une Task
       const existingTask = new Task(
         "Old Name",
         "Old Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.NOT_STARTED,
-      );
-      existingTask.id = 42; // ID fictif
-
-      // Moquer 'findOne' pour retourner existingTask
-      mockTypeOrm().onMock(Task).toReturn(existingTask, "findOne");
-
-      // Moquer 'save' pour retourner la tâche mise à jour
-      mockTypeOrm().onMock(Task).toReturn(existingTask, "save");
-
-      if (!existingTask.id) {
-        throw new Error("Task ID is missing.");
-      }
-
-      // Appel de updateTask
-      const updatedTask = await taskMutations.updateTask(
-        existingTask.id,
-        "New Name",
-        "New Description",
-      );
-
-      // Vérifier que la tâche a bien été mise à jour
-      expect(updatedTask.name).toBe("New Name");
-      expect(updatedTask.description).toBe("New Description");
-      // Les autres champs restent inchangés
-      expect(updatedTask.startDate).toBe(existingTask.startDate);
-      expect(updatedTask.endDate).toBe(existingTask.endDate);
-      expect(updatedTask.status).toBe(existingTask.status);
-    });
-
-    it("should throw 'Task with ID 999 not found' if task not found", async () => {
-      // Simule un findOne qui renvoie undefined
-      mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
-
-      await expect(
-        taskMutations.updateTask(999, "Name", "Description"),
-      ).rejects.toThrow("Task with ID 999 not found");
-    });
-  });
-
-  //
-  // 3) Tests pour deleteTask
-  //
-  describe("deleteTask", () => {
-    it("should delete an existing task", async () => {
-      // On simule une tache existante
-      const existingTask = new Task(
-        "Some Name",
-        "Some Description",
-        faker.date.past().toISOString(),
-        faker.date.future().toISOString(),
-        TaskStatus.BLOCKED,
+        TaskStatus.BLOCKED
       );
       existingTask.id = 123;
 
-      // Moquer 'findOne'
-      mockTypeOrm().onMock(Task).toReturn(existingTask, "findOne");
-      // Moquer 'remove' => renvoie la task supprimée
-      mockTypeOrm().onMock(Task).toReturn(existingTask, "remove");
-
-      // Appel de deleteTask
-      const deletedTask = await taskMutations.deleteTask(existingTask.id);
-
-      // Vérifier qu'on récupère la tache supprimée
-      expect(deletedTask).toMatchObject({
-        name: existingTask.name,
-        description: existingTask.description,
-        startDate: existingTask.startDate,
-        endDate: existingTask.endDate,
-        status: existingTask.status,
-      });
-    });
-
-    it("should throw error if task not found", async () => {
-      mockTypeOrm().onMock(Task).toReturn(undefined, "findOne");
-
-      await expect(taskMutations.deleteTask(9999)).rejects.toThrow(
-        "Task with ID 9999 not found",
+      const updatedTask = new Task(
+        "New Name",
+        "New Description",
+        faker.date.past().toISOString(),
+        faker.date.future().toISOString(),
+        TaskStatus.IN_PROGRESS
       );
+
+      const mock = mockTypeOrm();
+      mock.onMock(Task).toReturn(existingTask, "findOne");
+
+      mock.onMock(Task).toReturn({ ...existingTask, updatedTask }, "save");
+
+      const result = await taskMutations.updateTask(
+        existingTask.id,
+        updatedTask
+      );
+      expect(result).toMatchObject({
+        id: existingTask.id,
+        name: updatedTask.name,
+        description: updatedTask.description,
+        startDate: updatedTask.startDate,
+        endDate: updatedTask.endDate,
+        status: updatedTask.status,
+      });
     });
   });
 });

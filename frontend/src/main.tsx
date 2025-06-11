@@ -26,7 +26,7 @@ import { RequireAdmin } from "./layout/RequireAdmin";
 import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
-import ProjectDetails from "@pages/ProjectDetails";
+import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
