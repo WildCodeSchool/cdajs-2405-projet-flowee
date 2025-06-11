@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Task } from "../entities/Task";
-import { TaskQueries } from "../graphql-resolvers/TaskQueries";
+import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Task } from "../../entities/Task";
+import { TaskStatus } from "../../enums/TaskStatus";
+import { TaskQueries } from "../../graphql-resolvers/TaskQueries";
 
 describe("Task Queries", () => {
   let taskQueries: TaskQueries;
@@ -21,12 +22,14 @@ describe("Task Queries", () => {
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
           faker.date.future().toISOString(),
+          TaskStatus.IN_PROGRESS,
         ),
         new Task(
           faker.lorem.words(2),
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
           faker.date.future().toISOString(),
+          TaskStatus.IN_PROGRESS,
         ),
       ];
 
@@ -59,6 +62,7 @@ describe("Task Queries", () => {
         "Some description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
+        TaskStatus.IN_PROGRESS,
       );
       existingTask.id = 42;
 

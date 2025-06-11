@@ -23,6 +23,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./src",
+    "types": ["vitest"],
     "paths": {
       "@components/*": ["components/*"],
       "@atoms/*": ["components/atoms/*"],
