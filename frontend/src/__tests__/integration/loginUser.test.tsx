@@ -4,7 +4,15 @@ import LoginForm from "@organisms/LoginForm";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { beforeAll, afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  beforeAll,
+  afterAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 // Suppression des avertissements React Router
 const originalConsoleWarn = console.warn;

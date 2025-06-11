@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 
 export const useProjectHandlers = (
   refetch: () => void,
-  closeModal: () => void
+  closeModal: () => void,
 ) => {
   const [createDeliverable] = useCreateDeliverableMutation();
   const [createTask] = useCreateTaskMutation();
@@ -58,7 +58,7 @@ export const useProjectHandlers = (
         closeModal();
       }
     },
-    [createDeliverable, createTask, refetch, closeModal]
+    [createDeliverable, createTask, refetch, closeModal],
   );
 
   const handleEdit = useCallback(
@@ -101,7 +101,7 @@ export const useProjectHandlers = (
         closeModal();
       }
     },
-    [updateDeliverable, updateTask, refetch, closeModal]
+    [updateDeliverable, updateTask, refetch, closeModal],
   );
 
   const handleDelete = useCallback(
@@ -113,7 +113,7 @@ export const useProjectHandlers = (
         toast.success(
           `${
             entity.charAt(0).toUpperCase() + entity.slice(1)
-          } deleted successfully!`
+          } deleted successfully!`,
         );
         refetch();
       } catch (err) {
@@ -121,7 +121,7 @@ export const useProjectHandlers = (
         toast.error(`Could not delete ${entity}. Please try again later.`);
       }
     },
-    [deleteDeliverable, deleteTask, refetch]
+    [deleteDeliverable, deleteTask, refetch],
   );
 
   return { handleCreate, handleEdit, handleDelete };

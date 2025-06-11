@@ -61,3 +61,7 @@ body {
 #root {
   @apply flex-1 flex flex-col;
 }
+
+.bg-theme-progress-base {
+  background-color: "var(--base)";
+}

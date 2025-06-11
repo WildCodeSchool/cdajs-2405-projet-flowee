@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useSetPasswordFromActivationMutation } from "@generated/graphql-types";
 import LogoClientIcon from "@components/atoms/Icons/LogoClient";
+import { toast } from "react-toastify";
 
 type JWTContent = {
   accountId: string;
@@ -35,19 +36,20 @@ export function SetPasswordPage() {
     if (token) {
       const decoded = jwtDecode<JWTContent>(token);
       if (decoded.purpose !== "activation") {
-        alert("Token invalide");
+        toast.error("Token invalide");
         navigate("/activation-error");
         return;
       }
       setClientName(decoded.clientName || "");
       setEmail(decoded.email);
+      toast.info("coucou");
     }
   }, [navigate]);
 
   const onSubmit = async (data: FormValues) => {
     const token = sessionStorage.getItem("activationJwt");
     if (!token) {
-      alert("Session expirée ou invalide.");
+      toast.warn("Session expirée ou invalide.");
       return;
     }
 
@@ -57,7 +59,7 @@ export function SetPasswordPage() {
       navigate("/login");
     } catch (err) {
       console.error(err);
-      alert("Erreur : mot de passe non défini");
+      toast.warn("Erreur : mot de passe non défini");
     }
   };
 
