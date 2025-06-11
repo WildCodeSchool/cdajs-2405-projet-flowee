@@ -7,11 +7,8 @@ import { Card } from "@organisms/Cards";
 import { NavLink } from "react-router-dom";
 import ArrowIcon from "@components/atoms/Icons/Arrow";
 import SignedInLayout from "@layout/SignedInLayout";
-
 import FilterIcon from "@components/atoms/Icons/FilterIcon";
-
 import { useAuth } from "@context/authContext";
-import Unauthorized from "@components/atoms/illustrations/Unauthorized";
 import UnauthorizedAccess from "./UnauthorizedAcess";
 
 export default function Projects() {
