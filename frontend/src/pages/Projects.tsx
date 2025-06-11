@@ -38,8 +38,15 @@ export default function Projects() {
     { label: "Blocked", value: ProjectStatus.Blocked },
     { label: "Pending", value: ProjectStatus.Pending },
   ];
+  const sortOptions: FilterOption<SortOrder>[] = [
+    { label: "None", value: "NONE" },
+    { label: "A-Z", value: "AZ" },
+    { label: "Z-A", value: "ZA" },
+    { label: "Closest deadline", value: "DATE_ASC" },
+    { label: "Furthest deadline", value: "DATE_DESC" },
+  ];
 
-  const [sort, setSort] = useState<SortOrder>("NONE");
+  const [sort, setSort] = useState<SortOrder>("DATE_ASC");
   const [status, setStatus] = useState<ProjectStatus | "All">("All");
   const projects = data?.getProjectsByUser ?? [];
   const filteredProjects = projects
@@ -56,6 +63,24 @@ export default function Projects() {
     .sort((a, b) => {
       if (sort === "AZ") return a.projectName.localeCompare(b.projectName);
       if (sort === "ZA") return b.projectName.localeCompare(a.projectName);
+      if (sort === "DATE_ASC") {
+        const dateA = a.endDate
+          ? new Date(a.endDate).getTime()
+          : Number.POSITIVE_INFINITY;
+        const dateB = b.endDate
+          ? new Date(b.endDate).getTime()
+          : Number.POSITIVE_INFINITY;
+        return dateA - dateB;
+      }
+      if (sort === "DATE_DESC") {
+        const dateA = a.endDate
+          ? new Date(a.endDate).getTime()
+          : Number.NEGATIVE_INFINITY;
+        const dateB = b.endDate
+          ? new Date(b.endDate).getTime()
+          : Number.NEGATIVE_INFINITY;
+        return dateB - dateA;
+      }
       return 0;
     });
 
@@ -82,6 +107,7 @@ export default function Projects() {
         filterValue={status}
         onFilterChange={setStatus}
         filterOptions={projectFilterOptions}
+        sortOptions={sortOptions}
       />
       <SearchBar setSearchFilter={setSearchFilter} />
       <div className="flex flex-col md:flex-row h-screen flex-wrap">

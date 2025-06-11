@@ -9,10 +9,11 @@ import {
 import type { ClientUI } from "@interfaces/client.types";
 import { useEffect, useState } from "react";
 import CardsClient from "./CardsClient";
+import type { SortOrder } from "@components/molecules/Filters";
 
 interface DisplayClientsProps {
   searchFilter: string;
-  sortOrder: "NONE" | "AZ" | "ZA";
+  sortOrder: SortOrder;
   statusFilter: ClientStatus | "All";
 }
 

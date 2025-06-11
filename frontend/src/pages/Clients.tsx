@@ -21,6 +21,11 @@ export default function Clients() {
     { label: "Archived", value: ClientStatus.Archived },
     { label: "Inactive", value: ClientStatus.Inactive },
   ];
+  const sortOptions: FilterOption<SortOrder>[] = [
+    { label: "None", value: "NONE" },
+    { label: "A-Z", value: "AZ" },
+    { label: "Z-A", value: "ZA" },
+  ];
 
   return (
     <SignedInLayout>
@@ -42,6 +47,7 @@ export default function Clients() {
         filterValue={status}
         onFilterChange={setStatus}
         filterOptions={clientFilterOptions}
+        sortOptions={sortOptions}
       />
       <SearchBar setSearchFilter={setSearchFilter} />
       <DisplayClientsCard
