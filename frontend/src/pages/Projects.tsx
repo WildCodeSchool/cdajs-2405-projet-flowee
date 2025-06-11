@@ -11,6 +11,8 @@ import SignedInLayout from "@layout/SignedInLayout";
 import FilterIcon from "@components/atoms/Icons/FilterIcon";
 
 import { useAuth } from "@context/authContext";
+import Unauthorized from "@components/atoms/illustrations/Unauthorized";
+import UnauthorizedAccess from "./UnauthorizedAcess";
 
 export default function Projects() {
   const [searchFilter, setSearchFilter] = useState("");
@@ -22,7 +24,7 @@ export default function Projects() {
 
   // ⚡ Contrôle du rôle utilisateur (instantané, sans attendre la query)
   if (!authUserData?.role || !allowedRoles.includes(authUserData.role)) {
-    return <ErrorBanner message="Unauthorized user!" />;
+    return <UnauthorizedAccess />;
   }
 
   if (loading) return <p>Loading...</p>;
