@@ -27,6 +27,9 @@ import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
 import ProjectDetails from "@pages/ProjectDetails";
+import LegalNotice from "@pages/LegalNotice";
+import TermsAndConditions from "@pages/TermsAndConditions";
+import PrivacyPolicy from "@pages/PrivacyPolicy";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -115,6 +118,19 @@ const router = createBrowserRouter([
       {
         path: "/activate",
         element: <ActivateAccountPage />,
+      },
+      {
+        path: "/terms-and-conditions",
+
+        element: <TermsAndConditions />,
+      },
+      {
+        path: "/legal-notice",
+        element: <LegalNotice />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
       {
         path: "*",

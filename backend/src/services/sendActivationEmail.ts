@@ -14,20 +14,51 @@ export async function sendActivationEmail(
 
     await api.sendTransacEmail({
       to: [{ email: to, name }],
-      subject: "Active ton compte Flowee ✨",
+      subject: "Activate your Flowee account ✨",
       htmlContent: `
-        <p>Bonjour ${name},</p>
-        <p>Bienvenue sur Flowee ! Clique ci-dessous pour activer ton compte :</p>
-        <a href="https://staging.052024-jaune-3.wns.wilders.dev/activate?token=${token}">Activer mon compte</a>
-        <p>Ce lien est valable pendant 24h.</p>
-      `,
+    <div style="font-family: Arial, sans-serif; color: #222;">
+      <h2 style="color: #D16565;">Welcome to Flowee, ${name}!</h2>
+      <p>Thank you for signing up 🥳</p>
+      <p>
+        To complete your account creation, please click the button below:
+      </p>
+      <p style="text-align: center; margin: 32px 0;">
+        <a
+          href="https://staging.052024-jaune-3.wns.wilders.dev/activate?token=${token}"
+          style="
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: #D16565;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1em;
+          "
+        >Activate my account</a>
+      </p>
+      <p style="font-size: 0.98em; color: #555;">
+        This link is valid for 24 hours.
+      </p>
+      <hr style="border: none; border-top: 1px solid #f2f2f2; margin: 32px 0;" />
+      <p style="font-size: 0.92em; color: #888; text-align: center;">
+        By creating an account, you accept our
+        <a href="https://staging.052024-jaune-3.wns.wilders.dev/terms-and-conditions" style="color: #E19251;">Terms of Use</a>
+        and can consult our
+        <a href="https://staging.052024-jaune-3.wns.wilders.dev/legal-notice" style="color: #E19251;">Legal Notice</a>.
+      </p>
+      <p style="font-size: 0.86em; color: #aaa; text-align: center; margin-top: 16px;">
+        Flowee – Project management app.<br/>
+        For any questions, contact us at: <a href="mailto:appflowee@gmail.com" style="color: #D16565;">appflowee@gmail.com</a>
+      </p>
+    </div>
+  `,
       sender: {
         name: "Flowee",
         email: "appflowee@gmail.com",
       },
     });
   } catch (error) {
-    console.error("Erreur lors de l'envoi du mail d'activation :", error);
+    console.error("Unable to send the activation email :", error);
     throw error;
   }
 }

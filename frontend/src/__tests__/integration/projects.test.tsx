@@ -3,7 +3,15 @@ import { useAuth } from "@context/authContext";
 import { GetProjectsByUserDocument } from "@generated/graphql-types";
 import { render, screen, waitFor } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
-import { beforeAll, afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  beforeAll,
+  afterAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import Projects from "../../pages/Projects";
 
 // Suppression des avertissements React Router
