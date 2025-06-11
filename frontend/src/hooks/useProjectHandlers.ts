@@ -10,6 +10,7 @@ import {
 } from "@generated/graphql-types";
 import type { FormData } from "@interfaces/FormData";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 export const useProjectHandlers = (
   refetch: () => void,
@@ -109,10 +110,15 @@ export const useProjectHandlers = (
         await (entity === "deliverable"
           ? deleteDeliverable({ variables: { id } })
           : deleteTask({ variables: { id } }));
-
+        toast.success(
+          `${
+            entity.charAt(0).toUpperCase() + entity.slice(1)
+          } deleted successfully!`
+        );
         refetch();
       } catch (err) {
         console.error("Delete error:", err);
+        toast.error(`Could not delete ${entity}. Please try again later.`);
       }
     },
     [deleteDeliverable, deleteTask, refetch]

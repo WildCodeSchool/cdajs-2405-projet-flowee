@@ -4,6 +4,7 @@ import { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
 import { useEditForm } from "../../hooks/useEditForm";
 import type { FormData } from "@interfaces/FormData";
 import type { InitialValues } from "@interfaces/type";
+import { toast } from "react-toastify";
 
 export type EditModalProps = {
   mode: "deliverable" | "task";
@@ -23,17 +24,18 @@ export default function EditModal({
   const { setMode, form, handleChange, isDeliverable } =
     useEditForm(initialValues);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) return;
 
     if (mode === "deliverable") {
       if (!initialValues?.projectId) {
         console.error("Missing projectId for deliverable editing");
+        toast.error("Could not edit deliverable.");
         return;
       }
 
-      onSubmit({
+      await onSubmit({
         type: "deliverable",
         id: initialValues?.id ?? 0,
         name: form.name,
@@ -43,13 +45,15 @@ export default function EditModal({
         status: form.status as DeliverableStatus,
         projectName: initialValues.projectName,
       });
+      toast.success("Deliverable updated successfully!");
     } else {
       if (!initialValues?.deliverableId) {
         console.error("Missing deliverableId for task editing");
+        toast.error("Could not edit task.");
         return;
       }
 
-      onSubmit({
+      await onSubmit({
         type: "task",
         id: initialValues?.id ?? 0,
         name: form.name,
@@ -58,6 +62,7 @@ export default function EditModal({
         deliverableId: initialValues.deliverableId,
         status: form.status as TaskStatus,
       });
+      toast.success("Task updated successfully!");
     }
 
     onClose();

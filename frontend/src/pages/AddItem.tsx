@@ -3,6 +3,7 @@ import { Textarea } from "@components/atoms/TextArea";
 import { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
 import { useState } from "react";
 import type { ModalCreateItemProps } from "@interfaces/CreateItemProps";
+import { toast } from "react-toastify";
 
 export default function AddItem({
   mode,
@@ -20,14 +21,14 @@ export default function AddItem({
   const [deadline, setDeadline] = useState("");
   const [perimeter, setPerimeter] = useState("");
   const [status, setStatus] = useState(
-    isDeliverable ? DeliverableStatus.NotStarted : TaskStatus.NotStarted,
+    isDeliverable ? DeliverableStatus.NotStarted : TaskStatus.NotStarted
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isDeliverable) {
-      onSubmit({
+      await onSubmit({
         type: "deliverable",
         name,
         deadline,
@@ -35,8 +36,9 @@ export default function AddItem({
         projectId: Number(project),
         status: status as DeliverableStatus,
       });
+      toast.success("Deliverable created successfully!");
     } else {
-      onSubmit({
+      await onSubmit({
         type: "task",
         name,
         deadline,
@@ -44,6 +46,7 @@ export default function AddItem({
         deliverableId: Number(deliverableId),
         status: status as TaskStatus,
       });
+      toast.success("Task created successfully!");
     }
 
     onClose();
@@ -137,13 +140,13 @@ export default function AddItem({
                 setStatus(
                   isDeliverable
                     ? (e.target.value as DeliverableStatus)
-                    : (e.target.value as TaskStatus),
+                    : (e.target.value as TaskStatus)
                 )
               }
               className="w-full mt-1 py-2 px-4 bg-theme-lightGray rounded-md"
             >
               {Object.entries(
-                isDeliverable ? DeliverableStatus : TaskStatus,
+                isDeliverable ? DeliverableStatus : TaskStatus
               ).map(([label, value]) => (
                 <option key={value} value={value}>
                   {label.replace(/([A-Z])/g, " $1").trim()}
