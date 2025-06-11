@@ -1,3 +1,4 @@
+import Unauthorized from "@components/atoms/illustrations/Unauthorized";
 import { useAuth } from "@context/authContext";
 import type { ReactNode } from "react";
 
@@ -9,7 +10,7 @@ export const RequireAdmin = ({ children }: Props) => {
   const { authUserData } = useAuth();
 
   if (!authUserData || authUserData.role !== "ADMIN") {
-    return <h1>Unauthorized</h1>;
+    return <Unauthorized className="w-full h-screen" />;
   }
 
   return <>{children}</>;
