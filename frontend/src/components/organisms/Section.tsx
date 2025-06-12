@@ -76,10 +76,22 @@ export const Section: React.FC<SectionProps> = ({
       items = isAdmin
         ? projects.flatMap(
             (project) =>
-              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? [],
+              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? []
           )
         : [];
       break;
+  }
+  if (searchFilter.trim() !== "") {
+    const lowerSearch = searchFilter.trim().toLowerCase();
+    items = items.filter((item) => {
+      if ("projectName" in item) {
+        return item.projectName.toLowerCase().includes(lowerSearch);
+      }
+      if ("name" in item) {
+        return item.name.toLowerCase().includes(lowerSearch);
+      }
+      return false;
+    });
   }
 
   return (
