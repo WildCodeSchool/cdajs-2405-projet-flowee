@@ -58,18 +58,18 @@ export default function DisplayClientsCard({
   // Status filter
   if (statusFilter !== "All") {
     filteredClients = filteredClients.filter(
-      (client) => client.status === statusFilter
+      (client) => client.status === statusFilter,
     );
   }
 
   // Sorter by name
   if (sortOrder === "AZ") {
     filteredClients.sort((a, b) =>
-      (a.clientName ?? "").localeCompare(b.clientName ?? "")
+      (a.clientName ?? "").localeCompare(b.clientName ?? ""),
     );
   } else if (sortOrder === "ZA") {
     filteredClients.sort((a, b) =>
-      (b.clientName ?? "").localeCompare(a.clientName ?? "")
+      (b.clientName ?? "").localeCompare(a.clientName ?? ""),
     );
   }
 
@@ -85,7 +85,7 @@ export default function DisplayClientsCard({
         .catch((err: unknown) => {
           console.error("Delete error:", err);
           setOperationError(
-            "Deletion of the client failed. This client could be associated with existing projects."
+            "Deletion of the client failed. This client could be associated with existing projects.",
           );
         });
     }

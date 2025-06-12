@@ -33,7 +33,7 @@ export default function Tracker() {
   };
   const getLabel = (
     count: number,
-    labels: { full: string; singular: string; short: string }
+    labels: { full: string; singular: string; short: string },
   ) => {
     if (count <= 1) {
       return {
@@ -90,6 +90,7 @@ export default function Tracker() {
             key={labelItem.short}
             className="flex flex-row items-center gap-5"
             onClick={item.onClick}
+            // biome-ignore lint/a11y/useSemanticElements: <explanation>
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {

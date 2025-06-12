@@ -58,10 +58,7 @@ export default function ProjectModal({
   };
 
   const handleDelete = () => {
-    if (confirm("Es-tu sûr(e) de vouloir supprimer ce projet ?")) {
-      onDelete(project.id);
-      toast.success("Projet supprimé !");
-    }
+    onDelete(project.id);
   };
 
   if (!show) return null;

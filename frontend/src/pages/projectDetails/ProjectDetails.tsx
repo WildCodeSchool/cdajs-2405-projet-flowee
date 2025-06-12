@@ -17,6 +17,7 @@ import { useProjectHandlers } from "../../hooks/useProjectHandlers";
 import type { InitialValues } from "@interfaces/type";
 import ArrowIcon from "@components/atoms/Icons/Arrow";
 import ProjectModal from "@components/molecules/ProjectModal";
+import { toast } from "react-toastify";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -31,7 +32,6 @@ const ProjectDetails = () => {
       console.error("Error fetching project details:", error);
     },
   });
-  console.info("Project data:", data);
 
   const handleEditProject = async (newName: string) => {
     console.info("Editing project with new name:", newName);
@@ -65,6 +65,7 @@ const ProjectDetails = () => {
     type: "edit" | "delete";
     name: string;
   }>();
+  const deleteProjectModal = useModalState<{ id: number; name: string }>();
 
   const { handleCreate, handleEdit, handleDelete } = useProjectHandlers(
     refetch,
@@ -77,7 +78,7 @@ const ProjectDetails = () => {
   );
 
   const project = data?.getProjectById;
-  console.info("Project details:", project);
+
   const deliverables = project?.deliverables ?? [];
 
   const availableProjects = getProjectOptions(project).map((p) => ({
@@ -168,9 +169,31 @@ const ProjectDetails = () => {
           handleEditProject(updatedProject.name);
         }}
         onDelete={(id) => {
-          handleDeleteProject(id);
+          deleteProjectModal.openModal({
+            id,
+            name: project?.projectName ?? "",
+          });
         }}
       />
+
+      <DeleteModal
+        open={deleteProjectModal.open}
+        entityType="project"
+        itemName={deleteProjectModal.data?.name ?? ""}
+        onConfirm={() => {
+          if (deleteProjectModal.data?.id) {
+            handleDeleteProject(deleteProjectModal.data.id);
+            toast.success("Project deleted successfully!");
+            deleteProjectModal.closeModal();
+            navigate("/projects");
+          }
+        }}
+        onCancel={() => {
+          deleteProjectModal.closeModal();
+          projectModal.closeModal();
+        }}
+      />
+
       <Outlet />
     </SignedInLayout>
   );

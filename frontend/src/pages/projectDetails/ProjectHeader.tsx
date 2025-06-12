@@ -22,7 +22,6 @@ export default function ProjectHeader({
   onDeleteProject,
   onEditProject,
 }: ProjectHeaderProps) {
-  console.log(status);
   return (
     <>
       <section className="flex justify-between gap-4">
