@@ -33,6 +33,7 @@ export default function ProjectModal({
   const [endDate, setEndDate] = useState(project.endDate ?? "");
   const [description, setDescription] = useState(project.description ?? "");
 
+  console.info("name : ", name);
   useEffect(() => {
     setName(project.name);
     setEndDate(project.endDate ?? "");
@@ -52,9 +53,6 @@ export default function ProjectModal({
       endDate: endDate || undefined,
       description: description.trim(),
     });
-
-    toast.success("Projet modifié !");
-    onClose();
   };
 
   const handleDelete = () => {
@@ -107,10 +105,7 @@ export default function ProjectModal({
           </button>
         </form>
 
-        <div className="border-t pt-4 mt-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">
-            Supprimer ce projet
-          </h3>
+        <div className=" pt-4 mt-6">
           <button
             type="button"
             onClick={handleDelete}

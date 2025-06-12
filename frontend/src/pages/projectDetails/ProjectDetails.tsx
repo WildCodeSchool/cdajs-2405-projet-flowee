@@ -18,12 +18,14 @@ import type { InitialValues } from "@interfaces/type";
 import ArrowIcon from "@components/atoms/Icons/Arrow";
 import ProjectModal from "@components/molecules/ProjectModal";
 import { toast } from "react-toastify";
+import { useUpdateProjectMutation } from "@generated/graphql-types";
+import type { UpdateProjectInput } from "@generated/graphql-types";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const id = parseIdFromSlug(slug);
-
+  console.info("project details :");
   const { data, refetch } = useGetProjectByIdQuery({
     skip: id === null,
     variables: { id: id ?? 0 },
@@ -32,15 +34,55 @@ const ProjectDetails = () => {
       console.error("Error fetching project details:", error);
     },
   });
+  const [updateProjectMutation] = useUpdateProjectMutation();
+  console.info("data : ", data);
 
-  const handleEditProject = async (newName: string) => {
-    console.info("Editing project with new name:", newName);
-    // if (!project) return;
-    // // mutation GraphQL ici
-    // await updateProjectMutation({
-    //   variables: { id: project.id, name: newName },
-    // });
-    // await refetch();
+  const handleEditProject = async (updatedProject: {
+    id: number;
+    name: string;
+    endDate: string;
+    description: string;
+  }) => {
+    if (!project) return;
+    console.info("Editing project with new name:", updatedProject);
+    const payload: UpdateProjectInput = {
+      id: String(updatedProject.id),
+    };
+
+    if (updatedProject.name !== project.projectName) {
+      payload.name = updatedProject.name;
+    }
+
+    if (updatedProject.description !== project.description) {
+      payload.description = updatedProject.description;
+    }
+
+    if (updatedProject.endDate !== project.endDate) {
+      payload.endDate = updatedProject.endDate;
+    }
+
+    if (
+      payload.name === undefined &&
+      payload.description === undefined &&
+      payload.endDate === undefined
+    ) {
+      toast.info("Aucune modification détectée.");
+      return;
+    }
+
+    try {
+      const result = await updateProjectMutation({
+        variables: { data: payload },
+      });
+      console.info("result", result);
+
+      toast.success("Projet mis à jour !");
+      await refetch();
+      projectModal.closeModal();
+    } catch (error) {
+      console.error("Erreur update :", error);
+      toast.error("Erreur lors de la mise à jour du projet.");
+    }
   };
 
   const handleDeleteProject = async (id: number) => {
@@ -166,7 +208,7 @@ const ProjectDetails = () => {
           description: project?.description ?? "",
         }}
         onEdit={(updatedProject) => {
-          handleEditProject(updatedProject.name);
+          handleEditProject(updatedProject);
         }}
         onDelete={(id) => {
           deleteProjectModal.openModal({

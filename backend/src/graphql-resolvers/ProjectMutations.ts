@@ -15,6 +15,7 @@ import { generateActivationToken } from "../utils/accesstoken";
 import { sendActivationEmail } from "../services/sendActivationEmail";
 import { invalidateCache } from "../utils/invalidatecache";
 import { ClientStatus } from "../enums/ClientStatus";
+import { UpdateProjectInput } from "../inputs/UpdateProjectInput";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -240,5 +241,28 @@ export class ProjectMutations {
     }
 
     return result.newproject;
+  }
+
+  @Mutation(() => Project)
+  async updateProject(
+    @Arg("data", () => UpdateProjectInput) data: UpdateProjectInput,
+  ): Promise<Project> {
+    const project = await dataSource.manager.findOne(Project, {
+      where: { id: data.id },
+    });
+    console.info("data dans back", data);
+    console.info("projet dans back ", project);
+    if (!project) {
+      throw new Error("Unable to find the project");
+    }
+    if (data.name !== undefined) {
+      project.projectName = data.name;
+    }
+    if (data.description !== undefined) {
+      project.description = data.description;
+    }
+    if (data.endDate !== undefined) project.endDate = data.endDate;
+    await dataSource.manager.save(project);
+    return project;
   }
 }

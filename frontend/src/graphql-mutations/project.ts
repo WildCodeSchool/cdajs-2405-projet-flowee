@@ -13,3 +13,14 @@ export const CREATE_PROJECT = gql`
     }
   }
 `;
+
+export const EDIT_PROJECT = gql`
+mutation UpdateProject($data: UpdateProjectInput!) {
+  updateProject(data: $data) {
+    id
+    projectName
+    description
+    endDate
+  }
+}
+`;
