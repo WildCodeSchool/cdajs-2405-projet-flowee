@@ -82,6 +82,13 @@ export default function ModalClient({
 
       <div className="relative z-50 bg-white p-6 rounded-l-md w-[400px] max-w-full h-full">
         <h2 className="text-xl font-medium mb-6">Edit Client</h2>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-6 font-semibold text-gray-500 hover:text-gray-700"
+        > 
+        x
+        </button>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
