@@ -21,7 +21,7 @@ function decodeContextData(token: string | null): Partial<AuthContextUserType> {
       lastname: tokenData.lastname,
     };
   } catch (e) {
-    console.error("Erreur lors du décodage du token :", e);
+    console.error("Error while decoding token :", e);
     return {};
   }
 }
@@ -42,22 +42,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const syncAuth = async () => {
       if (token) {
-        // login / token changé
+        // login / token changed
         localStorage.setItem("AUTH_TOKEN", token);
         setAuthUserData(decodeContextData(token));
         try {
-          await client.resetStore(); // re-fetch des queries actives
+          await client.resetStore(); // re-fetch active queries
         } catch (e) {
-          console.error("Erreur reset Apollo:", e);
+          console.error("Apollo reset error:", e);
         }
       } else {
-        // logout / token vidé
-        localStorage.removeItem("AUTH_TOKEN"); // ← suppression ici
-        setAuthUserData({}); // reset contexte
+        // logout / token emptied
+        localStorage.removeItem("AUTH_TOKEN"); // ← deleting here
+        setAuthUserData({}); // reset context
         try {
           await client.clearStore(); // purge cache Apollo
         } catch (e) {
-          console.error("Erreur clear Apollo:", e);
+          console.error("Error clear Apollo:", e);
         }
       }
     };
