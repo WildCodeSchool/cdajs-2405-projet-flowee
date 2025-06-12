@@ -72,13 +72,6 @@ export default function Projects() {
         typeof project.client?.clientName === "string" &&
         project.client.clientName.trim().toLowerCase().includes(lowerSearch);
 
-      console.log("✅ Match found for:", {
-        projectName: project.projectName,
-        clientName: project.client?.clientName,
-        inProjectName,
-        inClientName,
-      });
-
       if (lowerSearch !== "" && !inProjectName && !inClientName) {
         return false;
       }
