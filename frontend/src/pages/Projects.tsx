@@ -14,6 +14,7 @@ import UnauthorizedAccess from "./UnauthorizedAcess";
 import Filters from "@components/molecules/Filters";
 import type { SortOrder, FilterOption } from "@components/molecules/Filters";
 import { useLocation } from "react-router-dom";
+import { slugify } from "@utils/project";
 export default function Projects() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
@@ -148,7 +149,7 @@ export default function Projects() {
                 <NavLink
                   to={
                     "projectName" in project
-                      ? `/projects/${project.projectName?.toLowerCase()}-${
+                      ? `/projects/${slugify(project.projectName?.toLowerCase())}-${
                           project.id
                         }`
                       : "/error"

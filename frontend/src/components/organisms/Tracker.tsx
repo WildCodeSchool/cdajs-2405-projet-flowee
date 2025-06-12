@@ -4,6 +4,7 @@ import {
   useGetProjectsByUserQuery,
   useGetTrackerStatsQuery,
 } from "@generated/graphql-types";
+import { slugify } from "@utils/project";
 
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +27,9 @@ export default function Tracker() {
   const handleClickLateProjects = () => {
     if (lateProjectList.length === 1) {
       const project = lateProjectList[0];
-      navigate(`/projects/${project.projectName?.toLowerCase()}-${project.id}`);
+      navigate(
+        `/projects/${slugify(project.projectName?.toLowerCase())}-${project.id}`,
+      );
     } else {
       navigate("/projects?filter=late");
     }
