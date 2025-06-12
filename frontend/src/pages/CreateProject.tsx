@@ -60,8 +60,9 @@ export default function CreateProject() {
         <Navigation />
       </div>
       <div className="flex-1 lg:flex lg:flex-col gap-4 p-4 md:ml-4 pt-4 ">
-        <NavLink to="/projects" className="">
-          Back to projects <ArrowIcon />
+        <NavLink to="/projects" className="flex gap-4 items-center">
+          <ArrowIcon className="text-black rotate-180" />
+          <p className="underline">Back to projects</p>{" "}
         </NavLink>
         <h1 className="text-2xl font-bold mb-4">New project</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">

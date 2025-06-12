@@ -5,7 +5,7 @@ import type {
 } from "@interfaces/FormData";
 import { useGetProjectByIdQuery } from "@generated/graphql-types";
 import SignedInLayout from "@layout/SignedInLayout";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
 import DeleteModal from "@components/molecules/DeleteModal";
 import AddModal from "@components/molecules/AddModal";
 import ProjectHeader from "./ProjectHeader";
@@ -15,9 +15,13 @@ import EditModal from "@components/molecules/EditModal";
 import { useModalState } from "../../hooks/useModalState";
 import { useProjectHandlers } from "../../hooks/useProjectHandlers";
 import type { InitialValues } from "@interfaces/type";
+import ArrowIcon from "@components/atoms/Icons/Arrow";
+import ProjectModal from "@components/molecules/ProjectModal";
+import { toast } from "react-toastify";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const id = parseIdFromSlug(slug);
 
   const { data, refetch } = useGetProjectByIdQuery({
@@ -29,6 +33,25 @@ const ProjectDetails = () => {
     },
   });
 
+  const handleEditProject = async (newName: string) => {
+    console.info("Editing project with new name:", newName);
+    // if (!project) return;
+    // // mutation GraphQL ici
+    // await updateProjectMutation({
+    //   variables: { id: project.id, name: newName },
+    // });
+    // await refetch();
+  };
+
+  const handleDeleteProject = async (id: number) => {
+    console.info("Deleting project with ID:", id);
+    // if (!project) return;
+    // await deleteProjectMutation({
+    //   variables: { id: project.id },
+    // });
+    // navigate("/projects");
+  };
+
   // States and modals
 
   const addModal = useModalState<FormData>();
@@ -38,6 +61,11 @@ const ProjectDetails = () => {
     id: number;
     name: string;
   }>();
+  const projectModal = useModalState<{
+    type: "edit" | "delete";
+    name: string;
+  }>();
+  const deleteProjectModal = useModalState<{ id: number; name: string }>();
 
   const { handleCreate, handleEdit, handleDelete } = useProjectHandlers(
     refetch,
@@ -45,10 +73,12 @@ const ProjectDetails = () => {
       addModal.closeModal();
       editModal.closeModal();
       deleteModal.closeModal();
+      projectModal.closeModal();
     },
   );
 
   const project = data?.getProjectById;
+
   const deliverables = project?.deliverables ?? [];
 
   const availableProjects = getProjectOptions(project).map((p) => ({
@@ -60,13 +90,28 @@ const ProjectDetails = () => {
 
   return (
     <SignedInLayout>
-      <NavLink to={"/projects"}>Back to projects</NavLink>
+      <NavLink to="/projects" className="flex gap-4 items-center">
+        <ArrowIcon className="text-black rotate-180" />
+        <p className="underline">Back to projects</p>{" "}
+      </NavLink>
       <ProjectHeader
         name={project?.projectName ?? ""}
         endDate={project?.endDate ?? ""}
         clientName={project?.client.clientName ?? ""}
         description={project?.description ?? ""}
         status={project?.status ?? "NOT_STARTED"}
+        onEditProject={() =>
+          projectModal.openModal({
+            type: "edit",
+            name: project?.projectName ?? "",
+          })
+        }
+        onDeleteProject={() =>
+          projectModal.openModal({
+            type: "delete",
+            name: project?.projectName ?? "",
+          })
+        }
       />
       {project && (
         <ProjectSections
@@ -111,6 +156,44 @@ const ProjectDetails = () => {
         onSubmit={handleEdit}
         initialValues={editModal.data as InitialValues}
       />
+      <ProjectModal
+        show={projectModal.open}
+        onClose={projectModal.closeModal}
+        project={{
+          id: Number(project?.id),
+          name: project?.projectName ?? "",
+          endDate: project?.endDate ?? "",
+          description: project?.description ?? "",
+        }}
+        onEdit={(updatedProject) => {
+          handleEditProject(updatedProject.name);
+        }}
+        onDelete={(id) => {
+          deleteProjectModal.openModal({
+            id,
+            name: project?.projectName ?? "",
+          });
+        }}
+      />
+
+      <DeleteModal
+        open={deleteProjectModal.open}
+        entityType="project"
+        itemName={deleteProjectModal.data?.name ?? ""}
+        onConfirm={() => {
+          if (deleteProjectModal.data?.id) {
+            handleDeleteProject(deleteProjectModal.data.id);
+            toast.success("Project deleted successfully!");
+            deleteProjectModal.closeModal();
+            navigate("/projects");
+          }
+        }}
+        onCancel={() => {
+          deleteProjectModal.closeModal();
+          projectModal.closeModal();
+        }}
+      />
+
       <Outlet />
     </SignedInLayout>
   );

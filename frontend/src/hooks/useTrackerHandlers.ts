@@ -3,7 +3,7 @@ import type { useNavigate } from "react-router-dom";
 
 export const handleClickLateProjects = (
   lateList: Project[],
-  navigate: ReturnType<typeof useNavigate>
+  navigate: ReturnType<typeof useNavigate>,
 ) => {
   if (lateList.length === 1) {
     const project = lateList[0];

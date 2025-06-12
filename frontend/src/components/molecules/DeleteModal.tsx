@@ -1,6 +1,6 @@
 type DeleteModalProps = {
   open: boolean;
-  entityType: "task" | "deliverable";
+  entityType: "task" | "deliverable" | "project";
   itemName: string;
   onCancel: () => void;
   onConfirm: () => void;
@@ -12,7 +12,6 @@ export default function DeleteModal({
   entityType,
   itemName,
   onCancel,
-
   onConfirm,
 }: DeleteModalProps) {
   if (!open) return null;

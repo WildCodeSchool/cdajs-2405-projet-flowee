@@ -150,7 +150,7 @@ export default function Projects() {
                   }
                   className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight "
                 >
-                  <ArrowIcon />
+                  <ArrowIcon className="text-white" />
                 </NavLink>
               </section>
             </Card>

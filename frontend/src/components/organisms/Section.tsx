@@ -127,7 +127,7 @@ export const Section: React.FC<SectionProps> = ({
                     to={getItemPath(item)}
                     className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight"
                   >
-                    <ArrowIcon />
+                    <ArrowIcon className="text-white" />
                   </NavLink>
                 ) : (
                   <button
@@ -135,7 +135,7 @@ export const Section: React.FC<SectionProps> = ({
                     onClick={handleOpen}
                     className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight"
                   >
-                    <ArrowIcon />
+                    <ArrowIcon className="text-white" />
                   </button>
                 )}
               </section>
