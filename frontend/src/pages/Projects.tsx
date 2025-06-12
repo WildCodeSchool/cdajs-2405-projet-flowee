@@ -64,10 +64,15 @@ export default function Projects() {
         }
       }
       if (status !== "All" && project.status !== status) return false;
-      if (
-        searchFilter.trim() !== "" &&
-        !project.projectName.toLowerCase().includes(searchFilter.toLowerCase())
-      ) {
+      const lowerSearch = searchFilter.trim().toLowerCase();
+      const inProjectName = project.projectName
+        .toLowerCase()
+        .includes(lowerSearch);
+      const inClientName =
+        typeof project.client?.clientName === "string" &&
+        project.client.clientName.trim().toLowerCase().includes(lowerSearch);
+
+      if (lowerSearch !== "" && !inProjectName && !inClientName) {
         return false;
       }
       return true;
@@ -122,7 +127,7 @@ export default function Projects() {
         sortOptions={sortOptions}
       />
       <SearchBar setSearchFilter={setSearchFilter} />
-      <div className="flex flex-col md:flex-row min-h-screen flex-wrap">
+      <div className="flex flex-col md:flex-row  ">
         <DisplayCards
           items={filteredProjects}
           loading={loading}
