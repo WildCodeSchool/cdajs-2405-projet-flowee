@@ -8,6 +8,7 @@ import { useState } from "react";
 import PasswordModal from "@molecules/PasswordModal";
 
 export default function SettingsClient() {
+  console.info("coucou settings client");
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const { data, loading, error } = useMeQuery();
   const {
