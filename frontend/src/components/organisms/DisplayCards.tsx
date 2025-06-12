@@ -29,13 +29,13 @@ export default function DisplayCards({
   };
 
   const filtered = items.filter((item) =>
-    getItemTitle(item).toLowerCase().includes(searchFilter.toLowerCase()),
+    getItemTitle(item).toLowerCase().includes(searchFilter.toLowerCase())
   );
 
   const displayedItems = filtered.slice(0, limit);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="flex flex-col md:flex-row gap-4 flex-wrap">
       {displayedItems.map((item) => renderItem(item))}
     </div>
   );
