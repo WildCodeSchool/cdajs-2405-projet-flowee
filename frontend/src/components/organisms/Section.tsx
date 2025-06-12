@@ -10,6 +10,7 @@ import { useRoleTheme } from "@context/roleThemeContext";
 import ArrowIcon from "@icons/Arrow";
 import { NavLink } from "react-router-dom";
 import ItemDetails from "@pages/ItemDetails";
+import { slugify } from "@utils/project";
 export interface SectionProps {
   title: string;
   variant: CardVariant;
@@ -58,7 +59,7 @@ export const Section: React.FC<SectionProps> = ({
 
   function getItemPath(item: Project | Deliverable | Task): string {
     if (item.__typename === "Project") {
-      return `/projects/${item.projectName?.toLowerCase()}-${item.id}`;
+      return `/projects/${slugify(item.projectName)}-${item.id}`;
     }
 
     return "/";
@@ -76,7 +77,7 @@ export const Section: React.FC<SectionProps> = ({
       items = isAdmin
         ? projects.flatMap(
             (project) =>
-              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? []
+              project.deliverables?.flatMap((d) => d.tasks ?? []) ?? [],
           )
         : [];
       break;

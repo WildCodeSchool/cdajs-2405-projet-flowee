@@ -86,8 +86,8 @@ export default function ModalClient({
           type="button"
           onClick={onClose}
           className="absolute top-3 right-6 font-semibold text-gray-500 hover:text-gray-700"
-        > 
-        x
+        >
+          x
         </button>
 
         <form onSubmit={handleSubmit} className="space-y-4">
