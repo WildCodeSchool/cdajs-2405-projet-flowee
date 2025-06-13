@@ -27,6 +27,9 @@ import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
 import ProjectDetails from "@pages/projectDetails/ProjectDetails";
+import LegalNotice from "@pages/LegalNotice";
+import TermsAndConditions from "@pages/TermsAndConditions";
+import PrivacyPolicy from "@pages/PrivacyPolicy";
 import NewAccount from "@components/organisms/NewAccount";
 
 const httpLink = new HttpLink({
@@ -116,6 +119,19 @@ const router = createBrowserRouter([
       {
         path: "/activate",
         element: <ActivateAccountPage />,
+      },
+      {
+        path: "/terms-and-conditions",
+
+        element: <TermsAndConditions />,
+      },
+      {
+        path: "/legal-notice",
+        element: <LegalNotice />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
       {
         path: "/newaccount",
