@@ -58,13 +58,13 @@ function renderWithMocks(mocks: MockedResponse[] = []) {
       { path: "/", element: <CreateProject /> },
       { path: "/dashboard", element: <div>Dashboard Page</div> },
     ],
-    routerConfig
+    routerConfig,
   );
 
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <RouterProvider router={router} />
-    </MockedProvider>
+    </MockedProvider>,
   );
 }
 
@@ -123,28 +123,28 @@ describe("Project creation", () => {
     // Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i })
+      screen.getByRole("button", { name: /Create the project/i }),
     );
 
     // success message verification
@@ -183,33 +183,33 @@ describe("Project creation", () => {
     // Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // Submission of the form
     await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i })
+      screen.getByRole("button", { name: /Créer le projet/i }),
     );
 
     // Verify the error message
     expect(
-      await screen.findByText(/Erreur : Erreur Apollo/i)
+      await screen.findByText(/Erreur : Erreur Apollo/i),
     ).toBeInTheDocument();
 
     errorSpy.mockRestore();
@@ -262,28 +262,28 @@ describe("Project creation", () => {
     // Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i })
+      screen.getByRole("button", { name: /Create the project/i }),
     );
 
     // Verification of success message
@@ -316,7 +316,7 @@ describe("Project creation", () => {
       },
       error: new GraphQLError(
         "Can't create the project. Please check your information or contact your project manager.",
-        { extensions: { code: "CLIENT_ACCOUNT_MISMATCH" } }
+        { extensions: { code: "CLIENT_ACCOUNT_MISMATCH" } },
       ),
     };
 
@@ -326,35 +326,35 @@ describe("Project creation", () => {
     // 4 Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i })
+      screen.getByRole("button", { name: /Create the project/i }),
     );
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Error : Can't create the project. Please check your information or contact your project manager./i
-      )
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
+      ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
   });
@@ -377,7 +377,7 @@ describe("Project creation", () => {
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Can't create the project. Please check your information or contact your project manager."
+        "Erreur : Can't create the project. Please check your information or contact your project manager.",
       ),
     };
 
@@ -387,35 +387,35 @@ describe("Project creation", () => {
     // 4 Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i })
+      screen.getByRole("button", { name: /Create the project/i }),
     );
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i
-      )
+        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+      ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
   });
@@ -438,7 +438,7 @@ describe("Project creation", () => {
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Can't create the project. Please check your information or contact your project manager."
+        "Erreur : Can't create the project. Please check your information or contact your project manager.",
       ),
     };
 
@@ -448,35 +448,35 @@ describe("Project creation", () => {
     // 4 Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i })
+      screen.getByRole("button", { name: /Create the project/i }),
     );
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i
-      )
+        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+      ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
   });
@@ -500,7 +500,7 @@ describe("Project creation", () => {
       },
       error: new GraphQLError(
         "Can't create the project. Please check your information or contact your project manager.",
-        { extensions: { code: "STATUS_INVALID" } }
+        { extensions: { code: "STATUS_INVALID" } },
       ),
     };
 
@@ -510,35 +510,35 @@ describe("Project creation", () => {
     // 4 Form filling
     await userEvent.type(
       screen.getByLabelText(/Project Name/i),
-      projectData.projectName
+      projectData.projectName,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Email/i),
-      projectData.clientEmail
+      projectData.clientEmail,
     );
     await userEvent.type(
       screen.getByLabelText(/Client Name/i),
-      projectData.clientName
+      projectData.clientName,
     );
     await userEvent.type(
       screen.getByLabelText(/End Date/i),
-      projectData.endDate
+      projectData.endDate,
     );
     await userEvent.type(
       screen.getByLabelText(/Description/i),
-      projectData.description
+      projectData.description,
     );
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i })
+      screen.getByRole("button", { name: /Create the project/i }),
     );
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i
-      )
+        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+      ),
     ).toBeInTheDocument();
 
     errorSpy.mockRestore();

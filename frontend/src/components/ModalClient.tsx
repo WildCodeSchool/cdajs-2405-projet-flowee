@@ -28,7 +28,7 @@ export default function ModalClient({
   const [name, setName] = useState(currentName ?? "");
   const [email, setEmail] = useState(currentEmail || "");
   const [status, setStatus] = useState<ClientStatus>(
-    currentStatus || ClientStatus.Active
+    currentStatus || ClientStatus.Active,
   );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);

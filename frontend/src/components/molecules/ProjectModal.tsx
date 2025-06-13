@@ -104,10 +104,7 @@ export default function ProjectModal({
           </button>
         </form>
 
-        <div className="border-t pt-4 mt-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">
-            Delete this project
-          </h3>
+        <div className=" pt-8">
           <button
             type="button"
             onClick={handleDelete}

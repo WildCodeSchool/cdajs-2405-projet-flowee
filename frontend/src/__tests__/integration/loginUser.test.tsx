@@ -76,13 +76,13 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), email);
@@ -105,7 +105,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     const errorMocks = [
@@ -121,7 +121,7 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={errorMocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), "wrong@mail.com");
@@ -129,7 +129,7 @@ describe("LoginForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     expect(
-      await screen.findByText(/wrong credentials, please try again/i)
+      await screen.findByText(/wrong credentials, please try again/i),
     ).toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     errorSpy.mockRestore();
@@ -143,13 +143,13 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     render(
       <MockedProvider mocks={[]} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Fills only the password
@@ -174,13 +174,13 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     render(
       <MockedProvider mocks={[]} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Fills only the email
@@ -205,13 +205,13 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     render(
       <MockedProvider mocks={[]} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Don't fill any fields. Click the sign in button
@@ -238,7 +238,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     //Prepare mock for spaceless email
@@ -258,13 +258,13 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Types in email with spaces and right password
     await userEvent.type(
       screen.getByLabelText(/email/i),
-      "   user@mail.com   "
+      "   user@mail.com   ",
     );
     await userEvent.type(screen.getByLabelText(/password/i), password);
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
@@ -286,7 +286,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     const email = "user@mail.com";
@@ -305,7 +305,7 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), email);
@@ -344,7 +344,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     const email = "disabled@mail.com";
@@ -362,7 +362,7 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={errorMocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), email);
@@ -371,7 +371,7 @@ describe("LoginForm", () => {
 
     // Verifies that the generic error message is displayed
     expect(
-      await screen.findByText(/wrong credentials, please try again/i)
+      await screen.findByText(/wrong credentials, please try again/i),
     ).toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
@@ -386,7 +386,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     const email = "user@mail.com";
@@ -404,7 +404,7 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), email);
@@ -428,13 +428,13 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     render(
       <MockedProvider mocks={[]} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     // Verfies that the email and password fields are present
@@ -471,7 +471,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     // Email with right format but weird
@@ -490,7 +490,7 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={errorMocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), email);
@@ -498,7 +498,7 @@ describe("LoginForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     expect(
-      await screen.findByText(/wrong credentials, please try again/i)
+      await screen.findByText(/wrong credentials, please try again/i),
     ).toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
@@ -514,7 +514,7 @@ describe("LoginForm", () => {
           element: <LoginForm />,
         },
       ],
-      routerConfig
+      routerConfig,
     );
 
     // Valid email but xss password
@@ -533,7 +533,7 @@ describe("LoginForm", () => {
     render(
       <MockedProvider mocks={errorMocks} addTypename={false}>
         <RouterProvider router={router} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await userEvent.type(screen.getByLabelText(/email/i), email);
@@ -542,13 +542,13 @@ describe("LoginForm", () => {
 
     //Verifies that generic error message is displayed
     const errorMessage = await screen.findByText(
-      /wrong credentials, please try again/i
+      /wrong credentials, please try again/i,
     );
     expect(errorMessage).toBeInTheDocument();
 
     // Verifies that the xss script is not rendered
     expect(
-      screen.queryByText(/<script>alert\(1\)<\/script>/i)
+      screen.queryByText(/<script>alert\(1\)<\/script>/i),
     ).not.toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();

@@ -15,6 +15,7 @@ import Filters from "@components/molecules/Filters";
 import type { SortOrder, FilterOption } from "@components/molecules/Filters";
 import { useLocation } from "react-router-dom";
 import { slugify } from "@utils/project";
+
 export default function Projects() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
@@ -23,7 +24,9 @@ export default function Projects() {
 
   const { authUserData } = useAuth();
   const location = useLocation();
-  const { data, loading, error } = useGetProjectsByUserQuery({});
+  const { data, loading, error } = useGetProjectsByUserQuery({
+    fetchPolicy: "network-only",
+  });
 
   const allowedRoles = ["ADMIN", "CLIENT"];
   const today = useMemo(() => new Date(), []);

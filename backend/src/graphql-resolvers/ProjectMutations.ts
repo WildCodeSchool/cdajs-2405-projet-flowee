@@ -228,7 +228,7 @@ export class ProjectMutations {
     }
     // Invalidate cache
     await invalidateCache(ctx.redis, user);
-    console.info("Cache invalidated for user projects");
+    console.info("Cache invalidated when creating projects");
     console.info("Project created successfully:", result.newproject);
     // Return the newly created project
     if (!result.newproject) {
@@ -247,7 +247,9 @@ export class ProjectMutations {
   @Mutation(() => Project)
   async updateProject(
     @Arg("data", () => UpdateProjectInput) data: UpdateProjectInput,
+    @Ctx() ctx: MyContext,
   ): Promise<Project> {
+    const user = ctx.user;
     const project = await dataSource.manager.findOne(Project, {
       where: { id: data.id },
     });
@@ -264,6 +266,12 @@ export class ProjectMutations {
     }
     if (data.endDate !== undefined) project.endDate = data.endDate;
     await dataSource.manager.save(project);
+
+    if (user) {
+      await invalidateCache(ctx.redis, user);
+      console.info("Cache invalidated when updating project");
+    }
+
     return project;
   }
 
@@ -271,7 +279,9 @@ export class ProjectMutations {
   @Mutation(() => Boolean)
   async deleteProject(
     @Arg("projectId", () => Number) projectId: number,
+    @Ctx() ctx: MyContext,
   ): Promise<boolean> {
+    const user = ctx.user;
     try {
       const project = await dataSource.manager.findOne(Project, {
         where: { id: projectId },
@@ -314,6 +324,13 @@ export class ProjectMutations {
 
         await dataSource.manager.save(client);
         console.info(`Client ${client.id} et son compte ont été désactivés`);
+      }
+
+      if (user) {
+        await invalidateCache(ctx.redis, user);
+        console.info(`Cache invalidated: projectsByUser:${user.id}`);
+        const stillThere = await ctx.redis.get(`projectsByUser:${user.id}`);
+        console.info("🚨 Redis after deletion:", stillThere);
       }
 
       return true;
