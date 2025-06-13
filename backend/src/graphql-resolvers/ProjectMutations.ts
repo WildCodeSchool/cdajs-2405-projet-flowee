@@ -243,6 +243,7 @@ export class ProjectMutations {
     return result.newproject;
   }
 
+  @Authorized("ADMIN")
   @Mutation(() => Project)
   async updateProject(
     @Arg("data", () => UpdateProjectInput) data: UpdateProjectInput,
@@ -264,5 +265,65 @@ export class ProjectMutations {
     if (data.endDate !== undefined) project.endDate = data.endDate;
     await dataSource.manager.save(project);
     return project;
+  }
+
+  @Authorized("ADMIN")
+  @Mutation(() => Boolean)
+  async deleteProject(
+    @Arg("projectId", () => Number) projectId: number,
+  ): Promise<boolean> {
+    try {
+      const project = await dataSource.manager.findOne(Project, {
+        where: { id: projectId },
+        relations: ["client", "client.account"],
+      });
+
+      if (!project) {
+        throw new GraphQLError(`Project with ID ${projectId} not found`, {
+          extensions: { code: "PROJECT_NOT_FOUND" },
+        });
+      }
+
+      const client = project.client;
+      console.info("client dans delete", client);
+
+      if (!client) {
+        throw new GraphQLError(
+          `Le projet ${projectId} n'est associé à aucun client.`,
+          {
+            extensions: { code: "CLIENT_NOT_FOUND" },
+          },
+        );
+      }
+
+      await dataSource.manager.remove(project);
+
+      // On check si le client a encore des projets ,
+      // si non on passe le statut du client en INACTIVE et le account en INACTIVE
+      const remainingProjects = await dataSource.manager.count(Project, {
+        where: { client: { id: client.id } },
+      });
+
+      if (remainingProjects === 0) {
+        client.status = ClientStatus.INACTIVE;
+
+        if (client.account) {
+          client.account.status = AccountStatus.INACTIVE;
+          await dataSource.manager.save(client.account);
+        }
+
+        await dataSource.manager.save(client);
+        console.info(`Client ${client.id} et son compte ont été désactivés`);
+      }
+
+      return true;
+    } catch (error) {
+      throw new GraphQLError("Failed to delete project", {
+        extensions: {
+          code: "DELETE_PROJECT_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
+    }
   }
 }

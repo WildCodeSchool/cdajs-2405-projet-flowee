@@ -24,3 +24,9 @@ mutation UpdateProject($data: UpdateProjectInput!) {
   }
 }
 `;
+
+export const DELETE_PROJECT = gql`
+  mutation DeleteProject($projectId: Float!) {
+    deleteProject(projectId: $projectId)
+  }
+`;

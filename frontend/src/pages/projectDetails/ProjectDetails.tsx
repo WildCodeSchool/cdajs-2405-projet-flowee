@@ -25,7 +25,7 @@ const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const id = parseIdFromSlug(slug);
-  console.info("project details :");
+
   const { data, refetch } = useGetProjectByIdQuery({
     skip: id === null,
     variables: { id: id ?? 0 },
@@ -35,7 +35,6 @@ const ProjectDetails = () => {
     },
   });
   const [updateProjectMutation] = useUpdateProjectMutation();
-  console.info("data : ", data);
 
   const handleEditProject = async (updatedProject: {
     id: number;
@@ -44,7 +43,7 @@ const ProjectDetails = () => {
     description: string;
   }) => {
     if (!project) return;
-    console.info("Editing project with new name:", updatedProject);
+
     const payload: UpdateProjectInput = {
       id: String(updatedProject.id),
     };
@@ -74,7 +73,6 @@ const ProjectDetails = () => {
       const result = await updateProjectMutation({
         variables: { data: payload },
       });
-      console.info("result", result);
 
       toast.success("Projet mis à jour !");
       await refetch();
