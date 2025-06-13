@@ -58,7 +58,7 @@ const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
         <section className="flex gap-4">
           <Tag
             text={
-              isDeliverable ? deliverable?.status ?? "" : task?.status ?? ""
+              isDeliverable ? (deliverable?.status ?? "") : (task?.status ?? "")
             }
           />
           <Tag text={isDeliverable ? "DELIVERABLE" : "TASK"} />

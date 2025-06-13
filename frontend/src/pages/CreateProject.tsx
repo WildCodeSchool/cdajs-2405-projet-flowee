@@ -46,7 +46,7 @@ export default function CreateProject() {
         />,
         {
           progressClassName: "bg-theme-progress-base",
-        }
+        },
       );
       reset();
       navigate("/dashboard");
