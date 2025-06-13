@@ -53,7 +53,6 @@ export default function ProjectModal({
       description: description.trim(),
     });
 
-    toast.success("Project edited successfully!");
     onClose();
   };
 
