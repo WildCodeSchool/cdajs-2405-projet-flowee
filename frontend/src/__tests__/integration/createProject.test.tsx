@@ -1,10 +1,13 @@
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
+import RoleToast from "@components/organisms/RoleToast";
 import { useAuth } from "@context/authContext";
 import { GetProjectsByUserDocument } from "@generated/graphql-types";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
+import * as ReactToastify from "react-toastify";
+import type { Mock } from "vitest";
 import {
   afterAll,
   beforeAll,
@@ -28,12 +31,6 @@ beforeAll(() => {
 });
 afterAll(() => {
   console.warn = originalConsoleWarn;
-});
-
-// Stub window.alert pour capturer l'alerte
-const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
-afterAll(() => {
-  alertSpy.mockRestore();
 });
 
 // Mock du contexte d'authentification
@@ -68,9 +65,47 @@ function renderWithMocks(mocks: MockedResponse[] = []) {
   );
 }
 
+// Mock générique pour la requête GetProjectsByUser
+const buildGetProjectsByUserMock = (): MockedResponse => ({
+  request: { query: GetProjectsByUserDocument },
+  result: {
+    data: {
+      getProjectsByUser: [
+        {
+          id: "1",
+          projectName: "Test Project",
+          companyUserId: 1,
+          description: "Test Description",
+          startDate: "2024-01-01",
+          endDate: "2024-12-31",
+          status: "NOT_STARTED",
+          client: { id: "1", clientName: "Test Client" },
+          deliverables: [],
+        },
+      ],
+    },
+  },
+});
+
+// Mock de react-toastify AVANT son import
+vi.mock("react-toastify", async () => {
+  const mod =
+    await vi.importActual<typeof import("react-toastify")>("react-toastify");
+  return {
+    __esModule: true,
+    ...mod,
+    toast: vi.fn(), // la fonction que l'on testera
+  };
+});
+
 describe("Création de projet", () => {
   beforeEach(() => {
+    // 2 On restaure tous les mocks/espions avant chaque test pour éviter
+    //    « Cannot redefine property: toast »
+    vi.restoreAllMocks();
     vi.clearAllMocks();
+
+    (ReactToastify.toast as unknown as Mock).mockReset();
     mockUseAuth.mockReturnValue({
       authUserData: { role: "ADMIN", id: "admin-id" },
     });
@@ -106,19 +141,17 @@ describe("Création de projet", () => {
       },
     };
 
-    // Mock de GetProjectsByUser utilisé en refetchQueries
-    const getProjectsMock: MockedResponse = {
-      request: {
-        query: GetProjectsByUserDocument,
-      },
-      result: {
-        data: { getProjectsByUser: [] },
-      },
-      delay: 100,
-    };
+    // 3 Espionne la fonction toast (après restoreAllMocks, donc sans conflit)
+    const toastMock = ReactToastify.toast as unknown as Mock;
+    toastMock.mockImplementation(() => "toast-id");
 
     // Rendu du composant avec le mock
-    renderWithMocks([mutationMock, getProjectsMock]);
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // Remplissage du formulaire
     await userEvent.type(
@@ -143,13 +176,22 @@ describe("Création de projet", () => {
     );
 
     // Soumission du formulaire
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // Vérification du message de succès
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith("Projet créé avec succès !");
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: RoleToast,
+          props: {
+            message: "Projet créé avec succès",
+            role: "ADMIN",
+          },
+        }),
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
     });
 
     // Vérification de la redirection vers le dashboard
@@ -203,9 +245,7 @@ describe("Création de projet", () => {
     );
 
     // Soumettre
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // Vérifier qu'un message d'erreur s'affiche
     expect(
@@ -246,18 +286,15 @@ describe("Création de projet", () => {
       },
     };
 
-    // Mock de GetProjectsByUser utilisé en refetchQueries
-    const getProjectsMock: MockedResponse = {
-      request: {
-        query: GetProjectsByUserDocument,
-      },
-      result: {
-        data: { getProjectsByUser: [] },
-      },
-    };
+    const toastMock = ReactToastify.toast as unknown as Mock;
+    toastMock.mockImplementation(() => "toast-id");
 
-    // Rendu du composant avec le mock
-    renderWithMocks([mutationMock, getProjectsMock]);
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // Remplissage du formulaire
     await userEvent.type(
@@ -282,13 +319,22 @@ describe("Création de projet", () => {
     );
 
     // Soumission du formulaire
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // Vérification du message de succès
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith("Projet créé avec succès !");
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: RoleToast,
+          props: {
+            message: "Projet créé avec succès",
+            role: "ADMIN",
+          },
+        }),
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
     });
 
     // Vérification de la redirection vers le dashboard
@@ -321,7 +367,12 @@ describe("Création de projet", () => {
     };
 
     // 3 Rendu du composant avec le mock
-    renderWithMocks([mutationMock]);
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Remplissage du formulaire
     await userEvent.type(
@@ -346,9 +397,7 @@ describe("Création de projet", () => {
     );
 
     // 5 Soumission du formulaire
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // 6 Vérification du message d'erreur
     expect(
@@ -382,7 +431,12 @@ describe("Création de projet", () => {
     };
 
     // 3 Rendu du composant avec le mock
-    renderWithMocks([mutationMock]);
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Remplissage du formulaire
     await userEvent.type(
@@ -407,9 +461,7 @@ describe("Création de projet", () => {
     );
 
     // 5 Soumission du formulaire
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // 6 Vérification du message d'erreur
     expect(
@@ -443,7 +495,12 @@ describe("Création de projet", () => {
     };
 
     // 3 Rendu du composant avec le mock
-    renderWithMocks([mutationMock]);
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Remplissage du formulaire
     await userEvent.type(
@@ -468,9 +525,7 @@ describe("Création de projet", () => {
     );
 
     // 5 Soumission du formulaire
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // 6 Vérification du message d'erreur
     expect(
@@ -505,7 +560,12 @@ describe("Création de projet", () => {
     };
 
     // 3 Rendu du composant avec le mock
-    renderWithMocks([mutationMock]);
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Remplissage du formulaire
     await userEvent.type(
@@ -530,9 +590,7 @@ describe("Création de projet", () => {
     );
 
     // 5 Soumission du formulaire
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    await userEvent.click(screen.getByText(/Créer le projet/i));
 
     // 6 Vérification du message d'erreur
     expect(

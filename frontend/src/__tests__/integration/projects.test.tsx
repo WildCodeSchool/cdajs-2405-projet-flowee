@@ -4,8 +4,8 @@ import { GetProjectsByUserDocument } from "@generated/graphql-types";
 import { render, screen, waitFor } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import {
-  beforeAll,
   afterAll,
+  beforeAll,
   beforeEach,
   describe,
   expect,
@@ -27,7 +27,7 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
-// 1. Mock du contexte d'authentification
+// Mock du contexte d'authentification
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));
@@ -168,6 +168,8 @@ describe("Projects Page", () => {
 
     renderComponent(mocksForAuth);
 
-    expect(screen.getByText("Unauthorized user!")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /unauthorized access/i }),
+    ).toBeInTheDocument();
   });
 });

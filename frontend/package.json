@@ -10,7 +10,7 @@
     "lint": "biome lint --write ./src",
     "format": "biome format --write ./src",
     "preview": "vite preview",
-    "test":  "vitest --reporter verbose",
+    "test": "vitest --reporter verbose",
     "test:watch": "vitest --watch",
     "generate": "graphql-codegen -w"
   },
@@ -39,6 +39,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.13.1",
     "@types/react-dom": "^19.0.2",
+    "@types/react-toastify": "^4.0.2",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "globals": "^15.9.0",
