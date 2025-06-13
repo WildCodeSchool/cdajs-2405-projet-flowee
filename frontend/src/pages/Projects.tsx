@@ -3,7 +3,7 @@ import { ProjectStatus } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
 import DisplayCards from "@organisms/DisplayCards";
 import SearchBar from "@organisms/Search";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@organisms/Cards";
 import { NavLink } from "react-router-dom";
 import ArrowIcon from "@components/atoms/Icons/Arrow";

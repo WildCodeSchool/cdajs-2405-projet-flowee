@@ -74,12 +74,12 @@ const routerConfig = {
 const renderComponent = (mocks: MockedResponse[] = []) => {
   const router = createMemoryRouter(
     [{ path: "/", element: <Projects /> }],
-    routerConfig
+    routerConfig,
   );
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <RouterProvider router={router} />
-    </MockedProvider>
+    </MockedProvider>,
   );
 };
 

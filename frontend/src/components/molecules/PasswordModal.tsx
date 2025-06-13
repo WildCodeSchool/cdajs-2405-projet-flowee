@@ -184,7 +184,7 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
                 <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden mb-1">
                   <div
                     className={`h-full transition-all duration-300 ${getStrengthColor(
-                      passwordCriteria
+                      passwordCriteria,
                     )}`}
                     style={{
                       width: `${
