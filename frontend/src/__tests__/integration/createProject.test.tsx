@@ -144,7 +144,7 @@ describe("Project creation", () => {
 
     // Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i })
+      screen.getByRole("button", { name: /Create the project/i })
     );
 
     // success message verification
@@ -175,7 +175,7 @@ describe("Project creation", () => {
         query: CREATE_PROJECT,
         variables: { newProject: projectData },
       },
-      error: new Error("Erreur Apollo"),
+      error: new Error("Apollo Error"),
     };
 
     renderWithMocks([mutationMock]);
@@ -315,7 +315,7 @@ describe("Project creation", () => {
         variables: { newProject: projectData },
       },
       error: new GraphQLError(
-        "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+        "Can't create the project. Please check your information or contact your project manager.",
         { extensions: { code: "CLIENT_ACCOUNT_MISMATCH" } }
       ),
     };
@@ -347,37 +347,37 @@ describe("Project creation", () => {
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i })
+      screen.getByRole("button", { name: /Create the project/i })
     );
 
-    // 6 Vérification du message d'erreur
+    // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet./i
+        /Error : Can't create the project. Please check your information or contact your project manager./i
       )
     ).toBeInTheDocument();
     errorSpy.mockRestore();
   });
 
-  it("refuse la création quand le client existe mais le mail est inconnu", async () => {
+  it("Prevent creation, client is known but email is unknown", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     // Préparation des données
     const projectData = {
-      projectName: "Projet Test",
+      projectName: "Test Project",
       clientEmail: "exist@a.fr",
       clientName: "Charlie",
       endDate: "2025-12-31",
-      description: "Description test",
+      description: "Test project description",
     };
 
-    // 2 Configuration du mock pour simuler l'erreur
+    // 2 Mock configuration to simulate the error
     const mutationMock: MockedResponse = {
       request: {
         query: CREATE_PROJECT,
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet."
+        "Erreur : Can't create the project. Please check your information or contact your project manager."
       ),
     };
 
@@ -408,37 +408,37 @@ describe("Project creation", () => {
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i })
+      screen.getByRole("button", { name: /Create the project/i })
     );
 
-    // 6 Vérification du message d'erreur
+    // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet./i
+        /Erreur : Can't create the project. Please check your information or contact your project manager./i
       )
     ).toBeInTheDocument();
     errorSpy.mockRestore();
   });
 
-  it("refuse la création quand le client est supprimé ou archivé", async () => {
+  it("Prevent creation when client is archived or deleted", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     // Preparation of test data
     const projectData = {
-      projectName: "Projet Test",
+      projectName: "Test Project",
       clientEmail: "exist@a.fr",
       clientName: "Bravo",
       endDate: "2025-12-31",
       description: "Description test",
     };
 
-    // 2 Configuration du mock pour simuler l'erreur
+    // 2 Mock configuration to simulate the error
     const mutationMock: MockedResponse = {
       request: {
         query: CREATE_PROJECT,
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet."
+        "Erreur : Can't create the project. Please check your information or contact your project manager."
       ),
     };
 
@@ -469,27 +469,27 @@ describe("Project creation", () => {
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i })
+      screen.getByRole("button", { name: /Create the project/i })
     );
 
-    // 6 Vérification du message d'erreur
+    // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet./i
+        /Erreur : Can't create the project. Please check your information or contact your project manager./i
       )
     ).toBeInTheDocument();
     errorSpy.mockRestore();
   });
 
-  it("refuse la création d'un second projet quand le compte est inactif", async () => {
+  it("Prevent the creation of a second project when the account is inactive", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     // Preparation of test data
     const projectData = {
-      projectName: "Second Projet",
+      projectName: "Second Project",
       clientEmail: "test@a.fr",
       clientName: "Alpha",
       endDate: "2025-12-31",
-      description: "Description du second projet",
+      description: "Second project description",
     };
 
     // 2 Mock configuration to simulate the error
@@ -499,7 +499,7 @@ describe("Project creation", () => {
         variables: { newProject: projectData },
       },
       error: new GraphQLError(
-        "Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet.",
+        "Can't create the project. Please check your information or contact your project manager.",
         { extensions: { code: "STATUS_INVALID" } }
       ),
     };
@@ -531,13 +531,13 @@ describe("Project creation", () => {
 
     // 5 Form submission
     await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i })
+      screen.getByRole("button", { name: /Create the project/i })
     );
 
-    // 6 Vérification du message d'erreur
+    // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Impossible de créer le projet. Merci de vérifier vos informations ou de contacter votre manager de projet./i
+        /Erreur : Can't create the project. Please check your information or contact your project manager./i
       )
     ).toBeInTheDocument();
 
