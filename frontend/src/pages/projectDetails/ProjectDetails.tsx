@@ -20,6 +20,7 @@ import ProjectModal from "@components/molecules/ProjectModal";
 import { toast } from "react-toastify";
 import { useUpdateProjectMutation } from "@generated/graphql-types";
 import type { UpdateProjectInput } from "@generated/graphql-types";
+import { useDeleteProjectMutation } from "@generated/graphql-types";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -35,12 +36,13 @@ const ProjectDetails = () => {
     },
   });
   const [updateProjectMutation] = useUpdateProjectMutation();
+  const [deleteProjectMutation] = useDeleteProjectMutation();
 
   const handleEditProject = async (updatedProject: {
     id: number;
     name: string;
-    endDate: string;
-    description: string;
+    endDate?: string;
+    description?: string;
   }) => {
     if (!project) return;
 
@@ -73,10 +75,13 @@ const ProjectDetails = () => {
       const result = await updateProjectMutation({
         variables: { data: payload },
       });
-
-      toast.success("Projet mis à jour !");
-      await refetch();
-      projectModal.closeModal();
+      if (result) {
+        toast.success("Projet mis à jour !");
+        await refetch();
+        projectModal.closeModal();
+      } else {
+        console.error("Update error");
+      }
     } catch (error) {
       console.error("Erreur update :", error);
       toast.error("Erreur lors de la mise à jour du projet.");
@@ -85,11 +90,15 @@ const ProjectDetails = () => {
 
   const handleDeleteProject = async (id: number) => {
     console.info("Deleting project with ID:", id);
-    // if (!project) return;
-    // await deleteProjectMutation({
-    //   variables: { id: project.id },
-    // });
-    // navigate("/projects");
+
+    try {
+      await deleteProjectMutation({
+        variables: { projectId: id },
+      });
+    } catch (error) {
+      console.error("Erreur dans deleteProjectMutation :", error);
+      throw error;
+    }
   };
 
   // States and modals
@@ -220,12 +229,18 @@ const ProjectDetails = () => {
         open={deleteProjectModal.open}
         entityType="project"
         itemName={deleteProjectModal.data?.name ?? ""}
-        onConfirm={() => {
-          if (deleteProjectModal.data?.id) {
-            handleDeleteProject(deleteProjectModal.data.id);
-            toast.success("Project deleted successfully!");
+        onConfirm={async () => {
+          const id = deleteProjectModal.data?.id;
+          if (!id) return;
+
+          try {
+            await handleDeleteProject(id);
+            toast.success("Projet supprimé avec succès !");
             deleteProjectModal.closeModal();
             navigate("/projects");
+          } catch (error) {
+            toast.error("Échec de la suppression du projet.");
+            console.error("Erreur suppression :", error);
           }
         }}
         onCancel={() => {

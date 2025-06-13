@@ -33,7 +33,6 @@ export default function ProjectModal({
   const [endDate, setEndDate] = useState(project.endDate ?? "");
   const [description, setDescription] = useState(project.description ?? "");
 
-  console.info("name : ", name);
   useEffect(() => {
     setName(project.name);
     setEndDate(project.endDate ?? "");
