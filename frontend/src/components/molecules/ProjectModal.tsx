@@ -52,9 +52,6 @@ export default function ProjectModal({
       endDate: endDate || undefined,
       description: description.trim(),
     });
-
-    toast.success("Projet modifié !");
-    onClose();
   };
 
   const handleDelete = () => {
@@ -107,10 +104,7 @@ export default function ProjectModal({
           </button>
         </form>
 
-        <div className="border-t pt-4 mt-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">
-            Supprimer ce projet
-          </h3>
+        <div className=" pt-4 mt-6">
           <button
             type="button"
             onClick={handleDelete}

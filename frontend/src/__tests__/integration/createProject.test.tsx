@@ -14,7 +14,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { CREATE_PROJECT } from "../../graphql-mutations/createproject";
+import { CREATE_PROJECT } from "../../graphql-mutations/project";
 import CreateProject from "../../pages/CreateProject";
 
 // Suppression des avertissements React Router
