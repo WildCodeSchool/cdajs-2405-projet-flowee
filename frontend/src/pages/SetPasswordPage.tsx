@@ -42,7 +42,6 @@ export function SetPasswordPage() {
       }
       setClientName(decoded.clientName || "");
       setEmail(decoded.email);
-      toast.info("hello");
     }
   }, [navigate]);
 
