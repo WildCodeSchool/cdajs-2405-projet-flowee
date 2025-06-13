@@ -67,7 +67,7 @@ const ProjectDetails = () => {
       payload.description === undefined &&
       payload.endDate === undefined
     ) {
-      toast.info("Aucune modification détectée.");
+      toast.info("No modification found.");
       return;
     }
 
@@ -76,15 +76,15 @@ const ProjectDetails = () => {
         variables: { data: payload },
       });
       if (result) {
-        toast.success("Projet mis à jour !");
+        toast.success("Projet updated !");
         await refetch();
         projectModal.closeModal();
       } else {
         console.error("Update error");
       }
     } catch (error) {
-      console.error("Erreur update :", error);
-      toast.error("Erreur lors de la mise à jour du projet.");
+      console.error("Update error :", error);
+      toast.error("Error when updating project.");
     }
   };
 
@@ -96,7 +96,7 @@ const ProjectDetails = () => {
         variables: { projectId: id },
       });
     } catch (error) {
-      console.error("Erreur dans deleteProjectMutation :", error);
+      console.error("Error in mutation :", error);
       throw error;
     }
   };
@@ -235,12 +235,12 @@ const ProjectDetails = () => {
 
           try {
             await handleDeleteProject(id);
-            toast.success("Projet supprimé avec succès !");
+            toast.success("Project successfully deleted !");
             deleteProjectModal.closeModal();
             navigate("/projects");
           } catch (error) {
-            toast.error("Échec de la suppression du projet.");
-            console.error("Erreur suppression :", error);
+            toast.error("Error when deleting project.");
+            console.error("Error when deleting project :", error);
           }
         }}
         onCancel={() => {
