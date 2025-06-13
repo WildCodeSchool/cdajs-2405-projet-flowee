@@ -9,11 +9,12 @@ import {
 import type { ClientUI } from "@interfaces/client.types";
 import { useEffect, useState } from "react";
 import CardsClient from "./CardsClient";
+import type { SortOrder } from "@components/molecules/Filters";
 
 interface DisplayClientsProps {
   searchFilter: string;
-  sortOrder: "NONE" | "AZ" | "ZA";
-  statusFilter: ClientStatus | "ALL";
+  sortOrder: SortOrder;
+  statusFilter: ClientStatus | "All";
 }
 
 export default function DisplayClientsCard({
@@ -55,26 +56,26 @@ export default function DisplayClientsCard({
   });
 
   // Status filter
-  if (statusFilter !== "ALL") {
+  if (statusFilter !== "All") {
     filteredClients = filteredClients.filter(
-      (client) => client.status === statusFilter,
+      (client) => client.status === statusFilter
     );
   }
 
   // Sorter by name
   if (sortOrder === "AZ") {
     filteredClients.sort((a, b) =>
-      (a.clientName ?? "").localeCompare(b.clientName ?? ""),
+      (a.clientName ?? "").localeCompare(b.clientName ?? "")
     );
   } else if (sortOrder === "ZA") {
     filteredClients.sort((a, b) =>
-      (b.clientName ?? "").localeCompare(a.clientName ?? ""),
+      (b.clientName ?? "").localeCompare(a.clientName ?? "")
     );
   }
 
   const handleDelete = (id: number) => {
     if (window.confirm("Are you sure you want to delete this client?")) {
-      setOperationError(null); // Réinitialiser l'erreur précédente
+      setOperationError(null);
 
       deleteClient({ variables: { id } })
         .then(() => {
@@ -84,7 +85,7 @@ export default function DisplayClientsCard({
         .catch((err: unknown) => {
           console.error("Delete error:", err);
           setOperationError(
-            "Deletion of the client failed. This client could be associated with existing projects.",
+            "Deletion of the client failed. This client could be associated with existing projects."
           );
         });
     }
@@ -92,7 +93,7 @@ export default function DisplayClientsCard({
 
   const handleArchive = (id: number) => {
     if (window.confirm("Are you sure you want to archive this client?")) {
-      setOperationError(null); // Réinitialiser l'erreur précédente
+      setOperationError(null);
 
       archiveClient({ variables: { id } })
         .then(() => {
@@ -119,21 +120,21 @@ export default function DisplayClientsCard({
 
   return (
     <div>
-      {/* Afficher le message de succès */}
+      {/* Display success messages */}
       {successMessage && (
         <div className="mb-4">
           <SuccessBanner message={successMessage} />
         </div>
       )}
 
-      {/* Afficher une erreur si une opération a échoué */}
+      {/* Display error if operation failed */}
       {operationError && (
         <div className="mb-4">
           <ErrorBanner message={operationError} />
         </div>
       )}
 
-      {/* Afficher un message si aucun client ne correspond aux  filtres*/}
+      {/* Display a message if no client for selected filters*/}
       {mappedClients.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           No client matches your search criteria.

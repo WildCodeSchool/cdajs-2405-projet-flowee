@@ -10,7 +10,7 @@
     "lint": "biome lint --write ./src",
     "format": "biome format --write ./src",
     "preview": "vite preview",
-    "test": "vitest",
+    "test":  "vitest --reporter verbose",
     "test:watch": "vitest --watch",
     "generate": "graphql-codegen -w"
   },
@@ -24,6 +24,7 @@
     "react-hook-form": "^7.55.0",
     "react-router": "^6.14.1",
     "react-router-dom": "^6.14.1",
+    "react-toastify": "^11.0.5",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {

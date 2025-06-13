@@ -1,5 +1,6 @@
 import { useLogout } from "@utils/logout";
-import SettingsIcon from "@components/atoms/Icons/SettingsIcon";
+
+import LogOutIcon from "@components/atoms/Icons/LogOutIcon";
 
 export default function Logout() {
   const logout = useLogout();
@@ -9,9 +10,9 @@ export default function Logout() {
       <button
         type="button"
         onClick={logout}
-        className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center"
+        className="flex flex-col items-center text-gray-500 hover:text-theme-dark md:justify-center w-full"
       >
-        <SettingsIcon className="h-6 w-6 md:h-4 md:w-4" />
+        <LogOutIcon className="h-5 w-5 md:h-3 md:w-3 fill-black" />
         <span className="hidden md:block text-xs mt-2">Logout</span>
       </button>
     </li>

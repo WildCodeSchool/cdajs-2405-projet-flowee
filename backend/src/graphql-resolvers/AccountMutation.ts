@@ -22,6 +22,7 @@ import {
   verifyActivationJWT,
 } from "../utils/generateactivationtoken";
 import { validatePasswordChange } from "../utils/passwordUtils";
+import { ClientStatus } from "../enums/ClientStatus";
 
 @Resolver(Account)
 export class AccountMutation {
@@ -87,6 +88,7 @@ export class AccountMutation {
 
     const account = await dataSource.manager.findOne(Account, {
       where: { id: accountId },
+      relations: ["client"],
     });
 
     if (!account || account.status !== AccountStatus.PENDING) {
@@ -96,6 +98,11 @@ export class AccountMutation {
     account.password = await argon2.hash(password);
     account.status = AccountStatus.ACTIVE;
     clearActivationToken(account);
+
+    if (account.client && account.client.status === ClientStatus.INACTIVE) {
+      account.client.status = ClientStatus.ACTIVE;
+      await dataSource.manager.save(account.client);
+    }
 
     await dataSource.manager.save(account);
     return true;

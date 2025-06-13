@@ -9,12 +9,9 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
   const [search, setSearch] = useState("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  // Send data to parent component
-  const sendData = () => {
-    setSearchFilter(search);
+    const newValue = e.target.value;
+    setSearch(newValue);
+    setSearchFilter(newValue);
   };
 
   return (
@@ -23,7 +20,6 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
         type="text"
         value={search}
         onChange={handleSearch}
-        onKeyUp={sendData}
         placeholder="Looking for something?"
         className="w-full py-2 px-4 border border-theme-gray rounded-md focus:outline-theme-base hover:border-theme-darkGray "
       />

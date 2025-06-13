@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
-import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Deliverable } from "../entities/Deliverable";
-import { DeliverableMutations } from "../graphql-resolvers/DeliverableMutations";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
-import type { MyContext } from "../types/MyContext";
+import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Deliverable } from "../../entities/Deliverable";
+import { DeliverableStatus } from "../../enums/DeliverableStatus";
+import { DeliverableMutations } from "../../graphql-resolvers/DeliverableMutations";
+import type { MyContext } from "../../types/MyContext";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
@@ -58,6 +58,49 @@ describe("deliverable Mutations", () => {
         status: input.status,
         createdAt: input.createdAt,
         reviewTimes: input.reviewTimes,
+      });
+    });
+  });
+
+  describe("updateDeliverable", () => {
+    it("should update an existing deliverable", async () => {
+      const existingDeliverable = new Deliverable(
+        "Old name",
+        "Old perimeter",
+        "2025-12-01",
+        DeliverableStatus.NOT_STARTED,
+        "2025-01-01",
+        1,
+      );
+      existingDeliverable.id = 123;
+
+      const updatedDeliverable = {
+        name: "New name",
+        perimeter: "New perimeter",
+        deliveryDate: "2025-12-31",
+        status: DeliverableStatus.APPROVED,
+        reviewTime: 3,
+      };
+
+      const mock = mockTypeOrm();
+      mock.onMock(Deliverable).toReturn(existingDeliverable, "findOne");
+
+      mock
+        .onMock(Deliverable)
+        .toReturn({ ...existingDeliverable, ...updatedDeliverable }, "save");
+
+      const result = await deliverableMutations.updateDeliverable(
+        existingDeliverable.id,
+        updatedDeliverable,
+      );
+
+      expect(result).toMatchObject({
+        id: 123,
+        name: updatedDeliverable.name,
+        perimeter: updatedDeliverable.perimeter,
+        deliveryDate: updatedDeliverable.deliveryDate,
+        status: updatedDeliverable.status,
+        reviewTime: updatedDeliverable.reviewTime,
       });
     });
   });

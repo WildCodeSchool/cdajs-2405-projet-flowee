@@ -73,6 +73,7 @@ export default function Navigation() {
             <span className="hidden md:block text-xs mt-2">Settings</span>
           </NavLink>
         </li>
+
         <Logout />
       </ul>
     </nav>

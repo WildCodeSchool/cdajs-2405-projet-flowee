@@ -1,11 +1,11 @@
-import { useForm } from "react-hook-form";
-import { useLoginMutation, type LoginMutation } from "@generated/graphql-types";
 import type { ApolloError } from "@apollo/client";
-import { useNavigate } from "react-router";
-import { useAuth } from "@context/authContext";
 import { Input } from "@atoms/Input";
-import { NavLink } from "react-router-dom";
+import { useAuth } from "@context/authContext";
+import { type LoginMutation, useLoginMutation } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { NavLink } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -15,7 +15,11 @@ interface LoginFormData {
 export default function LoginForm() {
   const { setToken } = useAuth();
   const navigate = useNavigate();
-  const { handleSubmit, register } = useForm<LoginFormData>();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<LoginFormData>();
 
   const [sendLogin, { error, loading }] = useLoginMutation({
     onCompleted: (data: LoginMutation) => {
@@ -39,11 +43,18 @@ export default function LoginForm() {
         type="email"
         {...register("email", { required: "Email is required" })}
       />
+      {errors.email && (
+        <p className="text-red text-sm">{errors.email.message}</p>
+      )}
+
       <Input
         label="Password"
         type="password"
         {...register("password", { required: "Password is required" })}
       />
+      {errors.password && (
+        <p className="text-red text-sm">{errors.password.message}</p>
+      )}
 
       <NavLink className="text-end text-sm w-full" to="">
         Forgot your password?
@@ -65,7 +76,7 @@ export default function LoginForm() {
           {loading && <span className="sr-only">Loading</span>}
         </button>
         <p className=" text-center md:text-start  w-full text-sm">
-          You don’t have an account?{" "}
+          You don't have an account?{" "}
           <NavLink className="underline font-medium" to="/signup">
             Sign up{" "}
           </NavLink>

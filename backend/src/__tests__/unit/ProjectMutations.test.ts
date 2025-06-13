@@ -1,13 +1,13 @@
 import { faker } from "@faker-js/faker";
-import { mockTypeOrm } from "../__tests_mockTypeorm-config";
-import { Project } from "../entities/Project";
-import { ProjectMutations } from "../graphql-resolvers/ProjectMutations";
-import { ProjectStatus } from "../enums/ProjectStatus";
-import type { CreateProjectInput } from "../inputs/CreateProjectInput";
-import { AccountStatus } from "../enums/AccountStatus";
-import { Role } from "../enums/Role";
-import type { MyContext } from "../types/MyContext";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
+import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Project } from "../../entities/Project";
+import { AccountStatus } from "../../enums/AccountStatus";
+import { DeliverableStatus } from "../../enums/DeliverableStatus";
+import { ProjectStatus } from "../../enums/ProjectStatus";
+import { Role } from "../../enums/Role";
+import { ProjectMutations } from "../../graphql-resolvers/ProjectMutations";
+import type { CreateProjectInput } from "../../inputs/CreateProjectInput";
+import type { MyContext } from "../../types/MyContext";
 
 describe("Project creation", () => {
   let projectMutations: ProjectMutations;

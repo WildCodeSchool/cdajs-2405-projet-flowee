@@ -44,7 +44,7 @@ export class Project extends BaseEntity {
   endDate?: string;
 
   @Column({ default: ProjectStatus.NOT_STARTED })
-  @Field({ nullable: true })
+  @Field(() => ProjectStatus, { nullable: true })
   status?: ProjectStatus;
 
   //relations

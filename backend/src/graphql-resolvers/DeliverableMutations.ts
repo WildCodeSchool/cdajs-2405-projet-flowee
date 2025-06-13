@@ -7,6 +7,7 @@ import { Task } from "../entities/Task";
 import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
 import type { MyContext } from "../types/MyContext";
 import { Project } from "../entities/Project";
+import { UpdateDeliverableInput } from "../inputs/UpdateDeliverableInput";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
@@ -72,30 +73,28 @@ export class DeliverableMutations {
   @Mutation((_) => Deliverable)
   async updateDeliverable(
     @Arg("id") id: number,
-    @Arg("name", { nullable: true }) name?: string,
-    @Arg("perimeter", { nullable: true }) perimeter?: string,
+    @Arg("data", () => UpdateDeliverableInput) data: UpdateDeliverableInput,
   ): Promise<Deliverable> {
-    try {
-      const deliverable = await dataSource.manager.findOne(Deliverable, {
-        where: { id },
+    const deliverable = await dataSource.manager.findOne(Deliverable, {
+      where: { id },
+    });
+
+    if (!deliverable) {
+      throw new GraphQLError(`Deliverable with ID ${id} not found`, {
+        extensions: { code: "DELIVERABLE_NOT_FOUND" },
       });
-      if (!deliverable) {
-        throw new GraphQLError(`Deliverable with ID ${id} not found`, {
-          extensions: { code: "DELIVERABLE_NOT_FOUND" },
-        });
-      }
+    }
 
-      if (name) deliverable.name = name;
-      if (perimeter) deliverable.perimeter = perimeter;
+    Object.assign(deliverable, data);
 
+    try {
       await dataSource.manager.save(deliverable);
-      console.info("Deliverable updated:", deliverable);
       return deliverable;
     } catch (error) {
       throw new GraphQLError("Failed to update deliverable", {
         extensions: {
           code: "UPDATE_DELIVERABLE_ERROR",
-          originalError: (error as Error).message || "Unknown error",
+          originalError: (error as Error).message,
         },
       });
     }

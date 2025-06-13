@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import type { AuthContextType } from "@interfaces/AuthContextType";
 import type { AuthContextUserType } from "@interfaces/AuthContextUserType";
+import { useApolloClient } from "@apollo/client";
 
 function decodeContextData(token: string | null): Partial<AuthContextUserType> {
   if (!token || token.split(".").length !== 3) {
@@ -20,7 +21,7 @@ function decodeContextData(token: string | null): Partial<AuthContextUserType> {
       lastname: tokenData.lastname,
     };
   } catch (e) {
-    console.error("Erreur lors du décodage du token :", e);
+    console.error("Error while decoding token :", e);
     return {};
   }
 }
@@ -31,6 +32,7 @@ export const authContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const client = useApolloClient();
   const [authUserData, setAuthUserData] = useState<
     Partial<AuthContextUserType>
   >(decodeContextData(localStorage.getItem("AUTH_TOKEN")));
@@ -38,11 +40,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState(localStorage.getItem("AUTH_TOKEN") ?? "");
 
   useEffect(() => {
-    if (token) {
-      localStorage.setItem("AUTH_TOKEN", token);
-      setAuthUserData(decodeContextData(token));
-    }
-  }, [token]);
+    const syncAuth = async () => {
+      if (token) {
+        // login / token changed
+        localStorage.setItem("AUTH_TOKEN", token);
+        setAuthUserData(decodeContextData(token));
+        try {
+          await client.resetStore(); // re-fetch active queries
+        } catch (e) {
+          console.error("Apollo reset error:", e);
+        }
+      } else {
+        // logout / token emptied
+        localStorage.removeItem("AUTH_TOKEN"); // ← deleting here
+        setAuthUserData({}); // reset context
+        try {
+          await client.clearStore(); // purge cache Apollo
+        } catch (e) {
+          console.error("Error clear Apollo:", e);
+        }
+      }
+    };
+
+    syncAuth();
+  }, [token, client]);
 
   return (
     <authContext.Provider value={{ authUserData, setToken }}>

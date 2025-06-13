@@ -1,19 +1,20 @@
 import { Input } from "@atoms/Input";
 import {
   ClientStatus,
+  useGetProjectsByUserQuery,
   useUpdateClientMutation,
 } from "@generated/graphql-types";
 import SuccessBanner from "@molecules/SuccesBanner";
-import { useState } from "react";
-import ErrorBanner from "./molecules/ErrorBanner";
 import { capitalize } from "@utils/stringUtils";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ErrorBanner from "./molecules/ErrorBanner";
 
 interface ModalClientProps {
   id: number;
   currentName?: string | null;
   currentEmail: string;
   currentStatus?: ClientStatus | null;
-  currentProjects?: string[];
   onClose: () => void;
 }
 
@@ -22,17 +23,26 @@ export default function ModalClient({
   currentName,
   currentEmail,
   currentStatus,
-  currentProjects = [],
   onClose,
 }: ModalClientProps) {
   const [name, setName] = useState(currentName ?? "");
   const [email, setEmail] = useState(currentEmail || "");
   const [status, setStatus] = useState<ClientStatus>(
-    currentStatus || ClientStatus.Active,
+    currentStatus || ClientStatus.Active
   );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Récupère tous les projets de l'utilisateur connecté
+  const { data: projectsData } = useGetProjectsByUserQuery();
+  const navigate = useNavigate();
+
+  // Filtre les projets pour ne garder que ceux du client affiché dans la modale
+  const clientProjects =
+    projectsData?.getProjectsByUser.filter(
+      (project) => project.client.id === id.toString(),
+    ) ?? [];
 
   const [updateClient, { loading }] = useUpdateClientMutation({
     onCompleted: () => {
@@ -59,7 +69,7 @@ export default function ModalClient({
       },
     });
   };
-  //TODO: les commentaires sont hardcodés et seront remplacés par une query dès que la fonctionnalité sera implémentée
+  //TODO: comments are hardcoded for nowand displayed in the modal. This is a placeholder for future implementation.
   const hardcodedComments = [
     { text: "I have a lot to say.." },
     { text: "This isn't a perfect world" },
@@ -82,6 +92,13 @@ export default function ModalClient({
 
       <div className="relative z-50 bg-white p-6 rounded-l-md w-[400px] max-w-full h-full">
         <h2 className="text-xl font-medium mb-6">Edit Client</h2>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-6 font-semibold text-gray-500 hover:text-gray-700"
+        >
+          x
+        </button>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -108,16 +125,23 @@ export default function ModalClient({
             <label htmlFor="projects" className="block text-base mb-1">
               Projects
             </label>
-            <div className="w-full py-2 px-4 bg-lightgray rounded-md focus:bg-white focus:outline-blue focus:invalid:border-red focus:invalid:outline-red">
-              {currentProjects && currentProjects.length > 0 ? (
-                currentProjects.map((project, index) => (
-                  <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    key={index}
-                    className="bg-orange-100 text-orange-800 rounded px-3 py-1 inline-block mr-2 mb-2"
+            <div className="w-full py-2 px-4 bg-lightgray rounded-md">
+              {clientProjects.length > 0 ? (
+                clientProjects.map((project) => (
+                  <button
+                    key={project.id}
+                    type="button"
+                    onClick={() =>
+                      navigate(
+                        `/projects/${project.projectName
+                          .toLowerCase()
+                          .replace(/\s+/g, "-")}-${project.id}`,
+                      )
+                    }
+                    className=" border border-[#D4711D] bg-[#FAF1E7] text-[#3A3631] text-sm font-medium rounded px-3 py-1 mb-2 shadow-none hover:bg-[#f9d9b5] transition-colors mr-2"
                   >
-                    {project}
-                  </div>
+                    {project.projectName}
+                  </button>
                 ))
               ) : (
                 <span className="text-gray-500 italic">

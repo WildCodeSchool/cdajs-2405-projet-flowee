@@ -3,6 +3,7 @@ import { Textarea } from "@components/atoms/TextArea";
 import { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
 import { useState } from "react";
 import type { ModalCreateItemProps } from "@interfaces/CreateItemProps";
+import { toast } from "react-toastify";
 
 export default function AddItem({
   mode,
@@ -23,11 +24,11 @@ export default function AddItem({
     isDeliverable ? DeliverableStatus.NotStarted : TaskStatus.NotStarted,
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isDeliverable) {
-      onSubmit({
+      await onSubmit({
         type: "deliverable",
         name,
         deadline,
@@ -35,8 +36,9 @@ export default function AddItem({
         projectId: Number(project),
         status: status as DeliverableStatus,
       });
+      toast.success("Deliverable created successfully!");
     } else {
-      onSubmit({
+      await onSubmit({
         type: "task",
         name,
         deadline,
@@ -44,6 +46,7 @@ export default function AddItem({
         deliverableId: Number(deliverableId),
         status: status as TaskStatus,
       });
+      toast.success("Task created successfully!");
     }
 
     onClose();
