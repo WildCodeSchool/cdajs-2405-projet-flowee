@@ -71,11 +71,11 @@ export default function ProjectModal({
           ×
         </button>
 
-        <h2 className="text-xl font-semibold">Modifier le projet</h2>
+        <h2 className="text-xl font-semibold">Edit the project</h2>
 
         <form onSubmit={handleEdit} className="flex flex-col gap-4 mt-2">
           <Input
-            label="Nom du projet *"
+            label="Project name*"
             required
             type="text"
             value={name}
@@ -83,7 +83,7 @@ export default function ProjectModal({
           />
 
           <Input
-            label="Date de fin"
+            label="Deadline"
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
@@ -100,17 +100,20 @@ export default function ProjectModal({
             type="submit"
             className="bg-theme-base text-white font-semibold py-2 px-4 rounded-md hover:opacity-90"
           >
-            Modifier le projet
+            Edit the project
           </button>
         </form>
 
-        <div className=" pt-4 mt-6">
+        <div className="border-t pt-4 mt-6">
+          <h3 className="text-sm font-medium text-gray-500 mb-2">
+            Delete this project
+          </h3>
           <button
             type="button"
             onClick={handleDelete}
             className="bg-red text-white font-semibold py-2 px-4 rounded-md hover:opacity-90"
           >
-            Supprimer le projet
+            Delete the project
           </button>
         </div>
       </section>

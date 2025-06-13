@@ -41,17 +41,17 @@ export default function CreateProject() {
 
       toast(
         <RoleToast
-          message="Projet créé avec succès"
+          message="Project created successfully!"
           role={authUserData.role}
         />,
         {
           progressClassName: "bg-theme-progress-base",
-        },
+        }
       );
       reset();
       navigate("/dashboard");
     } catch (e) {
-      console.error("Erreur lors de la création du projet :", e);
+      console.error("Error while creating the project :", e);
     }
   };
   return (
@@ -71,7 +71,7 @@ export default function CreateProject() {
               label="Project Name"
               type="text"
               {...register("projectName", {
-                required: "Ce champ est requis.",
+                required: "This field is required.",
               })}
             />
             {errors.projectName && (
@@ -82,10 +82,10 @@ export default function CreateProject() {
               label=" Client Email"
               type="email"
               {...register("clientEmail", {
-                required: "Ce champ est requis.",
+                required: "This field is required.",
                 pattern: {
                   value: /^\S+@\S+$/i,
-                  message: "Adresse email invalide.",
+                  message: "Invalid email address.",
                 },
               })}
             />
@@ -98,7 +98,7 @@ export default function CreateProject() {
               label="Client Name"
               type="text"
               {...register("clientName", {
-                required: "Ce champ est requis.",
+                required: "This field is required.",
               })}
             />
 
@@ -109,7 +109,7 @@ export default function CreateProject() {
             <Input
               label="End Date"
               type="date"
-              {...register("endDate", { required: "Ce champ est requis." })}
+              {...register("endDate", { required: "This field is required." })}
             />
 
             {errors.endDate && (
@@ -118,7 +118,9 @@ export default function CreateProject() {
 
             <Textarea
               label="Description"
-              {...register("description", { required: "Ce champ est requis." })}
+              {...register("description", {
+                required: "This field is required.",
+              })}
             />
 
             {errors.description && (
@@ -131,14 +133,14 @@ export default function CreateProject() {
               disabled={loading}
               className="bg-theme-base text-white px-4 py-2 rounded"
             >
-              {loading ? "Création en cours..." : "Créer le projet"}
+              {loading ? "Creating the project ..." : "Create Project"}
             </button>
             {error && (
-              <p className="text-red-500 mt-2">Erreur : {error.message}</p>
+              <p className="text-red-500 mt-2">Error : {error.message}</p>
             )}
             {data && (
               <div className="text-green-600 mt-2">
-                Projet créé avec succès: {data.createProject.projectName}
+                Project created successfully: {data.createProject.projectName}
               </div>
             )}
           </div>

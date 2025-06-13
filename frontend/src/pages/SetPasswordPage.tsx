@@ -36,7 +36,7 @@ export function SetPasswordPage() {
     if (token) {
       const decoded = jwtDecode<JWTContent>(token);
       if (decoded.purpose !== "activation") {
-        toast.error("Token invalide");
+        toast.error("Invalid activation token.");
         navigate("/activation-error");
         return;
       }
@@ -105,7 +105,7 @@ export function SetPasswordPage() {
             />
           </label>
           {errors.password && (
-            <p className="text-red-500">Mot de passe trop court</p>
+            <p className="text-red-500">Password is too short</p>
           )}
         </div>
 
@@ -117,8 +117,7 @@ export function SetPasswordPage() {
               {...register("confirmPassword", {
                 required: true,
                 validate: (val) =>
-                  val === watch("password") ||
-                  "Les mots de passe ne correspondent pas",
+                  val === watch("password") || "The passwords do not match",
               })}
               className="text-left p-2 border border-gray-300 rounded-md w-full"
             />
@@ -132,7 +131,7 @@ export function SetPasswordPage() {
           type="submit"
           className="bg-blueDark w-56 inline-block rounded-lg py-2 px-4 text-white text-base self-center"
         >
-          Valider
+          Set password
         </button>
       </form>
     </div>
