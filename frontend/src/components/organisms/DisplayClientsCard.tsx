@@ -120,21 +120,21 @@ export default function DisplayClientsCard({
 
   return (
     <div>
-      {/* Afficher le message de succès */}
+      {/* Display success messages */}
       {successMessage && (
         <div className="mb-4">
           <SuccessBanner message={successMessage} />
         </div>
       )}
 
-      {/* Afficher une erreur si une opération a échoué */}
+      {/* Display error if operation failed */}
       {operationError && (
         <div className="mb-4">
           <ErrorBanner message={operationError} />
         </div>
       )}
 
-      {/* Afficher un message si aucun client ne correspond aux  filtres*/}
+      {/* Display a message if no client for selected filters*/}
       {mappedClients.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           No client matches your search criteria.

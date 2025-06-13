@@ -34,7 +34,7 @@ const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
     return (
       <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end h-full">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative">
-          <p className="text-center text-gray-600">Chargement...</p>
+          <p className="text-center text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -69,7 +69,7 @@ const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
             <>
               {deliverable?.status && (
                 <p className="flex justify-between">
-                  <strong>Statut :</strong> {deliverable?.status}
+                  <strong>Status :</strong> {deliverable?.status}
                 </p>
               )}
               <p className="flex justify-between">
@@ -86,7 +86,7 @@ const ItemDetails = ({ id, type, onClose }: ItemDetailsProps) => {
           ) : (
             <>
               <p className="flex justify-between">
-                <strong>Statut :</strong>{" "}
+                <strong>Status :</strong>{" "}
                 {task?.status ? task?.status : "No status"}
               </p>
 

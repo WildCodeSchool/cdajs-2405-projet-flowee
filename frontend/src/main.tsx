@@ -18,7 +18,6 @@ import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
-import Test from "./pages/Test";
 import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
@@ -27,6 +26,10 @@ import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
 import ProjectDetails from "@pages/projectDetails/ProjectDetails";
+import LegalNotice from "@pages/LegalNotice";
+import TermsAndConditions from "@pages/TermsAndConditions";
+import PrivacyPolicy from "@pages/PrivacyPolicy";
+import NewAccount from "@components/organisms/NewAccount";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -88,10 +91,7 @@ const router = createBrowserRouter([
         path: "/settings",
         element: <Settings />,
       },
-      {
-        path: "/test",
-        element: <Test />,
-      },
+
       {
         path: "/activate",
         element: <ActivateAccountPage />,
@@ -115,6 +115,23 @@ const router = createBrowserRouter([
       {
         path: "/activate",
         element: <ActivateAccountPage />,
+      },
+      {
+        path: "/terms-and-conditions",
+
+        element: <TermsAndConditions />,
+      },
+      {
+        path: "/legal-notice",
+        element: <LegalNotice />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/newaccount",
+        element: <NewAccount user={"admin"} color={"bg-theme-base"} />,
       },
       {
         path: "*",

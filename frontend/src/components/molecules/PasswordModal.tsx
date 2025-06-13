@@ -67,7 +67,7 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
     setSuccess(false);
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError("The passwords do not match.");
       return;
     }
 
@@ -187,7 +187,12 @@ export default function PasswordModal({ isOpen, onClose }: PasswordModalProps) {
                       passwordCriteria,
                     )}`}
                     style={{
-                      width: `${(Object.values(passwordCriteria).filter(Boolean).length / 5) * 100}%`,
+                      width: `${
+                        (Object.values(passwordCriteria).filter(Boolean)
+                          .length /
+                          5) *
+                        100
+                      }%`,
                     }}
                   />
                 </div>

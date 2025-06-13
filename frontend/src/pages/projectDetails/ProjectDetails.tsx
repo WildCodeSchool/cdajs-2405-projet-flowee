@@ -18,6 +18,9 @@ import type { InitialValues } from "@interfaces/type";
 import ArrowIcon from "@components/atoms/Icons/Arrow";
 import ProjectModal from "@components/molecules/ProjectModal";
 import { toast } from "react-toastify";
+import { useUpdateProjectMutation } from "@generated/graphql-types";
+import type { UpdateProjectInput } from "@generated/graphql-types";
+import { useDeleteProjectMutation } from "@generated/graphql-types";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -32,24 +35,70 @@ const ProjectDetails = () => {
       console.error("Error fetching project details:", error);
     },
   });
+  const [updateProjectMutation] = useUpdateProjectMutation();
+  const [deleteProjectMutation] = useDeleteProjectMutation();
 
-  const handleEditProject = async (newName: string) => {
-    console.info("Editing project with new name:", newName);
-    // if (!project) return;
-    // // mutation GraphQL ici
-    // await updateProjectMutation({
-    //   variables: { id: project.id, name: newName },
-    // });
-    // await refetch();
+  const handleEditProject = async (updatedProject: {
+    id: number;
+    name: string;
+    endDate?: string;
+    description?: string;
+  }) => {
+    if (!project) return;
+
+    const payload: UpdateProjectInput = {
+      id: String(updatedProject.id),
+    };
+
+    if (updatedProject.name !== project.projectName) {
+      payload.name = updatedProject.name;
+    }
+
+    if (updatedProject.description !== project.description) {
+      payload.description = updatedProject.description;
+    }
+
+    if (updatedProject.endDate !== project.endDate) {
+      payload.endDate = updatedProject.endDate;
+    }
+
+    if (
+      payload.name === undefined &&
+      payload.description === undefined &&
+      payload.endDate === undefined
+    ) {
+      toast.info("No modification found.");
+      return;
+    }
+
+    try {
+      const result = await updateProjectMutation({
+        variables: { data: payload },
+      });
+      if (result) {
+        toast.success("Projet updated !");
+        await refetch();
+        projectModal.closeModal();
+      } else {
+        console.error("Update error");
+      }
+    } catch (error) {
+      console.error("Update error :", error);
+      toast.error("Error when updating project.");
+    }
   };
 
   const handleDeleteProject = async (id: number) => {
     console.info("Deleting project with ID:", id);
-    // if (!project) return;
-    // await deleteProjectMutation({
-    //   variables: { id: project.id },
-    // });
-    // navigate("/projects");
+
+    try {
+      await deleteProjectMutation({
+        variables: { projectId: id },
+      });
+    } catch (error) {
+      console.error("Error in mutation :", error);
+      throw error;
+    }
   };
 
   // States and modals
@@ -166,7 +215,7 @@ const ProjectDetails = () => {
           description: project?.description ?? "",
         }}
         onEdit={(updatedProject) => {
-          handleEditProject(updatedProject.name);
+          handleEditProject(updatedProject);
         }}
         onDelete={(id) => {
           deleteProjectModal.openModal({
@@ -180,12 +229,18 @@ const ProjectDetails = () => {
         open={deleteProjectModal.open}
         entityType="project"
         itemName={deleteProjectModal.data?.name ?? ""}
-        onConfirm={() => {
-          if (deleteProjectModal.data?.id) {
-            handleDeleteProject(deleteProjectModal.data.id);
-            toast.success("Project deleted successfully!");
+        onConfirm={async () => {
+          const id = deleteProjectModal.data?.id;
+          if (!id) return;
+
+          try {
+            await handleDeleteProject(id);
+            toast.success("Project successfully deleted !");
             deleteProjectModal.closeModal();
             navigate("/projects");
+          } catch (error) {
+            toast.error("Error when deleting project.");
+            console.error("Error when deleting project :", error);
           }
         }}
         onCancel={() => {

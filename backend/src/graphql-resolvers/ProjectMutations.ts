@@ -15,6 +15,7 @@ import { generateActivationToken } from "../utils/accesstoken";
 import { sendActivationEmail } from "../services/sendActivationEmail";
 import { invalidateCache } from "../utils/invalidatecache";
 import { ClientStatus } from "../enums/ClientStatus";
+import { UpdateProjectInput } from "../inputs/UpdateProjectInput";
 
 @Resolver(Project)
 export class ProjectMutations {
@@ -227,7 +228,7 @@ export class ProjectMutations {
     }
     // Invalidate cache
     await invalidateCache(ctx.redis, user);
-    console.info("Cache invalidated for user projects");
+    console.info("Cache invalidated when creating projects");
     console.info("Project created successfully:", result.newproject);
     // Return the newly created project
     if (!result.newproject) {
@@ -240,5 +241,106 @@ export class ProjectMutations {
     }
 
     return result.newproject;
+  }
+
+  @Authorized("ADMIN")
+  @Mutation(() => Project)
+  async updateProject(
+    @Arg("data", () => UpdateProjectInput) data: UpdateProjectInput,
+    @Ctx() ctx: MyContext,
+  ): Promise<Project> {
+    const user = ctx.user;
+    const project = await dataSource.manager.findOne(Project, {
+      where: { id: data.id },
+    });
+    console.info("data dans back", data);
+    console.info("projet dans back ", project);
+    if (!project) {
+      throw new Error("Unable to find the project");
+    }
+    if (data.name !== undefined) {
+      project.projectName = data.name;
+    }
+    if (data.description !== undefined) {
+      project.description = data.description;
+    }
+    if (data.endDate !== undefined) project.endDate = data.endDate;
+    await dataSource.manager.save(project);
+
+    if (user) {
+      await invalidateCache(ctx.redis, user);
+      console.info("Cache invalidated when updating project");
+    }
+
+    return project;
+  }
+
+  @Authorized("ADMIN")
+  @Mutation(() => Boolean)
+  async deleteProject(
+    @Arg("projectId", () => Number) projectId: number,
+    @Ctx() ctx: MyContext,
+  ): Promise<boolean> {
+    const user = ctx.user;
+    try {
+      const project = await dataSource.manager.findOne(Project, {
+        where: { id: projectId },
+        relations: ["client", "client.account"],
+      });
+
+      if (!project) {
+        throw new GraphQLError(`Project with ID ${projectId} not found`, {
+          extensions: { code: "PROJECT_NOT_FOUND" },
+        });
+      }
+
+      const client = project.client;
+      console.info("client dans delete", client);
+
+      if (!client) {
+        throw new GraphQLError(
+          `Le projet ${projectId} n'est associé à aucun client.`,
+          {
+            extensions: { code: "CLIENT_NOT_FOUND" },
+          },
+        );
+      }
+
+      await dataSource.manager.remove(project);
+
+      // On check si le client a encore des projets ,
+      // si non on passe le statut du client en INACTIVE et le account en INACTIVE
+      const remainingProjects = await dataSource.manager.count(Project, {
+        where: { client: { id: client.id } },
+      });
+
+      if (remainingProjects === 0) {
+        client.status = ClientStatus.INACTIVE;
+
+        if (client.account) {
+          client.account.status = AccountStatus.INACTIVE;
+          await dataSource.manager.save(client.account);
+        }
+
+        await dataSource.manager.save(client);
+        console.info(`Client ${client.id} et son compte ont été désactivés`);
+      }
+
+      if (user) {
+        await invalidateCache(ctx.redis, user);
+        console.info(`Cache invalidated: projectsByUser:${user.id}`);
+        const stillThere = await ctx.redis.get(`projectsByUser:${user.id}`);
+        console.info("🚨 Redis after deletion:", stillThere);
+      }
+
+      return true;
+    } catch (error) {
+      throw new GraphQLError("Failed to delete project", {
+        extensions: {
+          code: "DELETE_PROJECT_ERROR",
+          originalError: (error as Error).message || "Unknown error",
+        },
+      });
+    }
   }
 }

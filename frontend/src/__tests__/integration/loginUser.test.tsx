@@ -14,7 +14,7 @@ import {
   vi,
 } from "vitest";
 
-// Suppression des avertissements React Router
+//  Delete react router warnings to avoid cluttering the test output
 const originalConsoleWarn = console.warn;
 beforeAll(() => {
   console.warn = (msg, ...args) => {
@@ -27,13 +27,13 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
-//Mock du context d'authentification
+//Context authentification mock
 const setToken = vi.fn();
 vi.mock("@context/authContext", () => ({
   useAuth: () => ({ setToken }),
 }));
 
-// Mock de useNavigate de react-router
+//react-router useNavigate mock
 const mockNavigate = vi.fn();
 vi.mock("react-router", async (importOriginal) => ({
   ...(await importOriginal()),
@@ -68,7 +68,7 @@ describe("LoginForm", () => {
     mockNavigate.mockClear();
   });
 
-  it("connecte et redirige l'utilisateur avec les bons identifiants", async () => {
+  it("Logs user and redirect with right elements", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -88,14 +88,14 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText(/email/i), email);
     await userEvent.type(screen.getByLabelText(/password/i), password);
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
-    // On vérifie que le token est bien stocké et la navigation lancée
+    // Verifies that token is set and user is redirected
     await waitFor(() => {
       expect(setToken).toHaveBeenCalledWith("mocked-jwt-token");
       expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
     });
   });
 
-  it("affiche une erreur si les identifiants sont incorrects", async () => {
+  it("Displays an error if login elements are incorrect ", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const router = createMemoryRouter(
@@ -135,7 +135,7 @@ describe("LoginForm", () => {
     errorSpy.mockRestore();
   });
 
-  it("affiche une erreur quand l'email est vide", async () => {
+  it("Displays an error if email is empty", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -152,21 +152,21 @@ describe("LoginForm", () => {
       </MockedProvider>,
     );
 
-    // On remplit uniquement le mot de passe
+    // Fills only the password
     await userEvent.type(screen.getByLabelText(/password/i), "password123");
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    // On vérifie que l'erreur s'affiche
+    // Error message should appear
     const errorMessage = await screen.findByText("Email is required");
     expect(errorMessage).toBeInTheDocument();
     expect(errorMessage).toHaveClass("text-red");
-    // On vérifie que le token n'est pas stocké
+    // Verifies that the token is not set
     expect(setToken).not.toHaveBeenCalled();
-    // On vérifie qu'il n'y a pas de redirection
+    // Verifies that the navigation did not happen
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("affiche une erreur quand le mot de passe est vide", async () => {
+  it("Displays an error when password is empty", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -183,21 +183,21 @@ describe("LoginForm", () => {
       </MockedProvider>,
     );
 
-    // On remplit uniquement l'email
+    // Fills only the email
     await userEvent.type(screen.getByLabelText(/email/i), "user@mail.com");
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    // On vérifie que l'erreur s'affiche
+    // Error message should appear
     const errorMessage = await screen.findByText("Password is required");
     expect(errorMessage).toBeInTheDocument();
     expect(errorMessage).toHaveClass("text-red");
-    // On vérifie que le token n'est pas stocké
+    // Verifies that the token is not set
     expect(setToken).not.toHaveBeenCalled();
-    // On vérifie qu'il n'y a pas de redirection
+    // Verifies that the navigation did not happen
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("affiche des erreurs quand les deux champs sont vides", async () => {
+  it("Displays errors when both fields are empty", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -214,23 +214,23 @@ describe("LoginForm", () => {
       </MockedProvider>,
     );
 
-    // On ne remplit aucun champ, on clique directement
+    // Don't fill any fields. Click the sign in button
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    // On vérifie que les deux messages d'erreur s'affichent
+    // Verifies that both error messages are displayed
     const emailError = await screen.findByText("Email is required");
     const passwordError = await screen.findByText("Password is required");
     expect(emailError).toBeInTheDocument();
     expect(passwordError).toBeInTheDocument();
     expect(emailError).toHaveClass("text-red");
     expect(passwordError).toHaveClass("text-red");
-    // On vérifie que le token n'est pas stocké
+    // Verifies that the token is not set
     expect(setToken).not.toHaveBeenCalled();
-    // On vérifie qu'il n'y a pas de redirection
+    // Verifies that the navigation did not happen
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("gère correctement les espaces avant/après dans l'email", async () => {
+  it("Deals correctly with spaces before and after email", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -241,7 +241,7 @@ describe("LoginForm", () => {
       routerConfig,
     );
 
-    // On prépare le mock pour l'email sans espaces
+    //Prepare mock for spaceless email
     const email = "user@mail.com";
     const password = "1234";
     const mocks = [
@@ -261,7 +261,7 @@ describe("LoginForm", () => {
       </MockedProvider>,
     );
 
-    // On saisit l'email avec des espaces et le bon mot de passe
+    // Types in email with spaces and right password
     await userEvent.type(
       screen.getByLabelText(/email/i),
       "   user@mail.com   ",
@@ -269,14 +269,14 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText(/password/i), password);
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    // On vérifie que la connexion fonctionne (token stocké et redirection)
+    // Verfies that login is successful ( token is set and navigation happens )
     await waitFor(() => {
       expect(setToken).toHaveBeenCalledWith("mocked-jwt-token");
       expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
     });
   });
 
-  it("ne traite qu'une seule soumission même si l'utilisateur clique plusieurs fois rapidement", async () => {
+  it("Only submit once even if user clicks many times", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const router = createMemoryRouter(
@@ -313,19 +313,19 @@ describe("LoginForm", () => {
 
     const button = screen.getByRole("button", { name: /sign in/i });
 
-    // Premier clic (le seul qui doit être pris en compte)
+    // First click should trigger the login. The only one that will be processed
     await userEvent.click(button);
 
-    // Attends que le bouton soit disabled (mutation en cours)
+    // Wait for the button to be disabled. Mutation processing
     await waitFor(() => {
       expect(button).toBeDisabled();
     });
 
-    // Clics supplémentaires (ne doivent rien faire)
+    // More clicks should not trigger the login again
     await userEvent.click(button);
     await userEvent.click(button);
 
-    // On vérifie qu'une seule connexion est traitée
+    // Verifies that the login mutation was called only once
     await waitFor(() => {
       expect(setToken).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledTimes(1);
@@ -335,7 +335,7 @@ describe("LoginForm", () => {
     errorSpy.mockRestore();
   });
 
-  it("affiche un message générique si le compte est désactivé", async () => {
+  it("Display a generci message if account is deactivated", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const router = createMemoryRouter(
       [
@@ -369,7 +369,7 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText(/password/i), password);
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    // On vérifie que le message générique s'affiche
+    // Verifies that the generic error message is displayed
     expect(
       await screen.findByText(/wrong credentials, please try again/i),
     ).toBeInTheDocument();
@@ -378,7 +378,7 @@ describe("LoginForm", () => {
     errorSpy.mockRestore();
   });
 
-  it("permet la connexion en appuyant sur la touche Entrée", async () => {
+  it("Allow login with Enter", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -410,17 +410,17 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText(/email/i), email);
     await userEvent.type(screen.getByLabelText(/password/i), password);
 
-    // Appui sur "Entrée" dans le champ mot de passe
+    // Press Enter in the password field
     await userEvent.keyboard("{Enter}");
 
-    // On vérifie que la connexion fonctionne
+    // Verifies that login is successful
     await waitFor(() => {
       expect(setToken).toHaveBeenCalledWith("mocked-jwt-token");
       expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
     });
   });
 
-  it("a des champs et boutons accessibles au clavier et des labels corrects", async () => {
+  it("Has buttons and fields accessible with keyboard and the right labels", async () => {
     const router = createMemoryRouter(
       [
         {
@@ -437,18 +437,18 @@ describe("LoginForm", () => {
       </MockedProvider>,
     );
 
-    // Vérifie la présence des labels
+    // Verfies that the email and password fields are present
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
 
-    // Vérifie que le bouton est focusable et accessible
+    // Verifies that button is accessible and has the right label
     const button = screen.getByRole("button", { name: /sign in/i });
     expect(button).toBeInTheDocument();
 
-    // Forcer le blur pour simuler un utilisateur qui commence à tabuler
+    // Forces blur to simulate tab navigation
     (document.activeElement as HTMLElement)?.blur();
 
-    // Tabule dans l'ordre réel du DOM
+    // Tabs in the dom order
     await userEvent.tab(); // 1. Email
     expect(screen.getByLabelText(/email/i)).toHaveFocus();
 
@@ -462,7 +462,7 @@ describe("LoginForm", () => {
     expect(button).toHaveFocus();
   });
 
-  it("affiche un message d'erreur générique pour une tentative d'injection SQL", async () => {
+  it("Displays a generic error message for SQL injection", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const router = createMemoryRouter(
       [
@@ -474,7 +474,7 @@ describe("LoginForm", () => {
       routerConfig,
     );
 
-    // Email au format valide mais "bizarre"
+    // Email with right format but weird
     const email = "or1@evil.com";
     const password = "' OR 1=1 --";
     const errorMocks = [
@@ -505,7 +505,7 @@ describe("LoginForm", () => {
     errorSpy.mockRestore();
   });
 
-  it("n'affiche pas de code HTML ou script dans les messages d'erreur (protection XSS)", async () => {
+  it("Doesn't display hmtl or script in error messages (XSS protection)", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const router = createMemoryRouter(
       [
@@ -517,7 +517,7 @@ describe("LoginForm", () => {
       routerConfig,
     );
 
-    // Email valide, mot de passe avec XSS
+    // Valid email but xss password
     const email = "xss@test.com";
     const password = "<script>alert(1)</script>";
     const errorMocks = [
@@ -540,13 +540,13 @@ describe("LoginForm", () => {
     await userEvent.type(screen.getByLabelText(/password/i), password);
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
-    // Vérifie que le message d'erreur générique s'affiche
+    //Verifies that generic error message is displayed
     const errorMessage = await screen.findByText(
       /wrong credentials, please try again/i,
     );
     expect(errorMessage).toBeInTheDocument();
 
-    // Vérifie que le texte saisi n'est pas affiché tel quel dans l'UI
+    // Verifies that the xss script is not rendered
     expect(
       screen.queryByText(/<script>alert\(1\)<\/script>/i),
     ).not.toBeInTheDocument();

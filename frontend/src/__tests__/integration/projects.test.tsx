@@ -14,7 +14,7 @@ import {
 } from "vitest";
 import Projects from "../../pages/Projects";
 
-// Suppression des avertissements React Router
+//  Delete react router warnings to avoid cluttering the test output
 const originalConsoleWarn = console.warn;
 beforeAll(() => {
   console.warn = (msg, ...args) => {
@@ -27,21 +27,25 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
+<<<<<<< update-integration-tests
 // Mock du contexte d'authentification
+=======
+// 1. Context authentification mock
+>>>>>>> dev
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));
 
-// Conversion du mock pour TypeScript
+// Conversion of mock for TypeScript
 const mockUseAuth = useAuth as ReturnType<typeof vi.fn>;
 
-// Mock complet pour correspondre à la requête
+// Full mock to match the expected structure
 const mockProjects = [
   {
     id: "1",
-    projectName: "Projet Alpha",
+    projectName: "Alpha Project",
     companyUserId: "user-1",
-    description: "Description Alpha",
+    description: "A description of Alpha Project",
     startDate: "2024-01-01",
     endDate: "2024-12-31",
     status: "In Progress",
@@ -51,9 +55,9 @@ const mockProjects = [
   },
   {
     id: "2",
-    projectName: "Projet Beta",
+    projectName: "Beta Project",
     companyUserId: "user-2",
-    description: "Description Beta",
+    description: "A description of Beta Project",
     startDate: "2024-02-01",
     endDate: "2025-01-15",
     status: "Done",
@@ -63,7 +67,7 @@ const mockProjects = [
   },
 ];
 
-// Configuration du routeur
+// Router configuration
 const routerConfig = {
   future: {
     v7_startTransition: true,
@@ -88,7 +92,7 @@ describe("Projects Page", () => {
     vi.clearAllMocks();
   });
 
-  it("affiche l'état de chargement puis les projets quand la requête réussit", async () => {
+  it("Displays the loading state then projects when request is successful", async () => {
     mockUseAuth.mockReturnValue({ authUserData: { role: "ADMIN" } });
     const successMocks = [
       {
@@ -99,20 +103,20 @@ describe("Projects Page", () => {
 
     renderComponent(successMocks);
 
-    // 1 Vérifie l'état de chargement initial
+    // 1 Verifies that the loading state is displayed initially
     expect(screen.getByText("Loading...")).toBeInTheDocument();
 
-    // 2 Attendre que le chargement soit terminé et que les projets soient affichés
+    // 2 Wait for loading to finish and projects to be displayed
     await waitFor(() => {
-      expect(screen.getByText("Projet Alpha")).toBeInTheDocument();
-      expect(screen.getByText("Projet Beta")).toBeInTheDocument();
+      expect(screen.getByText("Alpha project")).toBeInTheDocument();
+      expect(screen.getByText("Beta project")).toBeInTheDocument();
     });
 
-    // 3 Vérifier que le loading a disparu
+    // 3 Verifies that the loading state is no longer displayed
     expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
   });
 
-  it("affiche un message d'erreur si la requête GraphQL échoue", async () => {
+  it("Displays an error message if Graphql fails", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mockUseAuth.mockReturnValue({ authUserData: { role: "ADMIN" } });
     const errorMocks = [
@@ -121,19 +125,17 @@ describe("Projects Page", () => {
           query: GetProjectsByUserDocument,
           variables: {},
         },
-        error: new Error("Une erreur s'est produite"),
+        error: new Error("An error occured"),
       },
     ];
 
     renderComponent(errorMocks);
 
-    expect(
-      await screen.findByText(/une erreur s'est produite/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/An error occured/i)).toBeInTheDocument();
     errorSpy.mockRestore();
   });
 
-  it("affiche un message si aucun projet n'est trouvé", async () => {
+  it("Displays a message if no projects found", async () => {
     mockUseAuth.mockReturnValue({ authUserData: { role: "ADMIN" } });
     const emptyMocks = [
       {
@@ -154,11 +156,11 @@ describe("Projects Page", () => {
     expect(await screen.findByText("No projects found!")).toBeInTheDocument();
   });
 
-  it("n'autorise pas l'accès aux utilisateurs sans le bon rôle", () => {
-    // Simule un utilisateur non autorisé
+  it("Doesn't allow access withtout the right role", () => {
+    // Simulate an unauthorized user
     mockUseAuth.mockReturnValue({ authUserData: { role: "SOME_OTHER_ROLE" } });
 
-    // Ajout d'un mock pour éviter l'erreur "No more mocked responses"
+    // Adds a mock to avoid the error "No more mocked responses"
     const mocksForAuth = [
       {
         request: { query: GetProjectsByUserDocument, variables: {} },
