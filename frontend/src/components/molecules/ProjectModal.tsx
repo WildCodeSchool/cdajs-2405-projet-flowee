@@ -52,8 +52,6 @@ export default function ProjectModal({
       endDate: endDate || undefined,
       description: description.trim(),
     });
-
-    onClose();
   };
 
   const handleDelete = () => {

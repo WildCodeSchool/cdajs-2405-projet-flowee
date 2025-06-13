@@ -14,7 +14,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { CREATE_PROJECT } from "../../graphql-mutations/createproject";
+import { CREATE_PROJECT } from "../../graphql-mutations/project";
 import CreateProject from "../../pages/CreateProject";
 
 // Delete react router warnings to avoid cluttering the test output

@@ -27,6 +27,7 @@ import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { SetPasswordPage } from "@pages/SetPasswordPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
 import ProjectDetails from "@pages/projectDetails/ProjectDetails";
+import NewAccount from "@components/organisms/NewAccount";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -115,6 +116,10 @@ const router = createBrowserRouter([
       {
         path: "/activate",
         element: <ActivateAccountPage />,
+      },
+      {
+        path: "/newaccount",
+        element: <NewAccount user={"admin"} color={"bg-theme-base"} />,
       },
       {
         path: "*",
