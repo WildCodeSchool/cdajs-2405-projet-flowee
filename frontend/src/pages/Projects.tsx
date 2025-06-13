@@ -3,7 +3,7 @@ import { ProjectStatus } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
 import DisplayCards from "@organisms/DisplayCards";
 import SearchBar from "@organisms/Search";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@organisms/Cards";
 import { NavLink } from "react-router-dom";
 import ArrowIcon from "@components/atoms/Icons/Arrow";
@@ -15,6 +15,7 @@ import Filters from "@components/molecules/Filters";
 import type { SortOrder, FilterOption } from "@components/molecules/Filters";
 import { useLocation } from "react-router-dom";
 import { slugify } from "@utils/project";
+
 export default function Projects() {
   const [showFilters, setShowFilters] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
@@ -23,7 +24,9 @@ export default function Projects() {
 
   const { authUserData } = useAuth();
   const location = useLocation();
-  const { data, loading, error } = useGetProjectsByUserQuery({});
+  const { data, loading, error } = useGetProjectsByUserQuery({
+    fetchPolicy: "network-only",
+  });
 
   const allowedRoles = ["ADMIN", "CLIENT"];
   const today = useMemo(() => new Date(), []);
