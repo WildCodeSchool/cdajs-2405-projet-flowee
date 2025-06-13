@@ -18,7 +18,6 @@ import Projects from "./pages/Projects";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Error404visitor from "./pages/Error404";
-import Test from "./pages/Test";
 import { AuthProvider } from "./context/authContext";
 import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
@@ -92,10 +91,7 @@ const router = createBrowserRouter([
         path: "/settings",
         element: <Settings />,
       },
-      {
-        path: "/test",
-        element: <Test />,
-      },
+
       {
         path: "/activate",
         element: <ActivateAccountPage />,
