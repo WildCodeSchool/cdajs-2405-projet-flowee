@@ -61,4 +61,47 @@ describe("deliverable Mutations", () => {
       });
     });
   });
+
+  describe("updateDeliverable", () => {
+    it("should update an existing deliverable", async () => {
+      const existingDeliverable = new Deliverable(
+        "Old name",
+        "Old perimeter",
+        "2025-12-01",
+        DeliverableStatus.NOT_STARTED,
+        "2025-01-01",
+        1,
+      );
+      existingDeliverable.id = 123;
+
+      const updatedDeliverable = {
+        name: "New name",
+        perimeter: "New perimeter",
+        deliveryDate: "2025-12-31",
+        status: DeliverableStatus.APPROVED,
+        reviewTime: 3,
+      };
+
+      const mock = mockTypeOrm();
+      mock.onMock(Deliverable).toReturn(existingDeliverable, "findOne");
+
+      mock
+        .onMock(Deliverable)
+        .toReturn({ ...existingDeliverable, ...updatedDeliverable }, "save");
+
+      const result = await deliverableMutations.updateDeliverable(
+        existingDeliverable.id,
+        updatedDeliverable,
+      );
+
+      expect(result).toMatchObject({
+        id: 123,
+        name: updatedDeliverable.name,
+        perimeter: updatedDeliverable.perimeter,
+        deliveryDate: updatedDeliverable.deliveryDate,
+        status: updatedDeliverable.status,
+        reviewTime: updatedDeliverable.reviewTime,
+      });
+    });
+  });
 });

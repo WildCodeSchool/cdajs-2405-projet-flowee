@@ -9,11 +9,12 @@ import {
 import type { ClientUI } from "@interfaces/client.types";
 import { useEffect, useState } from "react";
 import CardsClient from "./CardsClient";
+import type { SortOrder } from "@components/molecules/Filters";
 
 interface DisplayClientsProps {
   searchFilter: string;
-  sortOrder: "NONE" | "AZ" | "ZA";
-  statusFilter: ClientStatus | "ALL";
+  sortOrder: SortOrder;
+  statusFilter: ClientStatus | "All";
 }
 
 export default function DisplayClientsCard({
@@ -55,7 +56,7 @@ export default function DisplayClientsCard({
   });
 
   // Status filter
-  if (statusFilter !== "ALL") {
+  if (statusFilter !== "All") {
     filteredClients = filteredClients.filter(
       (client) => client.status === statusFilter,
     );
@@ -74,7 +75,7 @@ export default function DisplayClientsCard({
 
   const handleDelete = (id: number) => {
     if (window.confirm("Are you sure you want to delete this client?")) {
-      setOperationError(null); // Réinitialiser l'erreur précédente
+      setOperationError(null);
 
       deleteClient({ variables: { id } })
         .then(() => {
@@ -92,7 +93,7 @@ export default function DisplayClientsCard({
 
   const handleArchive = (id: number) => {
     if (window.confirm("Are you sure you want to archive this client?")) {
-      setOperationError(null); // Réinitialiser l'erreur précédente
+      setOperationError(null);
 
       archiveClient({ variables: { id } })
         .then(() => {

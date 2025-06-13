@@ -4,8 +4,9 @@ import {
   useGetProjectsByUserQuery,
   useMeQuery,
 } from "@generated/graphql-types";
-import { useState } from "react";
 import PasswordModal from "@molecules/PasswordModal";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SettingsClient() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function SettingsClient() {
     loading: projectsLoading,
     error: projectsError,
   } = useGetProjectsByUserQuery();
+  const navigate = useNavigate();
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -116,6 +118,11 @@ export default function SettingsClient() {
                 <button
                   key={project.id}
                   type="button"
+                  onClick={() =>
+                    navigate(
+                      `/projects/${project.projectName.toLowerCase().replace(/\s+/g, "-")}-${project.id}`,
+                    )
+                  }
                   className="border border-[#D4711D] bg-[#FAF1E7] text-[#3A3631] text-sm font-medium rounded-md px-3 py-1 shadow-none hover:bg-[#f9d9b5] transition-colors mr-2"
                 >
                   {project.projectName}

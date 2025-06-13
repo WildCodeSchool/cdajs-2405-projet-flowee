@@ -5,20 +5,31 @@ import SettingsClient from "@organisms/SettingsClient";
 
 export default function Settings() {
   const { data, loading, error } = useMeQuery();
+  console.info("data", data);
+  if (loading)
+    return (
+      <SignedInLayout>
+        <div>Loading...</div>
+      </SignedInLayout>
+    );
+  if (error)
+    return (
+      <SignedInLayout>
+        <div>Error: {error.message}</div>
+      </SignedInLayout>
+    );
+  if (!data?.me)
+    return (
+      <SignedInLayout>
+        <div>User not found.</div>
+      </SignedInLayout>
+    );
 
   return (
     <SignedInLayout>
-      {loading && <div>Loading...</div>}
-      {error && <div>Error: {error.message}</div>}
-      {!loading && !error && !data?.me && <div>User not found.</div>}
-      {!loading && !error && data?.me?.companyUser && <SettingsCompanyUser />}
-      {!loading && !error && data?.me?.client && <SettingsClient />}
-      {/* Optionnel : fallback si aucun type reconnu */}
-      {!loading &&
-        !error &&
-        data?.me &&
-        !data.me.companyUser &&
-        !data.me.client && <div>Unknown user type</div>}
+      {data.me.companyUser && <SettingsCompanyUser />}
+      {data.me.client && <SettingsClient />}
+      {!data.me.companyUser && !data.me.client && <div>Unknown user type</div>}
     </SignedInLayout>
   );
 }

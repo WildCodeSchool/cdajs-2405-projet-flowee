@@ -506,6 +506,7 @@ describe("LoginForm", () => {
   });
 
   it("n'affiche pas de code HTML ou script dans les messages d'erreur (protection XSS)", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const router = createMemoryRouter(
       [
         {
@@ -551,5 +552,6 @@ describe("LoginForm", () => {
     ).not.toBeInTheDocument();
     expect(setToken).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });

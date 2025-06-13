@@ -10,6 +10,7 @@ import { useRoleTheme } from "@context/roleThemeContext";
 import ArrowIcon from "@icons/Arrow";
 import { NavLink } from "react-router-dom";
 import ItemDetails from "@pages/ItemDetails";
+import { slugify } from "@utils/project";
 export interface SectionProps {
   title: string;
   variant: CardVariant;
@@ -58,7 +59,7 @@ export const Section: React.FC<SectionProps> = ({
 
   function getItemPath(item: Project | Deliverable | Task): string {
     if (item.__typename === "Project") {
-      return `/projects/${item.projectName?.toLowerCase()}-${item.id}`;
+      return `/projects/${slugify(item.projectName)}-${item.id}`;
     }
 
     return "/";
@@ -80,6 +81,18 @@ export const Section: React.FC<SectionProps> = ({
           )
         : [];
       break;
+  }
+  if (searchFilter.trim() !== "") {
+    const lowerSearch = searchFilter.trim().toLowerCase();
+    items = items.filter((item) => {
+      if ("projectName" in item) {
+        return item.projectName.toLowerCase().includes(lowerSearch);
+      }
+      if ("name" in item) {
+        return item.name.toLowerCase().includes(lowerSearch);
+      }
+      return false;
+    });
   }
 
   return (
@@ -127,7 +140,7 @@ export const Section: React.FC<SectionProps> = ({
                     to={getItemPath(item)}
                     className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight"
                   >
-                    <ArrowIcon />
+                    <ArrowIcon className="text-white" />
                   </NavLink>
                 ) : (
                   <button
@@ -135,7 +148,7 @@ export const Section: React.FC<SectionProps> = ({
                     onClick={handleOpen}
                     className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight"
                   >
-                    <ArrowIcon />
+                    <ArrowIcon className="text-white" />
                   </button>
                 )}
               </section>

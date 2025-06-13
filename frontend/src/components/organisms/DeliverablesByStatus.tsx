@@ -11,13 +11,20 @@ import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
 import { useState } from "react";
 import ItemDetails from "@pages/ItemDetails";
 import SearchBar from "./Search";
+import PencilIcon from "@components/atoms/Icons/PencilIcon";
+
 interface Props {
   deliverables: Deliverable[];
   projectSlug: string | undefined;
   onDelete: (id: number, name: string) => void;
+  onUpdate: (del: Deliverable) => void;
 }
 
-export const DeliverablesByStatus = ({ deliverables, onDelete }: Props) => {
+export const DeliverablesByStatus = ({
+  deliverables,
+  onDelete,
+  onUpdate,
+}: Props) => {
   const [searchFilter, setSearchFilter] = useState("");
 
   const [selectedDeliverableId, setSelectedDeliverableId] = useState<
@@ -64,11 +71,17 @@ export const DeliverablesByStatus = ({ deliverables, onDelete }: Props) => {
                     <aside className="flex  gap-2 ">
                       <button
                         type="button"
+                        onClick={() => onUpdate(deliverable)}
+                      >
+                        <PencilIcon className="w-3 h-3" />
+                      </button>
+                      <button
+                        type="button"
                         onClick={() =>
                           onDelete(Number(deliverable.id), deliverable.name)
                         }
                       >
-                        <TrashcanIcon className="w-3 h-3 fill-red" />
+                        <TrashcanIcon className="w-3 h-3" />
                       </button>
                       <button
                         type="button"

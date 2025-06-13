@@ -9,8 +9,13 @@ import { Textarea } from "@atoms/TextArea";
 
 import ArrowIcon from "@components/atoms/Icons/Arrow";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import RoleToast from "@components/organisms/RoleToast";
+import { useAuth } from "@context/authContext";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CreateProject() {
+  const { authUserData } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -33,7 +38,16 @@ export default function CreateProject() {
         refetchQueries: ["GetProjectsByUser"],
         awaitRefetchQueries: true,
       });
-      alert("Projet créé avec succès !");
+
+      toast(
+        <RoleToast
+          message="Projet créé avec succès"
+          role={authUserData.role}
+        />,
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
       reset();
       navigate("/dashboard");
     } catch (e) {
@@ -46,8 +60,9 @@ export default function CreateProject() {
         <Navigation />
       </div>
       <div className="flex-1 lg:flex lg:flex-col gap-4 p-4 md:ml-4 pt-4 ">
-        <NavLink to="/projects" className="">
-          Back to projects <ArrowIcon />
+        <NavLink to="/projects" className="flex gap-4 items-center">
+          <ArrowIcon className="text-black rotate-180" />
+          <p className="underline">Back to projects</p>{" "}
         </NavLink>
         <h1 className="text-2xl font-bold mb-4">New project</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">

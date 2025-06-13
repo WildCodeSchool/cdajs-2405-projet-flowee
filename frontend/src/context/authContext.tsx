@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import type { AuthContextType } from "@interfaces/AuthContextType";
 import type { AuthContextUserType } from "@interfaces/AuthContextUserType";
+import { useApolloClient } from "@apollo/client";
 
 function decodeContextData(token: string | null): Partial<AuthContextUserType> {
   if (!token || token.split(".").length !== 3) {
@@ -31,6 +32,7 @@ export const authContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const client = useApolloClient();
   const [authUserData, setAuthUserData] = useState<
     Partial<AuthContextUserType>
   >(decodeContextData(localStorage.getItem("AUTH_TOKEN")));
@@ -38,11 +40,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState(localStorage.getItem("AUTH_TOKEN") ?? "");
 
   useEffect(() => {
-    if (token) {
-      localStorage.setItem("AUTH_TOKEN", token);
-      setAuthUserData(decodeContextData(token));
-    }
-  }, [token]);
+    const syncAuth = async () => {
+      if (token) {
+        // login / token changé
+        localStorage.setItem("AUTH_TOKEN", token);
+        setAuthUserData(decodeContextData(token));
+        try {
+          await client.resetStore(); // re-fetch des queries actives
+        } catch (e) {
+          console.error("Erreur reset Apollo:", e);
+        }
+      } else {
+        // logout / token vidé
+        localStorage.removeItem("AUTH_TOKEN"); // ← suppression ici
+        setAuthUserData({}); // reset contexte
+        try {
+          await client.clearStore(); // purge cache Apollo
+        } catch (e) {
+          console.error("Erreur clear Apollo:", e);
+        }
+      }
+    };
+
+    syncAuth();
+  }, [token, client]);
 
   return (
     <authContext.Provider value={{ authUserData, setToken }}>
