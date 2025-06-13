@@ -44,7 +44,8 @@ export async function sendActivationEmail(
         By creating an account, you accept our
         <a href="https://staging.052024-jaune-3.wns.wilders.dev/terms-and-conditions" style="color: #E19251;">Terms of Use</a>
         and can consult our
-        <a href="https://staging.052024-jaune-3.wns.wilders.dev/legal-notice" style="color: #E19251;">Legal Notice</a>.
+        <a href="https://staging.052024-jaune-3.wns.wilders.dev/legal-notice" style="color: #E19251;">Legal Notice</a> and our 
+         <a href="https://staging.052024-jaune-3.wns.wilders.dev/privacy-policy" style="color: #E19251;">Privacy Policy</a>
       </p>
       <p style="font-size: 0.86em; color: #aaa; text-align: center; margin-top: 16px;">
         Flowee – Project management app.<br/>

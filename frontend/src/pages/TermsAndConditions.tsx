@@ -46,28 +46,29 @@ function TermsAndConditions() {
           </Button>
         </aside>
       </div>
-      <main className="flex flex-col gap-10 prose max-w-5xl mx-auto px-10 py-8">
-        <h1 className="text-3xl md:block font-bold text-center underline">
+      <div className="w-[80vw] border-t border-gray-300 mx-auto my-8" />
+      <div className="flex flex-col gap-10  max-w-5xl  px-20 py-8">
+        <h1 className="text-3xl md:block font-bold text-left underline">
           Terms of Use
         </h1>
 
-        <section>
-          <h2>1. Purpose</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">1. Purpose</h2>
           <p>
             These Terms of Use define the rules for using the Flowee platform.
           </p>
         </section>
 
-        <section>
-          <h2>2. Access to the Service</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">2. Access to the Service</h2>
           <p>
             Access to Flowee requires creating an account. You agree to provide
             accurate information and to keep it up to date.
           </p>
         </section>
 
-        <section>
-          <h2>3. Use of the Service</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">3. Use of the Service</h2>
           <ul>
             <li>
               You agree to use Flowee in compliance with the law and the rights
@@ -84,46 +85,46 @@ function TermsAndConditions() {
           </ul>
         </section>
 
-        <section>
-          <h2>4. Intellectual Property</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">4. Intellectual Property</h2>
           <p>
             The content of Flowee (texts, images, code, logo, etc.) remains the
             exclusive property of the publisher.
           </p>
         </section>
 
-        <section>
-          <h2>5. Liability</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">5. Liability</h2>
           <p>
             The publisher cannot be held responsible for service interruptions
             or indirect damages related to the use of the platform.
           </p>
         </section>
 
-        <section>
-          <h2>6. Account Termination</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">6. Account Termination</h2>
           <p>
             In case of non-compliance with these Terms of Use, Flowee reserves
             the right to suspend or delete your account without notice.
           </p>
         </section>
 
-        <section>
-          <h2>7. Changes to the Terms</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">7. Changes to the Terms</h2>
           <p>
             Flowee may modify these Terms of Use at any time. Users will be
             notified of changes by email or via the platform.
           </p>
         </section>
 
-        <section>
-          <h2>8. Contact</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">8. Contact</h2>
           <p>
             For any questions regarding these Terms, please contact us at{" "}
             <a href="mailto:appflowee@gmail.com">appflowee@gmail.com</a>.
           </p>
         </section>
-      </main>
+      </div>
     </div>
   );
 }

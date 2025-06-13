@@ -48,44 +48,44 @@ export default function LegalNotice() {
           </Button>
         </aside>
       </div>
-      <main className="prose max-w-3xl mx-auto py-8">
-        <h1 className="text-3xl md:block font-bold text-center underline">
-          Legal Notice
+      <div className="w-[80vw] border-t border-gray-300 mx-auto my-8" />
+      <div className="flex flex-col gap-8 p-20 mx-auto py-8">
+        <h1 className="text-3xl md:block font-bold text-left underline">
+          LEGAL NOTICE
         </h1>
-        <section>
-          <h2>Publisher Information</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">Publisher Information</h2>
           <ul>
             <li>
               <strong>Site name:</strong> Flowee
             </li>
             <li>
-              <strong>Owner:</strong> [Your name / Business name]
+              <strong>Owner:</strong> Flowee
             </li>
             <li>
-              <strong>Address:</strong> [Your postal address]
+              <strong>Address:</strong> Somewhere in the world
             </li>
             <li>
-              <strong>Phone:</strong> [Your phone number]
+              <strong>Phone:</strong> +33 6 06 06 06 06
             </li>
             <li>
-              <strong>Email:</strong> [Your email address]
+              <strong>Email:</strong> app.flowee@gmail.com
             </li>
             <li>
               <strong>Company registration number:</strong> [Company
               registration/SIREN/SIRET number]
             </li>
             <li>
-              <strong>Publication director:</strong> [Name of the legal
-              representative]
+              <strong>Publication director:</strong> Flowee Team
             </li>
           </ul>
         </section>
 
-        <section>
-          <h2>Hosting Provider</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">Hosting Provider</h2>
           <ul>
             <li>
-              <strong>Name:</strong> [Hosting provider, e.g. Vercel France]
+              <strong>Name:</strong> Flowee VPS
             </li>
             <li>
               <strong>Address:</strong> [Hosting provider’s address]
@@ -96,8 +96,8 @@ export default function LegalNotice() {
           </ul>
         </section>
 
-        <section>
-          <h2>Intellectual Property</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">Intellectual Property</h2>
           <p>
             The content of this website (texts, images, graphics, logo, etc.) is
             protected by copyright. Any reproduction, distribution, or use
@@ -105,14 +105,14 @@ export default function LegalNotice() {
           </p>
         </section>
 
-        <section>
-          <h2>Contact</h2>
+        <section className="flex flex-col gap-4" s>
+          <h2 className="text-xl font-bold">Contact</h2>
           <p>
             For any questions, please contact:{" "}
             <a href="mailto:appflowee@gmail.com">appflowee@gmail.com</a>
           </p>
         </section>
-      </main>
+      </div>
     </div>
   );
 }
