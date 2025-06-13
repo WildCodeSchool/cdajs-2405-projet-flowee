@@ -6,7 +6,6 @@ export default function Oops() {
   const role = useRoleTheme();
   if (!role) return null;
 
-  console.info(role);
   return (
     <div
       className={`w-full max-w-72 flex flex-row gap-4 items-center p-4 border rounded-md ${

@@ -13,7 +13,7 @@ export function ActivateAccountPage() {
 
     const handleActivation = async () => {
       if (!token) {
-        navigate("/activation-error?reason=missing", { replace: true }); // avec le replace :true pour éviter de revenir en arrière vers l'ancienne URL
+        navigate("/activation-error?reason=missing", { replace: true }); // with replace: true to avoid going back to this page
         return;
       }
 
@@ -29,7 +29,7 @@ export function ActivateAccountPage() {
         window.history.replaceState({}, "", "/set-password");
         navigate("/set-password");
       } catch (err) {
-        console.error("Erreur d’activation :", err);
+        console.error("Activation error:", err);
         navigate("/activation-error?reason=invalid", { replace: true });
       }
     };
@@ -40,9 +40,9 @@ export function ActivateAccountPage() {
   return (
     <div className="p-4 text-center">
       {loading ? (
-        <p>Activation de votre compte en cours...</p>
+        <p>Activating your account...</p>
       ) : (
-        <p>Préparation de votre compte...</p>
+        <p>Preparing your account...</p>
       )}
     </div>
   );

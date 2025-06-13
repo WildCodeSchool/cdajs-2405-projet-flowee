@@ -28,7 +28,7 @@ export default function ModalClient({
   const [name, setName] = useState(currentName ?? "");
   const [email, setEmail] = useState(currentEmail || "");
   const [status, setStatus] = useState<ClientStatus>(
-    currentStatus || ClientStatus.Active,
+    currentStatus || ClientStatus.Active
   );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -69,7 +69,7 @@ export default function ModalClient({
       },
     });
   };
-  //TODO: les commentaires sont hardcodés et seront remplacés par une query dès que la fonctionnalité sera implémentée
+  //TODO: comments are hardcoded for nowand displayed in the modal. This is a placeholder for future implementation.
   const hardcodedComments = [
     { text: "I have a lot to say.." },
     { text: "This isn't a perfect world" },
