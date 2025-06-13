@@ -105,7 +105,7 @@ export default function LegalNotice() {
           </p>
         </section>
 
-        <section className="flex flex-col gap-4" s>
+        <section className="flex flex-col gap-4">
           <h2 className="text-xl font-bold">Contact</h2>
           <p>
             For any questions, please contact:{" "}
