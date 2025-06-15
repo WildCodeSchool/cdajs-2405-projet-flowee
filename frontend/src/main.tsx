@@ -29,7 +29,8 @@ import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 import LegalNotice from "@pages/LegalNotice";
 import TermsAndConditions from "@pages/TermsAndConditions";
 import PrivacyPolicy from "@pages/PrivacyPolicy";
-import NewAccount from "@components/organisms/NewAccount";
+
+import InitPage from "@pages/InitPage";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -130,8 +131,8 @@ const router = createBrowserRouter([
         element: <PrivacyPolicy />,
       },
       {
-        path: "/newaccount",
-        element: <NewAccount user={"admin"} color={"bg-theme-base"} />,
+        path: "/init",
+        element: <InitPage />,
       },
       {
         path: "*",
