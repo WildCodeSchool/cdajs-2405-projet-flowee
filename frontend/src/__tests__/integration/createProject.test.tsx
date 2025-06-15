@@ -1,10 +1,13 @@
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
+import RoleToast from "@components/organisms/RoleToast";
 import { useAuth } from "@context/authContext";
 import { GetProjectsByUserDocument } from "@generated/graphql-types";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
+import * as ReactToastify from "react-toastify";
+import type { Mock } from "vitest";
 import {
   afterAll,
   beforeAll,
@@ -30,6 +33,9 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
+<<<<<<< update-integration-tests
+// Mock du contexte d'authentification
+=======
 // Stub window.alert to avoid actual alerts during tests
 const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
 afterAll(() => {
@@ -37,6 +43,7 @@ afterAll(() => {
 });
 
 // Mock useAuth to return a mock user
+>>>>>>> dev
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));
@@ -68,9 +75,51 @@ function renderWithMocks(mocks: MockedResponse[] = []) {
   );
 }
 
+<<<<<<< update-integration-tests
+// Mock générique pour la requête GetProjectsByUser
+const buildGetProjectsByUserMock = (): MockedResponse => ({
+  request: { query: GetProjectsByUserDocument },
+  result: {
+    data: {
+      getProjectsByUser: [
+        {
+          id: "1",
+          projectName: "Test Project",
+          companyUserId: 1,
+          description: "Test Description",
+          startDate: "2024-01-01",
+          endDate: "2024-12-31",
+          status: "NOT_STARTED",
+          client: { id: "1", clientName: "Test Client" },
+          deliverables: [],
+        },
+      ],
+    },
+  },
+});
+
+// Mock de react-toastify AVANT son import
+vi.mock("react-toastify", async () => {
+  const mod =
+    await vi.importActual<typeof import("react-toastify")>("react-toastify");
+  return {
+    __esModule: true,
+    ...mod,
+    toast: vi.fn(), // la fonction que l'on testera
+  };
+});
+
+describe("Création de projet", () => {
+=======
 describe("Project creation", () => {
+>>>>>>> dev
   beforeEach(() => {
+    // 2 On restaure tous les mocks/espions avant chaque test pour éviter
+    //    « Cannot redefine property: toast »
+    vi.restoreAllMocks();
     vi.clearAllMocks();
+
+    (ReactToastify.toast as unknown as Mock).mockReset();
     mockUseAuth.mockReturnValue({
       authUserData: { role: "ADMIN", id: "admin-id" },
     });
@@ -106,6 +155,19 @@ describe("Project creation", () => {
       },
     };
 
+<<<<<<< update-integration-tests
+    // 3 Espionne la fonction toast (après restoreAllMocks, donc sans conflit)
+    const toastMock = ReactToastify.toast as unknown as Mock;
+    toastMock.mockImplementation(() => "toast-id");
+
+    // Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
+=======
     // Mock of GetProjectsByUser used in refetchQueries
     const getProjectsMock: MockedResponse = {
       request: {
@@ -119,6 +181,7 @@ describe("Project creation", () => {
 
     // component rendering with the mock
     renderWithMocks([mutationMock, getProjectsMock]);
+>>>>>>> dev
 
     // Form filling
     await userEvent.type(
@@ -142,14 +205,34 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // Soumission du formulaire
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // Form submission
     await userEvent.click(
       screen.getByRole("button", { name: /Create the project/i }),
     );
+>>>>>>> dev
 
     // success message verification
     await waitFor(() => {
+<<<<<<< update-integration-tests
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: RoleToast,
+          props: {
+            message: "Projet créé avec succès",
+            role: "ADMIN",
+          },
+        }),
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
+=======
       expect(alertSpy).toHaveBeenCalledWith("Project created successfully!");
+>>>>>>> dev
     });
 
     // Dashboard redirection verification
@@ -202,10 +285,15 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // Soumettre
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // Submission of the form
     await userEvent.click(
       screen.getByRole("button", { name: /Créer le projet/i }),
     );
+>>>>>>> dev
 
     // Verify the error message
     expect(
@@ -246,6 +334,17 @@ describe("Project creation", () => {
       },
     };
 
+<<<<<<< update-integration-tests
+    const toastMock = ReactToastify.toast as unknown as Mock;
+    toastMock.mockImplementation(() => "toast-id");
+
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
+=======
     // Mock of GetProjectsByUser used in refetchQueries
     const getProjectsMock: MockedResponse = {
       request: {
@@ -258,6 +357,7 @@ describe("Project creation", () => {
 
     // Mocked rendering of the component
     renderWithMocks([mutationMock, getProjectsMock]);
+>>>>>>> dev
 
     // Form filling
     await userEvent.type(
@@ -281,14 +381,34 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // Soumission du formulaire
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // Form submission
     await userEvent.click(
       screen.getByRole("button", { name: /Create the project/i }),
     );
+>>>>>>> dev
 
     // Verification of success message
     await waitFor(() => {
+<<<<<<< update-integration-tests
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: RoleToast,
+          props: {
+            message: "Projet créé avec succès",
+            role: "ADMIN",
+          },
+        }),
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
+=======
       expect(alertSpy).toHaveBeenCalledWith("Project created successfully!");
+>>>>>>> dev
     });
 
     // Verification of redirection to the dashboard
@@ -320,8 +440,18 @@ describe("Project creation", () => {
       ),
     };
 
+<<<<<<< update-integration-tests
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
+=======
     // 3 Mocked rendering of the component
     renderWithMocks([mutationMock]);
+>>>>>>> dev
 
     // 4 Form filling
     await userEvent.type(
@@ -345,10 +475,15 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // 5 Soumission du formulaire
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // 5 Form submission
     await userEvent.click(
       screen.getByRole("button", { name: /Create the project/i }),
     );
+>>>>>>> dev
 
     // 6 Error message verification
     expect(
@@ -381,8 +516,18 @@ describe("Project creation", () => {
       ),
     };
 
+<<<<<<< update-integration-tests
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
+=======
     // 3 Mocked rendering of the component
     renderWithMocks([mutationMock]);
+>>>>>>> dev
 
     // 4 Form filling
     await userEvent.type(
@@ -406,10 +551,15 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // 5 Soumission du formulaire
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // 5 Form submission
     await userEvent.click(
       screen.getByRole("button", { name: /Create the project/i }),
     );
+>>>>>>> dev
 
     // 6 Error message verification
     expect(
@@ -442,8 +592,18 @@ describe("Project creation", () => {
       ),
     };
 
+<<<<<<< update-integration-tests
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
+=======
     // 3 Mocked rendering of the component
     renderWithMocks([mutationMock]);
+>>>>>>> dev
 
     // 4 Form filling
     await userEvent.type(
@@ -467,10 +627,15 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // 5 Soumission du formulaire
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // 5 Form submission
     await userEvent.click(
       screen.getByRole("button", { name: /Create the project/i }),
     );
+>>>>>>> dev
 
     // 6 Error message verification
     expect(
@@ -504,8 +669,18 @@ describe("Project creation", () => {
       ),
     };
 
+<<<<<<< update-integration-tests
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
+=======
     // 3 Mocked rendering of the component
     renderWithMocks([mutationMock]);
+>>>>>>> dev
 
     // 4 Form filling
     await userEvent.type(
@@ -529,10 +704,15 @@ describe("Project creation", () => {
       projectData.description,
     );
 
+<<<<<<< update-integration-tests
+    // 5 Soumission du formulaire
+    await userEvent.click(screen.getByText(/Créer le projet/i));
+=======
     // 5 Form submission
     await userEvent.click(
       screen.getByRole("button", { name: /Create the project/i }),
     );
+>>>>>>> dev
 
     // 6 Error message verification
     expect(
