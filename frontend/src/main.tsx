@@ -29,8 +29,11 @@ import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 import LegalNotice from "@pages/LegalNotice";
 import TermsAndConditions from "@pages/TermsAndConditions";
 import PrivacyPolicy from "@pages/PrivacyPolicy";
-
+import NewAccount from "@components/organisms/NewAccount";
+import ForgotPassword from "@pages/ForgotPassword";
+import ResetPassword from "@pages/ResetPassword";
 import InitPage from "@pages/InitPage";
+
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -101,6 +104,11 @@ const router = createBrowserRouter([
         path: "/set-password",
         element: <SetPasswordPage />,
       },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      {
+        path: "reset-password/",
+        element: <ResetPassword />,
+      },
       {
         path: "/activation-error",
         element: <ActivationErrorPage />,
@@ -154,7 +162,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");
