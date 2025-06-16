@@ -12,21 +12,17 @@ describe("Task Mutations", () => {
   beforeEach(() => {
     taskMutations = new TaskMutations();
 
-    // Créer une instance fictive de Task (avec un Status fixe)
+    // Creation of a fake task with fixed status
     task = new Task(
       faker.lorem.words(3), // name
       faker.lorem.sentence(), // description
-      faker.date
-        .past()
-        .toISOString(), // startDate (string)
-      faker.date
-        .future()
-        .toISOString(), // endDate (string)
-      TaskStatus.IN_PROGRESS, // Status FIXE pour (tests déterministes)
+      faker.date.past().toISOString(), // startDate (string)
+      faker.date.future().toISOString(), // endDate (string)
+      TaskStatus.IN_PROGRESS // Fixed status for determinist testing
     );
   });
 
-  // 1) Tests pour createTask
+  // 1) Tests for createTask
   describe("createTask", () => {
     it("should create a new task", async () => {
       mockTypeOrm().onMock(Task).toReturn(task, "save");
@@ -60,7 +56,7 @@ describe("Task Mutations", () => {
       };
 
       await expect(taskMutations.createTask(input)).rejects.toThrow(
-        "Name is required",
+        "Name is required"
       );
     });
   });
@@ -74,7 +70,7 @@ describe("Task Mutations", () => {
         "Old Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.BLOCKED,
+        TaskStatus.BLOCKED
       );
       existingTask.id = 123;
 
@@ -83,7 +79,7 @@ describe("Task Mutations", () => {
         "New Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.IN_PROGRESS,
+        TaskStatus.IN_PROGRESS
       );
 
       const mock = mockTypeOrm();
@@ -93,7 +89,7 @@ describe("Task Mutations", () => {
 
       const result = await taskMutations.updateTask(
         existingTask.id,
-        updatedTask,
+        updatedTask
       );
       expect(result).toMatchObject({
         id: existingTask.id,
