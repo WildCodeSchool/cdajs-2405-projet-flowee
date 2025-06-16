@@ -1,7 +1,7 @@
-import { Query, Arg, Resolver, Authorized, Ctx } from "type-graphql";
+import { Arg, Authorized, Ctx, Query, Resolver } from "type-graphql";
 import { ILike } from "typeorm";
-import { Project } from "../entities/Project";
 import { dataSource } from "../dataSource/dataSource";
+import { Project } from "../entities/Project";
 import type { MyContext } from "../types/MyContext";
 
 @Resolver(Project)

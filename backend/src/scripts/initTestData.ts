@@ -1,10 +1,10 @@
 import { dataSource } from "../dataSource/dataSource";
-import { Project } from "../entities/Project";
-import { Client } from "../entities/Client";
 import { Account } from "../entities/Account";
-import { Role } from "../enums/Role";
+import { Client } from "../entities/Client";
+import { Project } from "../entities/Project";
 import { AccountStatus } from "../enums/AccountStatus";
 import { ProjectStatus } from "../enums/ProjectStatus";
+import { Role } from "../enums/Role";
 
 /**
  * Crée un projet de test complet avec account + client associés

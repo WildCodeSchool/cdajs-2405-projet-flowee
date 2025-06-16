@@ -6,6 +6,7 @@ import { Account } from "../entities/Account";
 import { Client } from "../entities/Client";
 import { CompanyUser } from "../entities/CompanyUser";
 import { AccountStatus } from "../enums/AccountStatus";
+import { ClientStatus } from "../enums/ClientStatus";
 import type { Role } from "../enums/Role";
 import {
   generateClientToken,
@@ -22,7 +23,6 @@ import {
   verifyActivationJWT,
 } from "../utils/generateactivationtoken";
 import { validatePasswordChange } from "../utils/passwordUtils";
-import { ClientStatus } from "../enums/ClientStatus";
 
 @Resolver(Account)
 export class AccountMutation {
@@ -155,7 +155,7 @@ export class AccountMutation {
           account.email;
         await sendPasswordChangeNotification(account.email, userName);
       } catch (emailError) {
-        // Don't block the process if email fails
+        console.error(emailError);
       }
 
       return true;

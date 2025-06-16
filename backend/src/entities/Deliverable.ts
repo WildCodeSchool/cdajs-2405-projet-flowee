@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -9,8 +9,8 @@ import {
 } from "typeorm";
 import { Task } from "./Task";
 
-import { Project } from "./Project";
 import type { DeliverableStatus } from "../enums/DeliverableStatus";
+import { Project } from "./Project";
 
 @ObjectType()
 @Entity()

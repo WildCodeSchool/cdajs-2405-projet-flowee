@@ -1,6 +1,6 @@
-import { InputType, Field } from "type-graphql";
-import { DeliverableStatus } from "../enums/DeliverableStatus";
 import { IsNotEmpty } from "class-validator";
+import { Field, InputType } from "type-graphql";
+import { DeliverableStatus } from "../enums/DeliverableStatus";
 
 @InputType()
 export class CreateDeliverableInput {

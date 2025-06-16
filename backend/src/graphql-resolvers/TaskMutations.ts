@@ -1,9 +1,9 @@
-import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { GraphQLError } from "graphql";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
+import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
 import { CreateTaskInput } from "../inputs/CreateTaskInput";
-import { Deliverable } from "../entities/Deliverable";
 import { UpdateTaskInput } from "../inputs/UpdateTaskInput";
 
 @Resolver(Task)

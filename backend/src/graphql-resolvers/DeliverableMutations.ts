@@ -4,10 +4,10 @@ import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
 
-import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
-import type { MyContext } from "../types/MyContext";
 import { Project } from "../entities/Project";
+import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
 import { UpdateDeliverableInput } from "../inputs/UpdateDeliverableInput";
+import type { MyContext } from "../types/MyContext";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {

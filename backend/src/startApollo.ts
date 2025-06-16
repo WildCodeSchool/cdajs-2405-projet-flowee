@@ -1,13 +1,16 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import { type RedisClientType, createClient } from "redis";
 import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
 import { Project } from "./entities/Project";
 import { AccountStatus } from "./enums/AccountStatus";
 import { ClientStatus } from "./enums/ClientStatus";
+import { DeliverableStatus } from "./enums/DeliverableStatus";
 import { ProjectStatus } from "./enums/ProjectStatus";
 import { Role } from "./enums/Role";
+import { TaskStatus } from "./enums/TaskStatus";
 import {
   AccountMutation,
   AuthMutation,
@@ -32,9 +35,6 @@ import {
   createMaxDepthRule,
   createNoIntrospectionRule,
 } from "./utils/securityRules";
-import { DeliverableStatus } from "./enums/DeliverableStatus";
-import { TaskStatus } from "./enums/TaskStatus";
-import { createClient, type RedisClientType } from "redis";
 
 registerEnumType(Role, {
   name: "Role",

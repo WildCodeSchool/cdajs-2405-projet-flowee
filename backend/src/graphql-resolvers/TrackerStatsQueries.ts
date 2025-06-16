@@ -1,8 +1,8 @@
 import { Authorized, Ctx, Query, Resolver } from "type-graphql";
+import { dataSource } from "../dataSource/dataSource";
+import { Project } from "../entities/Project";
 import { TrackerStats } from "../entities/TrackerStats";
 import type { MyContext } from "../types/MyContext";
-import { Project } from "../entities/Project";
-import { dataSource } from "../dataSource/dataSource";
 
 @Resolver(TrackerStats)
 export class TrackerStatsQueries {

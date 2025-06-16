@@ -1,21 +1,21 @@
-import { dataSource } from "../dataSource/dataSource";
+import { ValidationError } from "class-validator";
 import { GraphQLError } from "graphql";
-import { Project } from "../entities/Project";
-import { Client } from "../entities/Client";
+import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { dataSource } from "../dataSource/dataSource";
 import { Account } from "../entities/Account";
-import { CreateProjectInput } from "../inputs/CreateProjectInput";
+import { Client } from "../entities/Client";
+import { CompanyUser } from "../entities/CompanyUser";
+import { Project } from "../entities/Project";
+import { AccountStatus } from "../enums/AccountStatus";
+import { ClientStatus } from "../enums/ClientStatus";
 import { ProjectStatus } from "../enums/ProjectStatus";
 import { Role } from "../enums/Role";
-import { AccountStatus } from "../enums/AccountStatus";
-import { Mutation, Arg, Resolver, Authorized, Ctx } from "type-graphql";
-import { ValidationError } from "class-validator";
-import type { MyContext } from "../types/MyContext";
-import { CompanyUser } from "../entities/CompanyUser";
-import { generateActivationToken } from "../utils/accesstoken";
-import { sendActivationEmail } from "../services/sendActivationEmail";
-import { invalidateCache } from "../utils/invalidatecache";
-import { ClientStatus } from "../enums/ClientStatus";
+import { CreateProjectInput } from "../inputs/CreateProjectInput";
 import { UpdateProjectInput } from "../inputs/UpdateProjectInput";
+import { sendActivationEmail } from "../services/sendActivationEmail";
+import type { MyContext } from "../types/MyContext";
+import { generateActivationToken } from "../utils/accesstoken";
+import { invalidateCache } from "../utils/invalidatecache";
 
 @Resolver(Project)
 export class ProjectMutations {
