@@ -3,7 +3,7 @@ import SibApiV3Sdk from "sib-api-v3-sdk";
 export async function sendResetPasswordEmail(
   to: string,
   name: string,
-  token: string
+  token: string,
 ) {
   const api = new SibApiV3Sdk.TransactionalEmailsApi();
   await api.sendTransacEmail({

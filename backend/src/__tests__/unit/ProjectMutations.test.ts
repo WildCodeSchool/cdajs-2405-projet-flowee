@@ -1,13 +1,16 @@
 import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
-import { Project } from "../../entities/Project";
+import type { Project } from "../../entities/Project";
 import { AccountStatus } from "../../enums/AccountStatus";
-import { DeliverableStatus } from "../../enums/DeliverableStatus";
 import { ProjectStatus } from "../../enums/ProjectStatus";
 import { Role } from "../../enums/Role";
 import { ProjectMutations } from "../../graphql-resolvers/ProjectMutations";
 import type { CreateProjectInput } from "../../inputs/CreateProjectInput";
 import type { MyContext } from "../../types/MyContext";
+import { CompanyUser } from "../../entities/CompanyUser";
+import { Account } from "../../entities/Account";
+import { Client } from "../../entities/Client";
+import { dataSource } from "../../dataSource/dataSource";
 
 describe("Project creation", () => {
   let projectMutations: ProjectMutations;
@@ -32,19 +35,31 @@ describe("Project creation", () => {
   describe("Success cases", () => {
     it("should create a project successfully", async () => {
       const userId = mockUuid();
+      const companyUserId = mockUuid();
       const clientId = mockUuid();
       const projectId = mockUuid();
 
-      const mockCtx: MyContext = {
-        user: {
+      const mockCompanyUser = {
+        id: companyUserId,
+        firstname: "Alice",
+        lastname: "Durand",
+        account: {
           id: userId,
-          email: "admin@example.com",
-          role: Role.ADMIN,
-          password: "test",
-          status: AccountStatus.ACTIVE,
         },
-        // Ajoute les autres champs obligatoires de MyContext ici si besoin (ex: redis)
-      } as MyContext;
+      };
+      const mockAccount = {
+        id: mockUuid(),
+        email: validInput.clientEmail,
+        role: Role.CLIENT,
+        status: AccountStatus.ACTIVE,
+      };
+
+      const mockClient = {
+        id: mockUuid(),
+        clientName: validInput.clientName,
+        status: AccountStatus.ACTIVE,
+        account: mockAccount,
+      };
 
       const savedProject = {
         id: projectId,
@@ -52,36 +67,62 @@ describe("Project creation", () => {
         description: validInput.description,
         startDate: new Date().toISOString(),
         endDate: validInput.endDate,
-        status: DeliverableStatus.IN_PROGRESS,
-        companyUserId: userId,
+        status: ProjectStatus.NOT_STARTED,
         client: {
           id: clientId,
-          name: validInput.clientName,
+          clientName: validInput.clientName,
           email: validInput.clientEmail,
         },
+        companyUserId,
       };
 
-      mockTypeOrm().onMock(Project).toReturn(savedProject, "save");
+      const mockCtx: MyContext = {
+        user: {
+          id: userId,
+          email: "admin@example.com",
+          role: Role.ADMIN,
+          password: "hashed",
+          status: AccountStatus.ACTIVE,
+        },
+        redis: {
+          del: jest.fn(),
+          get: jest.fn(),
+        },
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      } as any;
+
+      mockTypeOrm().onMock(CompanyUser).toReturn(mockCompanyUser, "findOne");
+      mockTypeOrm().onMock(Account).toReturn(mockAccount, "findOne");
+      mockTypeOrm().onMock(Client).toReturn(mockClient, "findOne");
+      jest
+        .spyOn(dataSource, "transaction")
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        .mockImplementation(async (cb: any) => {
+          return cb({
+            findOne: jest
+              .fn()
+              .mockResolvedValueOnce(mockAccount) // 1er appel -> Account
+              .mockResolvedValueOnce(mockClient), // 2e appel -> Client
+            save: jest.fn().mockResolvedValue(savedProject),
+            create: jest.fn().mockImplementation((_, obj) => obj),
+          });
+        });
 
       const createdProject: Project = await projectMutations.createProject(
         validInput,
         mockCtx,
       );
 
-      expect(createdProject).toEqual(expect.anything());
-      console.log("Expected:", {
-        projectName: validInput.projectName,
-        description: validInput.description,
-        endDate: validInput.endDate,
-        status: ProjectStatus.IN_PROGRESS,
-        client: {
-          name: validInput.clientName,
-          email: validInput.clientEmail,
-        },
-      });
-      console.log("Received:", createdProject);
+      expect(createdProject).toBeDefined();
+      expect(createdProject.projectName).toBe(validInput.projectName);
+      expect(createdProject.description).toBe(validInput.description);
+      expect(createdProject.endDate).toBe(validInput.endDate);
+      expect(createdProject.status).toBe(ProjectStatus.NOT_STARTED);
+      expect(createdProject.client?.clientName).toBe(validInput.clientName);
 
-      expect(createdProject.startDate).toBeDefined();
+      expect(createdProject.projectName).toBe(validInput.projectName);
+      expect(createdProject.client?.clientName).toBe(validInput.clientName);
+      expect(createdProject.status).toBe(ProjectStatus.NOT_STARTED);
     });
   });
 

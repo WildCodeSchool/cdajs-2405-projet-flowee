@@ -41,15 +41,23 @@ export class Account extends BaseEntity {
   @Field(() => AccountStatus)
   status: AccountStatus;
 
-  @OneToOne(() => Client, (client) => client.account, {
-    nullable: true,
-  })
+  @OneToOne(
+    () => Client,
+    (client) => client.account,
+    {
+      nullable: true,
+    },
+  )
   @Field(() => Client, { nullable: true })
   client?: Client;
 
-  @OneToOne(() => CompanyUser, (companyUser) => companyUser.account, {
-    nullable: true,
-  })
+  @OneToOne(
+    () => CompanyUser,
+    (companyUser) => companyUser.account,
+    {
+      nullable: true,
+    },
+  )
   @Field(() => CompanyUser, { nullable: true })
   companyUser?: CompanyUser;
 
@@ -57,7 +65,7 @@ export class Account extends BaseEntity {
     email: string,
     password: string,
     role: Role,
-    status: AccountStatus
+    status: AccountStatus,
   ) {
     super();
     this.email = email;
