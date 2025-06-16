@@ -19,12 +19,12 @@ export function generateResetPasswordToken(account: Account): string {
       purpose: "password-reset",
     },
     JWT_SECRET,
-    { expiresIn: "30m" }
+    { expiresIn: "30m" },
   );
 }
 
 export function verifyResetPasswordToken(
-  token: string
+  token: string,
 ): ResetPasswordTokenPayload {
   const decoded = jwt.verify(token, JWT_SECRET) as ResetPasswordTokenPayload;
 

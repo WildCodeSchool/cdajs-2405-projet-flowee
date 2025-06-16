@@ -36,7 +36,7 @@ export class AccountMutation {
   async createAccount(
     @Arg("email") email: string,
     @Arg("password") password: string, // A modifier - stocké en clair temporairement
-    @Arg("role") role: Role
+    @Arg("role") role: Role,
   ): Promise<Account> {
     try {
       // Vérification si l'email existe déjà
@@ -54,7 +54,7 @@ export class AccountMutation {
         email,
         hashedPassword,
         role,
-        AccountStatus.PENDING
+        AccountStatus.PENDING,
       );
 
       await dataSource.manager.save(newAccount);
@@ -67,7 +67,7 @@ export class AccountMutation {
 
   @Mutation(() => String)
   async activateAccountAndReturnToken(
-    @Arg("token") token: string
+    @Arg("token") token: string,
   ): Promise<string> {
     const account = await dataSource.manager.findOne(Account, {
       where: { activationToken: token },
@@ -87,7 +87,7 @@ export class AccountMutation {
   @Mutation(() => Boolean)
   async setPasswordFromActivation(
     @Arg("token") token: string,
-    @Arg("password") password: string
+    @Arg("password") password: string,
   ): Promise<boolean> {
     const { accountId } = verifyActivationJWT(token);
 
@@ -117,7 +117,7 @@ export class AccountMutation {
   async updatePassword(
     @Arg("currentPassword") currentPassword: string,
     @Arg("newPassword") newPassword: string,
-    @Ctx() context: MyContext
+    @Ctx() context: MyContext,
   ): Promise<boolean> {
     try {
       if (!context.user) {
@@ -141,7 +141,7 @@ export class AccountMutation {
       // Validate new password
       const validationResult = validatePasswordChange(
         currentPassword,
-        newPassword
+        newPassword,
       );
 
       if (!validationResult.isValid) {
@@ -177,7 +177,7 @@ export class AuthMutation {
   @Mutation(() => String)
   async login(
     @Arg("email") email: string,
-    @Arg("password") password: string
+    @Arg("password") password: string,
   ): Promise<string> {
     let token = "";
 
@@ -236,7 +236,7 @@ export class AuthMutation {
     await sendResetPasswordEmail(
       account.email,
       account.client?.clientName || account.email,
-      token
+      token,
     );
 
     return true;
@@ -245,7 +245,7 @@ export class AuthMutation {
   @Mutation(() => Boolean)
   async resetPassword(
     @Arg("token") token: string,
-    @Arg("newPassword") newPassword: string
+    @Arg("newPassword") newPassword: string,
   ): Promise<boolean> {
     const { accountId } = verifyResetPasswordToken(token);
     const account = await dataSource.manager.findOne(Account, {

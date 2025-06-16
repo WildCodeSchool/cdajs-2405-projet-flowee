@@ -34,7 +34,6 @@ import ForgotPassword from "@pages/ForgotPassword";
 import ResetPassword from "@pages/ResetPassword";
 import InitPage from "@pages/InitPage";
 
-
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
 });
@@ -162,7 +161,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 } else {
   console.error("Root element not found");

@@ -27,7 +27,6 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
-
 // Mock du contexte d'authentification
 
 vi.mock("@context/authContext", () => ({
@@ -76,12 +75,12 @@ const routerConfig = {
 const renderComponent = (mocks: MockedResponse[] = []) => {
   const router = createMemoryRouter(
     [{ path: "/", element: <Projects /> }],
-    routerConfig
+    routerConfig,
   );
   return render(
     <MockedProvider mocks={mocks} addTypename={false}>
       <RouterProvider router={router} />
-    </MockedProvider>
+    </MockedProvider>,
   );
 };
 
@@ -169,7 +168,7 @@ describe("Projects Page", () => {
     renderComponent(mocksForAuth);
 
     expect(
-      screen.getByRole("img", { name: /unauthorized access/i })
+      screen.getByRole("img", { name: /unauthorized access/i }),
     ).toBeInTheDocument();
   });
 });
