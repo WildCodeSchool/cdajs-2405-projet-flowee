@@ -35,6 +35,7 @@ import {
 import { DeliverableStatus } from "./enums/DeliverableStatus";
 import { TaskStatus } from "./enums/TaskStatus";
 import { createClient, type RedisClientType } from "redis";
+import { Initmutation } from "./graphql-resolvers/InitMutation";
 
 registerEnumType(Role, {
   name: "Role",
@@ -101,6 +102,7 @@ async function startServerApollo() {
         AccountQueries,
         AuthMutation,
         TrackerStatsQueries,
+        Initmutation,
       ],
       authChecker,
     });
