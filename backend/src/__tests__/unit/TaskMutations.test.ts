@@ -6,6 +6,7 @@ import { TaskMutations } from "../../graphql-resolvers/TaskMutations";
 import type { CreateTaskInput } from "../../inputs/CreateTaskInput";
 import { DeliverableStatus } from "../../enums/DeliverableStatus";
 import { Deliverable } from "../../entities/Deliverable";
+
 describe("Task Mutations", () => {
   let taskMutations: TaskMutations;
   let taskInput: CreateTaskInput;
@@ -145,7 +146,7 @@ describe("Task Mutations", () => {
       const mock = mockTypeOrm();
       mock.onMock(Task).toReturn(null, "findOne");
       await expect(taskMutations.deleteTask(taskId)).rejects.toThrow(
-        "Failed to delete task"
+        "Task with ID 789 not found"
       );
     });
   });
