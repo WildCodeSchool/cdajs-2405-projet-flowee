@@ -134,4 +134,39 @@ describe("deliverable Mutations", () => {
       });
     });
   });
+
+  describe("deleteDeliverable", () => {
+    it("should delete an existing deliverable", async () => {
+      const existingDeliverable = new Deliverable(
+        "Deliverable to delete",
+        "Perimeter to delete",
+        faker.date.future().toISOString(),
+        DeliverableStatus.NOT_STARTED,
+        "5"
+      );
+      existingDeliverable.id = 45;
+
+      const mock = mockTypeOrm();
+      mock
+        .onMock(Deliverable)
+        .toReturn({ id: existingDeliverable.id }, "findOne");
+      mock.onMock(Deliverable).toReturn(undefined, "delete");
+
+      const result = await deliverableMutations.deleteDeliverable(45);
+
+      expect(result).toBe(true);
+    });
+
+    it("should throw an error if deliverable does not exist", async () => {
+      const deliverableId = 789;
+
+      const mock = mockTypeOrm();
+      mock.onMock(Deliverable).toReturn(null, "findOne");
+
+      const result = await deliverableMutations.deleteDeliverable(
+        deliverableId
+      );
+      expect(result).toBeNull();
+    });
+  });
 });
