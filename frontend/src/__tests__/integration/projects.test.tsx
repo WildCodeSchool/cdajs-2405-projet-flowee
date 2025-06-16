@@ -27,7 +27,9 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
-// 1. Context authentification mock
+
+// Mock du contexte d'authentification
+
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));
@@ -104,8 +106,8 @@ describe("Projects Page", () => {
 
     // 2 Wait for loading to finish and projects to be displayed
     await waitFor(() => {
-      expect(screen.getByText("Alpha project")).toBeInTheDocument();
-      expect(screen.getByText("Beta project")).toBeInTheDocument();
+      expect(screen.getByText("Alpha Project")).toBeInTheDocument();
+      expect(screen.getByText("Beta Project")).toBeInTheDocument();
     });
 
     // 3 Verifies that the loading state is no longer displayed
