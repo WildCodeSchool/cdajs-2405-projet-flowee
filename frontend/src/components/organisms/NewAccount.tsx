@@ -1,7 +1,7 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 
-import LogoEntrepriseIcon from "@components/atoms/Icons/LogoEntreprise";
 import { gql, useMutation } from "@apollo/client";
+import LogoEntrepriseIcon from "@components/atoms/Icons/LogoEntreprise";
 import { Link } from "react-router-dom";
 
 interface PropsType {

@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { ClientStatus } from "@generated/graphql-types";
-import EllipsesIcon from "@components/atoms/Icons/Ellipses";
 import ModalClient from "@components/ModalClient";
+import EllipsesIcon from "@components/atoms/Icons/Ellipses";
+import { ClientStatus } from "@generated/graphql-types";
 import type { ClientUI } from "@interfaces/client.types";
 import { capitalize } from "@utils/stringUtils";
+import { useEffect, useRef, useState } from "react";
 
 interface CardsClientProps {
   client: ClientUI;

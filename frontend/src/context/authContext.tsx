@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useApolloClient } from "@apollo/client";
 import type { AuthContextType } from "@interfaces/AuthContextType";
 import type { AuthContextUserType } from "@interfaces/AuthContextUserType";
-import { useApolloClient } from "@apollo/client";
+import { jwtDecode } from "jwt-decode";
+import { createContext, useContext, useEffect, useState } from "react";
 
 function decodeContextData(token: string | null): Partial<AuthContextUserType> {
   if (!token || token.split(".").length !== 3) {
@@ -45,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // login / token changed
         localStorage.setItem("AUTH_TOKEN", token);
         setAuthUserData(decodeContextData(token));
+        console.info("AuthUserData", decodeContextData(token));
         try {
           await client.resetStore(); // re-fetch active queries
         } catch (e) {

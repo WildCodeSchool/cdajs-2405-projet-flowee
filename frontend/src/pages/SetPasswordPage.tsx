@@ -1,9 +1,9 @@
+import LogoClientIcon from "@components/atoms/Icons/LogoClient";
+import { useSetPasswordFromActivationMutation } from "@generated/graphql-types";
+import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { useSetPasswordFromActivationMutation } from "@generated/graphql-types";
-import LogoClientIcon from "@components/atoms/Icons/LogoClient";
 import { toast } from "react-toastify";
 
 type JWTContent = {

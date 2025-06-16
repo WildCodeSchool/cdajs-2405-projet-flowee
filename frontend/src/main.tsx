@@ -1,35 +1,35 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import {
   ApolloClient,
-  InMemoryCache,
   ApolloProvider,
   HttpLink,
+  InMemoryCache,
 } from "@apollo/client";
 import { type ContextSetter, setContext } from "@apollo/client/link/context";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import Projects from "./pages/Projects";
-import Clients from "./pages/Clients";
-import Settings from "./pages/Settings";
-import Error404visitor from "./pages/Error404";
+import NewAccount from "@components/organisms/NewAccount";
+import { ActivateAccountPage } from "@pages/ActivateAccountPage";
+import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
+import LegalNotice from "@pages/LegalNotice";
+import PrivacyPolicy from "@pages/PrivacyPolicy";
+import { SetPasswordPage } from "@pages/SetPasswordPage";
+import TermsAndConditions from "@pages/TermsAndConditions";
+import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 import { AuthProvider } from "./context/authContext";
-import CreateProject from "./pages/CreateProject";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
-import { ActivateAccountPage } from "@pages/ActivateAccountPage";
-import { SetPasswordPage } from "@pages/SetPasswordPage";
-import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
-import ProjectDetails from "@pages/projectDetails/ProjectDetails";
-import LegalNotice from "@pages/LegalNotice";
-import TermsAndConditions from "@pages/TermsAndConditions";
-import PrivacyPolicy from "@pages/PrivacyPolicy";
-import NewAccount from "@components/organisms/NewAccount";
+import Clients from "./pages/Clients";
+import CreateProject from "./pages/CreateProject";
+import Dashboard from "./pages/Dashboard";
+import Error404visitor from "./pages/Error404";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Projects from "./pages/Projects";
+import Settings from "./pages/Settings";
+import Signup from "./pages/Signup";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",

@@ -1,7 +1,7 @@
-// @components/molecules/ProjectModal.tsx
-import { useState, useEffect } from "react";
 import { Input } from "@components/atoms/Input";
 import { Textarea } from "@components/atoms/TextArea";
+// @components/molecules/ProjectModal.tsx
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type ProjectModalProps = {

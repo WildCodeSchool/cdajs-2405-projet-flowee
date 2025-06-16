@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { DeliverableStatus } from "@generated/graphql-types";
 import type { TaskStatus } from "@generated/graphql-types";
+import { useEffect, useState } from "react";
 
 type Mode = "deliverable" | "task";
 

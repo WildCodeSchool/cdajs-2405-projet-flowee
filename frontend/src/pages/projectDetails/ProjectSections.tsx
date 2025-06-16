@@ -2,8 +2,8 @@ import { AddButton } from "@components/atoms/AddButton";
 import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
 import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
 import type {
-  DeliverableStatus,
   Deliverable,
+  DeliverableStatus,
   Project,
   TaskStatus,
 } from "@generated/graphql-types";

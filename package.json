@@ -7,6 +7,7 @@
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "lint": "npx @biomejs/biome lint --write ./backend/src ./frontend/src",
     "format": "npx @biomejs/biome format --write ./backend/src ./frontend/src",
+    "check": "npx @biomejs/biome check --write ./backend/src ./frontend/src",
     "prepare": "husky"
   },
   "author": "",

@@ -1,17 +1,17 @@
-import { Accordion, AccordionItem } from "@szhsin/react-accordion";
+import type { Deliverable } from "@generated/graphql-types";
 import {
   DELIVERABLE_STATUS,
   DELIVERABLE_STATUS_META,
   type DeliverableStatus,
 } from "@interfaces/Status";
-import type { Deliverable } from "@generated/graphql-types";
+import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import { useMemo } from "react";
 
-import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
-import { useState } from "react";
-import ItemDetails from "@pages/ItemDetails";
-import SearchBar from "./Search";
 import PencilIcon from "@components/atoms/Icons/PencilIcon";
+import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
+import ItemDetails from "@pages/ItemDetails";
+import { useState } from "react";
+import SearchBar from "./Search";
 
 interface Props {
   deliverables: Deliverable[];

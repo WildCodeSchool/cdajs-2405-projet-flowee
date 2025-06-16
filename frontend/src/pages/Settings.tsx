@@ -1,7 +1,7 @@
-import SignedInLayout from "@layout/SignedInLayout";
 import { useMeQuery } from "@generated/graphql-types";
-import SettingsCompanyUser from "@organisms/SettingsCompanyUser";
+import SignedInLayout from "@layout/SignedInLayout";
 import SettingsClient from "@organisms/SettingsClient";
+import SettingsCompanyUser from "@organisms/SettingsCompanyUser";
 
 export default function Settings() {
   const { data, loading, error } = useMeQuery();

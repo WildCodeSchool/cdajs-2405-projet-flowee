@@ -1,26 +1,26 @@
+import ArrowIcon from "@components/atoms/Icons/Arrow";
+import AddModal from "@components/molecules/AddModal";
+import DeleteModal from "@components/molecules/DeleteModal";
+import EditModal from "@components/molecules/EditModal";
+import ProjectModal from "@components/molecules/ProjectModal";
+import { useGetProjectByIdQuery } from "@generated/graphql-types";
+import { useUpdateProjectMutation } from "@generated/graphql-types";
+import type { UpdateProjectInput } from "@generated/graphql-types";
+import { useDeleteProjectMutation } from "@generated/graphql-types";
 import type {
   DeliverableFormData,
   FormData,
   TaskFormData,
 } from "@interfaces/FormData";
-import { useGetProjectByIdQuery } from "@generated/graphql-types";
+import type { InitialValues } from "@interfaces/type";
 import SignedInLayout from "@layout/SignedInLayout";
-import { NavLink, Outlet, useParams, useNavigate } from "react-router-dom";
-import DeleteModal from "@components/molecules/DeleteModal";
-import AddModal from "@components/molecules/AddModal";
-import ProjectHeader from "./ProjectHeader";
-import ProjectSections from "./ProjectSections";
-import { parseIdFromSlug, getProjectOptions } from "@utils/project";
-import EditModal from "@components/molecules/EditModal";
+import { getProjectOptions, parseIdFromSlug } from "@utils/project";
+import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useModalState } from "../../hooks/useModalState";
 import { useProjectHandlers } from "../../hooks/useProjectHandlers";
-import type { InitialValues } from "@interfaces/type";
-import ArrowIcon from "@components/atoms/Icons/Arrow";
-import ProjectModal from "@components/molecules/ProjectModal";
-import { toast } from "react-toastify";
-import { useUpdateProjectMutation } from "@generated/graphql-types";
-import type { UpdateProjectInput } from "@generated/graphql-types";
-import { useDeleteProjectMutation } from "@generated/graphql-types";
+import ProjectHeader from "./ProjectHeader";
+import ProjectSections from "./ProjectSections";
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();

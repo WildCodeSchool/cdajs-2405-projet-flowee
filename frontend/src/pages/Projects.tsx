@@ -1,20 +1,20 @@
+import ArrowIcon from "@components/atoms/Icons/Arrow";
+import FilterIcon from "@components/atoms/Icons/FilterIcon";
+import Filters from "@components/molecules/Filters";
+import type { FilterOption, SortOrder } from "@components/molecules/Filters";
+import { useAuth } from "@context/authContext";
 import { useGetProjectsByUserQuery } from "@generated/graphql-types";
 import { ProjectStatus } from "@generated/graphql-types";
+import SignedInLayout from "@layout/SignedInLayout";
 import ErrorBanner from "@molecules/ErrorBanner";
+import { Card } from "@organisms/Cards";
 import DisplayCards from "@organisms/DisplayCards";
 import SearchBar from "@organisms/Search";
-import { useMemo, useState } from "react";
-import { Card } from "@organisms/Cards";
-import { NavLink } from "react-router-dom";
-import ArrowIcon from "@components/atoms/Icons/Arrow";
-import SignedInLayout from "@layout/SignedInLayout";
-import FilterIcon from "@components/atoms/Icons/FilterIcon";
-import { useAuth } from "@context/authContext";
-import UnauthorizedAccess from "./UnauthorizedAcess";
-import Filters from "@components/molecules/Filters";
-import type { SortOrder, FilterOption } from "@components/molecules/Filters";
-import { useLocation } from "react-router-dom";
 import { slugify } from "@utils/project";
+import { useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import UnauthorizedAccess from "./UnauthorizedAcess";
 
 export default function Projects() {
   const [showFilters, setShowFilters] = useState(false);
