@@ -23,7 +23,6 @@ export class Deliverable extends BaseEntity {
   @Field()
   name: string;
 
-  //J'ai mis perimeter au lieu de description pour que ça soit plus parlant
   @Column({ nullable: true })
   @Field({ nullable: true })
   perimeter?: string;
@@ -45,17 +44,11 @@ export class Deliverable extends BaseEntity {
   reviewTimes?: number;
 
   //relations
-  @ManyToOne(
-    () => Project,
-    (project) => project.deliverables,
-  )
+  @ManyToOne(() => Project, (project) => project.deliverables)
   @Field(() => Project, { nullable: true })
   project?: Project;
 
-  @OneToMany(
-    () => Task,
-    (task) => task.deliverable,
-  )
+  @OneToMany(() => Task, (task) => task.deliverable)
   @Field(() => [Task], { nullable: true })
   tasks?: Task[];
 
@@ -65,7 +58,7 @@ export class Deliverable extends BaseEntity {
     deliveryDate?: string,
     status?: DeliverableStatus,
     createdAt?: string,
-    reviewTimes?: number,
+    reviewTimes?: number
   ) {
     super();
 
