@@ -12,7 +12,7 @@ export async function sendResetPasswordEmail(
     htmlContent: `
       <p>Hello ${name},</p>
       <p>Click the button below to reset your password. This link is valid for 30 minutes.</p>
-      <a href="http://localhost:5173/forgot-password?token=${token}">Reset password</a> 
+      <a href="https://staging.052024-jaune-3.wns.wilders.dev/forgot-password?token=${token}">Reset password</a> 
     `, //need change for prod
     sender: {
       name: "Flowee",
@@ -20,4 +20,3 @@ export async function sendResetPasswordEmail(
     },
   });
 }
-// <a href="https://staging.052024-jaune-3.wns.wilders.dev/reset-password?token=${token}">Reset password</a>
