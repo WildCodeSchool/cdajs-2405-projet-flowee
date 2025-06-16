@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useResetPasswordMutation } from "@generated/graphql-types";
 import { toast } from "react-toastify";
+import AuthIllustration from "@components/atoms/illustrations/AuthIllus";
+import LogoIcon from "@components/atoms/Icons/Logo";
+import LogoMarkIcon from "@components/atoms/Icons/LogoMark";
+import { Input } from "@components/atoms/Input";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -38,21 +42,45 @@ export default function ResetPassword() {
     }
   };
   return (
-    <div className="reset-container">
-      <h2>Reset your password</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="New password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Reset password"}
-        </button>
-      </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="flex flex-row w-full sm:h-screen">
+      <aside className=" hidden sm:block sm:bg-orangeLight sm:w-[55%] sm:p-10">
+        <NavLink to="/">
+          {" "}
+          <LogoIcon className=" w-40" />
+        </NavLink>
+        <AuthIllustration className="w-[80%] mx-auto" />
+      </aside>
+      <section className=" flex flex-auto flex-col bg-white gap-2  sm:justify-center sm:px-8 lg:px-28 justify-end">
+        <div className="flex flex-col gap-3 text-center">
+          <aside className="flex flex-col sm:flex-row items-center gap-2 pt-6">
+            <LogoMarkIcon className=" w-12 sm:w-8 " />
+            <h1 className=" text-2xl sm:text-3xl font-bold ">
+              Reset your password
+            </h1>
+          </aside>
+
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 p-8 w-full max-w-md mx-auto mt-10"
+          >
+            <Input
+              label="New Password"
+              type="password"
+              required
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex items-center justify-center bg-theme-visitorBtnBG rounded-lg px-12 py-2 text-white text-base w-full"
+            >
+              {loading ? "Sending..." : "Reset password"}
+            </button>
+          </form>
+        </div>
+      </section>
     </div>
   );
 }

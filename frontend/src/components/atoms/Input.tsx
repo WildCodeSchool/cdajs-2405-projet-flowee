@@ -9,7 +9,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, ...props }, ref) => {
     return (
       <div className="flex flex-col gap-1">
-        <label htmlFor={props.name}>{label}</label>
+        <label htmlFor={props.name} className="text-left">
+          {label}
+        </label>
 
         <input
           ref={ref}
@@ -19,5 +21,5 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         />
       </div>
     );
-  },
+  }
 );
