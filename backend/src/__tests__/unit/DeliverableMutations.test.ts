@@ -162,11 +162,9 @@ describe("deliverable Mutations", () => {
 
       const mock = mockTypeOrm();
       mock.onMock(Deliverable).toReturn(null, "findOne");
-
-      const result = await deliverableMutations.deleteDeliverable(
-        deliverableId
-      );
-      expect(result).toBeNull();
+      await expect(
+        deliverableMutations.deleteDeliverable(deliverableId)
+      ).rejects.toThrow("Failed to delete deliverable");
     });
   });
 });
