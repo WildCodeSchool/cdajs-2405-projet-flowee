@@ -175,8 +175,11 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // Soumission du formulaire
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // success message verification
     await waitFor(() => {
@@ -184,7 +187,7 @@ describe("Création de projet", () => {
         expect.objectContaining({
           type: RoleToast,
           props: {
-            message: "Projet créé avec succès",
+            message: "Project created successfully!",
             role: "ADMIN",
           },
         }),
@@ -244,12 +247,15 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // Soumettre
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // Verify the error message
     expect(
-      await screen.findByText(/Erreur : Erreur Apollo/i),
+      await screen.findByText(/Error : Apollo Error/i),
     ).toBeInTheDocument();
 
     errorSpy.mockRestore();
@@ -332,8 +338,11 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // Soumission du formulaire
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // Verification of success message
     await waitFor(() => {
@@ -341,7 +350,7 @@ describe("Création de projet", () => {
         expect.objectContaining({
           type: RoleToast,
           props: {
-            message: "Projet créé avec succès",
+            message: "Project created successfully!",
             role: "ADMIN",
           },
         }),
@@ -410,8 +419,11 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // 5 Soumission du formulaire
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
@@ -440,7 +452,7 @@ describe("Création de projet", () => {
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Can't create the project. Please check your information or contact your project manager.",
+        "Error : Can't create the project. Please check your information or contact your project manager.",
       ),
     };
 
@@ -474,13 +486,16 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // 5 Soumission du formulaire
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
       ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
@@ -504,7 +519,7 @@ describe("Création de projet", () => {
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Can't create the project. Please check your information or contact your project manager.",
+        "Error : Can't create the project. Please check your information or contact your project manager.",
       ),
     };
 
@@ -538,13 +553,16 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // 5 Soumission du formulaire
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
       ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
@@ -603,13 +621,16 @@ describe("Création de projet", () => {
       projectData.description,
     );
 
-    // 5 Soumission du formulaire
-    await userEvent.click(screen.getByText(/Créer le projet/i));
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
       ),
     ).toBeInTheDocument();
 
