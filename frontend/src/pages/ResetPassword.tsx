@@ -35,8 +35,8 @@ export default function ResetPassword() {
       }
       toast.success("Password reset successfully! You can now log in.");
       navigate("/login");
-    } catch (err) {
-      console.error("Reset error:", err);
+    } catch (error) {
+      console.error("Reset error:", error);
       toast.error("An error occurred while resetting your password.");
       setError("An error occurred. Try again.");
     }
@@ -45,7 +45,6 @@ export default function ResetPassword() {
     <div className="flex flex-row w-full sm:h-screen">
       <aside className=" hidden sm:block sm:bg-orangeLight sm:w-[55%] sm:p-10">
         <NavLink to="/">
-          {" "}
           <LogoIcon className=" w-40" />
         </NavLink>
         <AuthIllustration className="w-[80%] mx-auto" />
