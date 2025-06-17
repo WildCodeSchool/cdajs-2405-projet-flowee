@@ -30,7 +30,7 @@ export default function Signup() {
       <LogoClientIcon className="h-20 w-20" />
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-3xl font-bold">Welcome to Flowee ! </h1>
-        <h2>Du blabla sur une nouvelle façon de gerer ses projets</h2>
+        <h2>Project management reinvented</h2>
       </div>
       <div className="flex flex-col gap-4 w-full max-w-96">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
