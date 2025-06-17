@@ -56,7 +56,7 @@ export default function LoginForm() {
         <p className="text-red text-sm">{errors.password.message}</p>
       )}
 
-      <NavLink className="text-end text-sm w-full" to="">
+      <NavLink className="text-end text-sm w-full" to="/forgot-password">
         Forgot your password?
       </NavLink>
       {error && <ErrorBanner message="Wrong credentials, please try again." />}

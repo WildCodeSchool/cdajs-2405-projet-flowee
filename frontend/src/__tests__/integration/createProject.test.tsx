@@ -1,10 +1,13 @@
 import { MockedProvider, type MockedResponse } from "@apollo/client/testing";
+import RoleToast from "@components/organisms/RoleToast";
 import { useAuth } from "@context/authContext";
 import { GetProjectsByUserDocument } from "@generated/graphql-types";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
+import * as ReactToastify from "react-toastify";
+import type { Mock } from "vitest";
 import {
   afterAll,
   beforeAll,
@@ -30,13 +33,7 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
-// Stub window.alert to avoid actual alerts during tests
-const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
-afterAll(() => {
-  alertSpy.mockRestore();
-});
-
-// Mock useAuth to return a mock user
+// Mock du contexte d'authentification
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));
@@ -68,9 +65,47 @@ function renderWithMocks(mocks: MockedResponse[] = []) {
   );
 }
 
-describe("Project creation", () => {
+// Mock générique pour la requête GetProjectsByUser
+const buildGetProjectsByUserMock = (): MockedResponse => ({
+  request: { query: GetProjectsByUserDocument },
+  result: {
+    data: {
+      getProjectsByUser: [
+        {
+          id: "1",
+          projectName: "Test Project",
+          companyUserId: 1,
+          description: "Test Description",
+          startDate: "2024-01-01",
+          endDate: "2024-12-31",
+          status: "NOT_STARTED",
+          client: { id: "1", clientName: "Test Client" },
+          deliverables: [],
+        },
+      ],
+    },
+  },
+});
+
+// Mock de react-toastify AVANT son import
+vi.mock("react-toastify", async () => {
+  const mod =
+    await vi.importActual<typeof import("react-toastify")>("react-toastify");
+  return {
+    __esModule: true,
+    ...mod,
+    toast: vi.fn(), // la fonction que l'on testera
+  };
+});
+
+describe("Création de projet", () => {
   beforeEach(() => {
+    // 2 On restaure tous les mocks/espions avant chaque test pour éviter
+    //    « Cannot redefine property: toast »
+    vi.restoreAllMocks();
     vi.clearAllMocks();
+
+    (ReactToastify.toast as unknown as Mock).mockReset();
     mockUseAuth.mockReturnValue({
       authUserData: { role: "ADMIN", id: "admin-id" },
     });
@@ -106,19 +141,17 @@ describe("Project creation", () => {
       },
     };
 
-    // Mock of GetProjectsByUser used in refetchQueries
-    const getProjectsMock: MockedResponse = {
-      request: {
-        query: GetProjectsByUserDocument,
-      },
-      result: {
-        data: { getProjectsByUser: [] },
-      },
-      delay: 100,
-    };
+    // 3 Espionne la fonction toast (après restoreAllMocks, donc sans conflit)
+    const toastMock = ReactToastify.toast as unknown as Mock;
+    toastMock.mockImplementation(() => "toast-id");
 
-    // component rendering with the mock
-    renderWithMocks([mutationMock, getProjectsMock]);
+    // Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // Form filling
     await userEvent.type(
@@ -142,14 +175,26 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // Form submission
-    await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // success message verification
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith("Project created successfully!");
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: RoleToast,
+          props: {
+            message: "Project created successfully!",
+            role: "ADMIN",
+          },
+        }),
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
     });
 
     // Dashboard redirection verification
@@ -202,14 +247,15 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // Submission of the form
-    await userEvent.click(
-      screen.getByRole("button", { name: /Créer le projet/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // Verify the error message
     expect(
-      await screen.findByText(/Erreur : Erreur Apollo/i),
+      await screen.findByText(/Error : Apollo Error/i),
     ).toBeInTheDocument();
 
     errorSpy.mockRestore();
@@ -246,18 +292,29 @@ describe("Project creation", () => {
       },
     };
 
-    // Mock of GetProjectsByUser used in refetchQueries
-    const getProjectsMock: MockedResponse = {
-      request: {
-        query: GetProjectsByUserDocument,
-      },
-      result: {
-        data: { getProjectsByUser: [] },
-      },
-    };
+    // Mock de react-toastify AVANT son import
+    vi.mock("react-toastify", async () => {
+      const mod =
+        await vi.importActual<typeof import("react-toastify")>(
+          "react-toastify",
+        );
+      return {
+        __esModule: true,
+        ...mod,
+        toast: vi.fn(), // la fonction que l'on testera
+      };
+    });
 
-    // Mocked rendering of the component
-    renderWithMocks([mutationMock, getProjectsMock]);
+    // Rendu du composant avec le mock
+    const toastMock = ReactToastify.toast as unknown as Mock;
+    toastMock.mockImplementation(() => "toast-id");
+
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // Form filling
     await userEvent.type(
@@ -281,14 +338,26 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // Form submission
-    await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // Verification of success message
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith("Project created successfully!");
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: RoleToast,
+          props: {
+            message: "Project created successfully!",
+            role: "ADMIN",
+          },
+        }),
+        {
+          progressClassName: "bg-theme-progress-base",
+        },
+      );
     });
 
     // Verification of redirection to the dashboard
@@ -320,8 +389,13 @@ describe("Project creation", () => {
       ),
     };
 
-    // 3 Mocked rendering of the component
-    renderWithMocks([mutationMock]);
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Form filling
     await userEvent.type(
@@ -345,10 +419,11 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // 5 Form submission
-    await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
@@ -377,12 +452,17 @@ describe("Project creation", () => {
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Can't create the project. Please check your information or contact your project manager.",
+        "Error : Can't create the project. Please check your information or contact your project manager.",
       ),
     };
 
-    // 3 Mocked rendering of the component
-    renderWithMocks([mutationMock]);
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Form filling
     await userEvent.type(
@@ -406,15 +486,16 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // 5 Form submission
-    await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
       ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
@@ -438,12 +519,17 @@ describe("Project creation", () => {
         variables: { newProject: projectData },
       },
       error: new Error(
-        "Erreur : Can't create the project. Please check your information or contact your project manager.",
+        "Error : Can't create the project. Please check your information or contact your project manager.",
       ),
     };
 
-    // 3 Mocked rendering of the component
-    renderWithMocks([mutationMock]);
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Form filling
     await userEvent.type(
@@ -467,15 +553,16 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // 5 Form submission
-    await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
       ),
     ).toBeInTheDocument();
     errorSpy.mockRestore();
@@ -504,8 +591,13 @@ describe("Project creation", () => {
       ),
     };
 
-    // 3 Mocked rendering of the component
-    renderWithMocks([mutationMock]);
+    // 3 Rendu du composant avec le mock
+    const mocks = [
+      mutationMock,
+      buildGetProjectsByUserMock(),
+      buildGetProjectsByUserMock(),
+    ];
+    renderWithMocks(mocks);
 
     // 4 Form filling
     await userEvent.type(
@@ -529,15 +621,16 @@ describe("Project creation", () => {
       projectData.description,
     );
 
-    // 5 Form submission
-    await userEvent.click(
-      screen.getByRole("button", { name: /Create the project/i }),
-    );
+    // Avant de cliquer sur le bouton, attendre que le texte "Create Project" soit visible
+    await waitFor(() => {
+      expect(screen.getByText(/Create Project/i)).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText(/Create Project/i));
 
     // 6 Error message verification
     expect(
       await screen.findByText(
-        /Erreur : Can't create the project. Please check your information or contact your project manager./i,
+        /Error : Can't create the project. Please check your information or contact your project manager./i,
       ),
     ).toBeInTheDocument();
 

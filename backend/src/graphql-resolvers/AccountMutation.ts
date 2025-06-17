@@ -23,6 +23,11 @@ import {
 } from "../utils/generateactivationtoken";
 import { validatePasswordChange } from "../utils/passwordUtils";
 import { ClientStatus } from "../enums/ClientStatus";
+import { sendResetPasswordEmail } from "../services/sendResetPasswordEmail";
+import {
+  generateResetPasswordToken,
+  verifyResetPasswordToken,
+} from "../utils/generateResetPasswordToken";
 
 @Resolver(Account)
 export class AccountMutation {
@@ -214,5 +219,46 @@ export class AuthMutation {
     }
 
     return token;
+  }
+
+  @Mutation(() => Boolean)
+  async requestPasswordReset(@Arg("email") email: string): Promise<boolean> {
+    const account = await dataSource.manager.findOne(Account, {
+      where: { email },
+    });
+
+    if (!account) return true;
+
+    const token = generateResetPasswordToken(account);
+
+    await dataSource.manager.save(account);
+
+    await sendResetPasswordEmail(
+      account.email,
+      account.client?.clientName || account.email,
+      token,
+    );
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async resetPassword(
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string,
+  ): Promise<boolean> {
+    const { accountId } = verifyResetPasswordToken(token);
+    const account = await dataSource.manager.findOne(Account, {
+      where: { id: accountId },
+    });
+
+    if (!account) {
+      throw new GraphQLError("Account not found");
+    }
+
+    account.password = await argon2.hash(newPassword);
+    await dataSource.manager.save(account);
+
+    return true;
   }
 }

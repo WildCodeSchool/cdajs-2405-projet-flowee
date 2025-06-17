@@ -20,7 +20,7 @@ describe("Company Mutations", () => {
     company = new Company(
       faker.company.name(),
       faker.location.streetAddress(),
-      faker.phone.number(),
+      faker.phone.number()
     );
   });
 
@@ -31,7 +31,7 @@ describe("Company Mutations", () => {
       const createdCompany: Company = await companyMutations.createCompany(
         company.name,
         company.address,
-        company.contactInfo,
+        company.contactInfo
       );
 
       expect(createdCompany).toMatchObject({
@@ -47,7 +47,7 @@ describe("Company Mutations", () => {
       const mockCompany = new Company(
         faker.company.name(),
         faker.location.streetAddress(),
-        faker.phone.number(),
+        faker.phone.number()
       );
       mockCompany.id = 1;
 
@@ -55,15 +55,15 @@ describe("Company Mutations", () => {
 
       mockTypeOrm().onMock(Company).toReturn(mockCompany, "save");
 
-      // Appeler la mutation updateCompany
+      // Call the updateCompany mutation
       const updatedCompany = await companyMutations.updateCompany(
         mockCompany.id,
         "New Company Name",
         "New Address",
-        "New Contact Info",
+        "New Contact Info"
       );
 
-      // Vérifier que les modifications ont été prises en compte
+      // Verifies that the company was updated correctly
       expect(updatedCompany).toMatchObject({
         id: mockCompany.id,
         name: "New Company Name",
@@ -73,17 +73,17 @@ describe("Company Mutations", () => {
     });
 
     it("should return an error if the company does not exist", async () => {
-      // Moquer `findOne()` pour retourner `undefined`
+      // Mock`findOne()` to return `undefined`
       mockTypeOrm().onMock(Company).toReturn(undefined, "findOne");
 
-      // Vérifier que la mutation renvoie une erreur
+      // Verifies that the updateCompany mutation throws an error
       await expect(
         companyMutations.updateCompany(
           999,
           "New Name",
           "New Address",
-          "New Contact Info",
-        ),
+          "New Contact Info"
+        )
       ).rejects.toThrow("Company with ID 999 not found");
     });
   });

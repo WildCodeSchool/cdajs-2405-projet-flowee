@@ -4,8 +4,8 @@ import { GetProjectsByUserDocument } from "@generated/graphql-types";
 import { render, screen, waitFor } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import {
-  beforeAll,
   afterAll,
+  beforeAll,
   beforeEach,
   describe,
   expect,
@@ -27,7 +27,8 @@ afterAll(() => {
   console.warn = originalConsoleWarn;
 });
 
-// 1. Context authentification mock
+// Mock du contexte d'authentification
+
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));
@@ -104,8 +105,8 @@ describe("Projects Page", () => {
 
     // 2 Wait for loading to finish and projects to be displayed
     await waitFor(() => {
-      expect(screen.getByText("Alpha project")).toBeInTheDocument();
-      expect(screen.getByText("Beta project")).toBeInTheDocument();
+      expect(screen.getByText("Alpha Project")).toBeInTheDocument();
+      expect(screen.getByText("Beta Project")).toBeInTheDocument();
     });
 
     // 3 Verifies that the loading state is no longer displayed
@@ -166,6 +167,8 @@ describe("Projects Page", () => {
 
     renderComponent(mocksForAuth);
 
-    expect(screen.getByText("Unauthorized user!")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /unauthorized access/i }),
+    ).toBeInTheDocument();
   });
 });
