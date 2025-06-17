@@ -29,7 +29,6 @@ import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 import LegalNotice from "@pages/LegalNotice";
 import TermsAndConditions from "@pages/TermsAndConditions";
 import PrivacyPolicy from "@pages/PrivacyPolicy";
-import NewAccount from "@components/organisms/NewAccount";
 import ForgotPassword from "@pages/ForgotPassword";
 import ResetPassword from "@pages/ResetPassword";
 import InitPage from "@pages/InitPage";

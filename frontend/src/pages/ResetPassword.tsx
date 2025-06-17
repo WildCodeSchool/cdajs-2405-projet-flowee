@@ -35,8 +35,9 @@ export default function ResetPassword() {
       }
       toast.success("Password reset successfully! You can now log in.");
       navigate("/login");
-    } catch (error) {
-      console.error("Reset error:", error);
+    } catch (err) {
+      console.error("Reset error:", err);
+      console.error(error);
       toast.error("An error occurred while resetting your password.");
       setError("An error occurred. Try again.");
     }
