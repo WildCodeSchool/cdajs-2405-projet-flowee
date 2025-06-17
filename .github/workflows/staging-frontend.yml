@@ -1,4 +1,4 @@
-name: compile and push client image
+name: Deploy Staging Frontend
 
 on:
   push:
