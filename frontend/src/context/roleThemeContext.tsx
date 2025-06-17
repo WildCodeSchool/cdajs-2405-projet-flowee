@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { useAuth } from "./authContext";
 import { createContext, useContext, useEffect } from "react";
+import { useAuth } from "./authContext";
 
 type RoleClass = "client" | "admin" | "visitor";
 

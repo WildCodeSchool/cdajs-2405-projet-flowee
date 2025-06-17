@@ -1,13 +1,16 @@
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import { type RedisClientType, createClient } from "redis";
 import { buildSchema, registerEnumType } from "type-graphql";
 import { dataSource } from "./dataSource/dataSource";
 import { Project } from "./entities/Project";
 import { AccountStatus } from "./enums/AccountStatus";
 import { ClientStatus } from "./enums/ClientStatus";
+import { DeliverableStatus } from "./enums/DeliverableStatus";
 import { ProjectStatus } from "./enums/ProjectStatus";
 import { Role } from "./enums/Role";
+import { TaskStatus } from "./enums/TaskStatus";
 import {
   AccountMutation,
   AuthMutation,
@@ -19,6 +22,7 @@ import { CompanyMutations } from "./graphql-resolvers/CompanyMutations";
 import { CompanyQueries } from "./graphql-resolvers/CompanyQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
+import { Initmutation } from "./graphql-resolvers/InitMutation";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
 import { TaskMutations } from "./graphql-resolvers/TaskMutations";
@@ -32,10 +36,6 @@ import {
   createMaxDepthRule,
   createNoIntrospectionRule,
 } from "./utils/securityRules";
-import { DeliverableStatus } from "./enums/DeliverableStatus";
-import { TaskStatus } from "./enums/TaskStatus";
-import { createClient, type RedisClientType } from "redis";
-import { Initmutation } from "./graphql-resolvers/InitMutation";
 
 registerEnumType(Role, {
   name: "Role",

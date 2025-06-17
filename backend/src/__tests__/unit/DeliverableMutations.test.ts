@@ -1,14 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
 import { Deliverable } from "../../entities/Deliverable";
-import { DeliverableStatus } from "../../enums/DeliverableStatus";
-import { DeliverableMutations } from "../../graphql-resolvers/DeliverableMutations";
-import type { MyContext } from "../../types/MyContext";
-import type { CreateDeliverableInput } from "../../inputs/CreateDeliverableInput";
-import { Role } from "../../enums/Role";
-import { AccountStatus } from "../../enums/AccountStatus";
 import { Project } from "../../entities/Project";
+import { AccountStatus } from "../../enums/AccountStatus";
+import { DeliverableStatus } from "../../enums/DeliverableStatus";
 import { ProjectStatus } from "../../enums/ProjectStatus";
+import { Role } from "../../enums/Role";
+import { DeliverableMutations } from "../../graphql-resolvers/DeliverableMutations";
+import type { CreateDeliverableInput } from "../../inputs/CreateDeliverableInput";
+import type { MyContext } from "../../types/MyContext";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
@@ -78,7 +78,7 @@ describe("deliverable Mutations", () => {
           ...validDeliverableInput,
           projectId: mockProject.id,
         },
-        mockCtx
+        mockCtx,
       );
 
       expect(result).toMatchObject({
@@ -100,7 +100,7 @@ describe("deliverable Mutations", () => {
         "2025-12-01",
         DeliverableStatus.NOT_STARTED,
         "2025-01-01",
-        1
+        1,
       );
       existingDeliverable.id = 123;
 
@@ -121,7 +121,7 @@ describe("deliverable Mutations", () => {
 
       const result = await deliverableMutations.updateDeliverable(
         existingDeliverable.id,
-        updatedDeliverable
+        updatedDeliverable,
       );
 
       expect(result).toMatchObject({
@@ -142,7 +142,7 @@ describe("deliverable Mutations", () => {
         "Perimeter to delete",
         faker.date.future().toISOString(),
         DeliverableStatus.NOT_STARTED,
-        "5"
+        "5",
       );
       existingDeliverable.id = 45;
 
@@ -163,7 +163,7 @@ describe("deliverable Mutations", () => {
       const mock = mockTypeOrm();
       mock.onMock(Deliverable).toReturn(null, "findOne");
       await expect(
-        deliverableMutations.deleteDeliverable(deliverableId)
+        deliverableMutations.deleteDeliverable(deliverableId),
       ).rejects.toThrow("Failed to delete deliverable");
     });
   });

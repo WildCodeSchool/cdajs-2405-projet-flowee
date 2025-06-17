@@ -1,6 +1,6 @@
 import { Arg, Query, Resolver } from "type-graphql";
-import { Task } from "../entities/Task";
 import { dataSource } from "../dataSource/dataSource";
+import { Task } from "../entities/Task";
 
 @Resolver(Task)
 export class TaskQueries {

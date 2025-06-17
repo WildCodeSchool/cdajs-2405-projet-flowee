@@ -1,6 +1,6 @@
-import { InputType, Field } from "type-graphql";
-import { TaskStatus } from "../enums/TaskStatus";
 import { IsNotEmpty, IsOptional } from "class-validator";
+import { Field, InputType } from "type-graphql";
+import { TaskStatus } from "../enums/TaskStatus";
 
 @InputType()
 export class UpdateTaskInput {

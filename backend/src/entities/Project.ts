@@ -1,4 +1,5 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { IsNotEmpty } from "class-validator";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -7,11 +8,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { IsNotEmpty } from "class-validator";
 
+import { ProjectStatus } from "../enums/ProjectStatus";
 import { Client } from "./Client";
 import { CompanyUser } from "./CompanyUser";
-import { ProjectStatus } from "../enums/ProjectStatus";
 import { Deliverable } from "./Deliverable";
 
 @ObjectType()

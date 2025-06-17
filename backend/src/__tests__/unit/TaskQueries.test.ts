@@ -22,14 +22,14 @@ describe("Task Queries", () => {
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
           faker.date.future().toISOString(),
-          TaskStatus.IN_PROGRESS
+          TaskStatus.IN_PROGRESS,
         ),
         new Task(
           faker.lorem.words(2),
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
           faker.date.future().toISOString(),
-          TaskStatus.IN_PROGRESS
+          TaskStatus.IN_PROGRESS,
         ),
       ];
 
@@ -62,7 +62,7 @@ describe("Task Queries", () => {
         "Some description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.IN_PROGRESS
+        TaskStatus.IN_PROGRESS,
       );
       existingTask.id = 42;
 

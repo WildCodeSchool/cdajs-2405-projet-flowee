@@ -1,6 +1,6 @@
+import { useInitAdminMutation } from "@generated/graphql-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useInitAdminMutation } from "@generated/graphql-types";
 import { toast } from "react-toastify";
 
 type InitForm = {
@@ -31,6 +31,7 @@ export default function InitPage() {
       navigate("/login");
     } catch (err) {
       toast.error("Unable to perform this operation");
+      console.error(err);
     }
   };
 

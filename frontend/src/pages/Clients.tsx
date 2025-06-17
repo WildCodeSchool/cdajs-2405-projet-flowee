@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import SearchBar from "@organisms/Search";
 import DisplayClientsCard from "@organisms/DisplayClientsCard";
+import SearchBar from "@organisms/Search";
 
-import { ClientStatus } from "@generated/graphql-types";
-import SignedInLayout from "@layout/SignedInLayout";
 import FilterIcon from "@components/atoms/Icons/FilterIcon";
 import Filters from "@components/molecules/Filters";
-import type { SortOrder, FilterOption } from "@components/molecules/Filters";
+import type { FilterOption, SortOrder } from "@components/molecules/Filters";
+import { ClientStatus } from "@generated/graphql-types";
+import SignedInLayout from "@layout/SignedInLayout";
 
 export default function Clients() {
   const [searchFilter, setSearchFilter] = useState("");

@@ -29,6 +29,9 @@
       "recommended": true,
       "a11y": {
         "noSvgWithoutTitle": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": "error"
       }
     }
   },

@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
 import { CardBackground } from "@atoms/illustrations/cardBackground";
 import { useRoleTheme } from "@context/roleThemeContext";
+import type { ReactNode } from "react";
 
 export type CardVariant = "projects" | "deliverables" | "tasks" | "toReview";
 

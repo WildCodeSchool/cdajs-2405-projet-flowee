@@ -1,9 +1,9 @@
-import { useState } from "react";
-import SearchBar from "@organisms/Search";
-import Tracker from "@organisms/Tracker";
-import { Section } from "@organisms/Section";
 import { useRoleTheme } from "@context/roleThemeContext";
 import SignedInLayout from "@layout/SignedInLayout";
+import SearchBar from "@organisms/Search";
+import { Section } from "@organisms/Section";
+import Tracker from "@organisms/Tracker";
+import { useState } from "react";
 
 export default function Dashboard() {
   const [searchFilter, setSearchFilter] = useState("");

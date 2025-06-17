@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -9,8 +9,8 @@ import {
 } from "typeorm";
 import { Task } from "./Task";
 
-import { Project } from "./Project";
 import type { DeliverableStatus } from "../enums/DeliverableStatus";
+import { Project } from "./Project";
 
 @ObjectType()
 @Entity()
@@ -44,11 +44,17 @@ export class Deliverable extends BaseEntity {
   reviewTimes?: number;
 
   //relations
-  @ManyToOne(() => Project, (project) => project.deliverables)
+  @ManyToOne(
+    () => Project,
+    (project) => project.deliverables,
+  )
   @Field(() => Project, { nullable: true })
   project?: Project;
 
-  @OneToMany(() => Task, (task) => task.deliverable)
+  @OneToMany(
+    () => Task,
+    (task) => task.deliverable,
+  )
   @Field(() => [Task], { nullable: true })
   tasks?: Task[];
 
@@ -58,7 +64,7 @@ export class Deliverable extends BaseEntity {
     deliveryDate?: string,
     status?: DeliverableStatus,
     createdAt?: string,
-    reviewTimes?: number
+    reviewTimes?: number,
   ) {
     super();
 

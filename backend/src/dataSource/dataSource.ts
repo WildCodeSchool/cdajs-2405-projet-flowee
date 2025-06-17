@@ -1,5 +1,5 @@
-import { DataSource } from "typeorm";
 import dotenv from "dotenv";
+import { DataSource } from "typeorm";
 dotenv.config();
 
 const dbHost = process.env.DB_HOST ?? "localhost";

@@ -4,10 +4,10 @@ import { dataSource } from "../dataSource/dataSource";
 import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
 
-import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
-import type { MyContext } from "../types/MyContext";
 import { Project } from "../entities/Project";
+import { CreateDeliverableInput } from "../inputs/CreateDeliverableInput";
 import { UpdateDeliverableInput } from "../inputs/UpdateDeliverableInput";
+import type { MyContext } from "../types/MyContext";
 
 @Resolver(Deliverable)
 export class DeliverableMutations {
@@ -16,7 +16,7 @@ export class DeliverableMutations {
   async createDeliverable(
     @Arg("newDeliverable", () => CreateDeliverableInput)
     newDeliverableInput: CreateDeliverableInput,
-    @Ctx() ctx: MyContext
+    @Ctx() ctx: MyContext,
   ): Promise<Deliverable> {
     const user = ctx.user;
 
@@ -51,7 +51,7 @@ export class DeliverableMutations {
         deliveryDate,
         status,
         createdAt,
-        reviewTimes
+        reviewTimes,
       );
 
       deliverable.project = project;
@@ -73,7 +73,7 @@ export class DeliverableMutations {
   @Mutation((_) => Deliverable)
   async updateDeliverable(
     @Arg("id") id: number,
-    @Arg("data", () => UpdateDeliverableInput) data: UpdateDeliverableInput
+    @Arg("data", () => UpdateDeliverableInput) data: UpdateDeliverableInput,
   ): Promise<Deliverable> {
     const deliverable = await dataSource.manager.findOne(Deliverable, {
       where: { id },

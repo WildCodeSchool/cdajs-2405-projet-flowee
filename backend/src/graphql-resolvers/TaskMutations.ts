@@ -1,9 +1,9 @@
-import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { GraphQLError } from "graphql";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
+import { Deliverable } from "../entities/Deliverable";
 import { Task } from "../entities/Task";
 import { CreateTaskInput } from "../inputs/CreateTaskInput";
-import { Deliverable } from "../entities/Deliverable";
 import { UpdateTaskInput } from "../inputs/UpdateTaskInput";
 
 @Resolver(Task)
@@ -12,7 +12,7 @@ export class TaskMutations {
   @Mutation(() => Task)
   async createTask(
     @Arg("newTask", () => CreateTaskInput)
-    newTaskInput: CreateTaskInput
+    newTaskInput: CreateTaskInput,
   ): Promise<Task> {
     const { name, description, startDate, endDate, status, deliverableId } =
       newTaskInput;
@@ -26,7 +26,7 @@ export class TaskMutations {
         Deliverable,
         {
           id: deliverableId,
-        }
+        },
       );
 
       const newTask = new Task(
@@ -34,7 +34,7 @@ export class TaskMutations {
         description ?? "",
         startDate,
         endDate,
-        status
+        status,
       );
 
       newTask.deliverable = deliverable;
@@ -59,7 +59,7 @@ export class TaskMutations {
   @Mutation(() => Task)
   async updateTask(
     @Arg("id") id: number,
-    @Arg("data", () => UpdateTaskInput) data: UpdateTaskInput
+    @Arg("data", () => UpdateTaskInput) data: UpdateTaskInput,
   ): Promise<Task> {
     const task = await dataSource.manager.findOne(Task, { where: { id } });
     if (!task) {

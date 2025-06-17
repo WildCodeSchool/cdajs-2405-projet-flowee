@@ -1,6 +1,6 @@
+import { useRoleTheme } from "@context/roleThemeContext";
 import type { NavLinkProps } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { useRoleTheme } from "@context/roleThemeContext";
 
 export type ButtonVariant = "filled" | "DANGER" | "SUCCES" | "GRAY" | "OUTLINE";
 

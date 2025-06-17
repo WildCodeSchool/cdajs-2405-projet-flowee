@@ -1,7 +1,7 @@
-import { Query, Arg, Resolver, Authorized, Ctx } from "type-graphql";
+import { Arg, Authorized, Ctx, Query, Resolver } from "type-graphql";
 import { ILike } from "typeorm";
-import { Project } from "../entities/Project";
 import { dataSource } from "../dataSource/dataSource";
+import { Project } from "../entities/Project";
 import type { MyContext } from "../types/MyContext";
 
 @Resolver(Project)
@@ -41,8 +41,7 @@ export class ProjectQueries {
     return projects;
   }
 
-  // Query qui récupère l'utilisateur connecté et renvoie ses projets
-  @Authorized("CLIENT", "ADMIN") // Protège cette requête pour les utilisateurs connectés
+  @Authorized("CLIENT", "ADMIN")
   @Query(() => [Project])
   async getProjectsByUser(@Ctx() context: MyContext): Promise<Project[]> {
     const { user, redis } = context;
@@ -54,10 +53,10 @@ export class ProjectQueries {
     const cacheKey = `user-projects:${user.role}:${user.id}`;
     const cached = await redis.get(cacheKey);
     if (cached) {
-      console.info("Projets récupérés depuis le cache");
+      console.info("[CACHE] Projects retrieved from cache");
       return JSON.parse(cached);
     }
-    console.log("🔄 [BBD] Projets récupérés depuis PostgreSQL");
+    console.log("[BDD] Projects retrieved from PostgreSQL");
     let projects: Project[] = [];
 
     if (user.role === "CLIENT") {
@@ -83,7 +82,7 @@ export class ProjectQueries {
       throw new Error("User role not supported");
     }
 
-    // Stocker le résultat dans Redis pour 10 minutes
+    // Stock the result in Redis for 10 minutes to avoid requesting immediately
     await redis.set(cacheKey, JSON.stringify(projects), { EX: 600 });
 
     return projects;

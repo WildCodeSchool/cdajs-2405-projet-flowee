@@ -1,10 +1,10 @@
+import PencilIcon from "@components/atoms/Icons/PencilIcon";
 import TrashcanIcon from "@components/atoms/Icons/TrashcanIcon";
 import type { Deliverable, Task } from "@generated/graphql-types";
+import ItemDetails from "@pages/ItemDetails";
 import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import { useState } from "react";
-import ItemDetails from "@pages/ItemDetails";
 import SearchBar from "./Search";
-import PencilIcon from "@components/atoms/Icons/PencilIcon";
 
 interface Props {
   deliverables: Deliverable[];
