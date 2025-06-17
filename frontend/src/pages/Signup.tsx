@@ -1,5 +1,4 @@
 import LogoClientIcon from "@components/atoms/Icons/LogoClient";
-import LogoEntrepriseIcon from "@components/atoms/Icons/LogoEntreprise";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -30,7 +29,7 @@ export default function Signup() {
       <LogoClientIcon className="h-20 w-20" />
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-3xl font-bold">Welcome to Flowee ! </h1>
-        <h2>Du blabla sur une nouvelle façon de gerer ses projets</h2>
+        <h2>Project management reinvented</h2>
       </div>
       <div className="flex flex-col gap-4 w-full max-w-96">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -71,13 +70,6 @@ export default function Signup() {
           <Link to="/login" className="font-bold text-xs underline ">
             Sign in
           </Link>
-        </div>
-      </div>
-      <div className="w-full max-w-72 flex flex-row gap-4 items-center bg-orangeBg p-4 border rounded-md border-darkorange">
-        <LogoEntrepriseIcon className="h-12 w-12 border border-gray-300 rounded-md p-2" />
-        <div className="">
-          <p className="font-bold">Oops, I am not a client</p>
-          <p className="underline text-sm">Click here to Sign Up</p>
         </div>
       </div>
     </div>
