@@ -15,25 +15,25 @@ describe("Task Queries", () => {
 
   describe("getAllTasks", () => {
     it("should return an array of tasks", async () => {
-      // Préparation de taches fictives
+      // Prepare fake tasks
       const tasks: Task[] = [
         new Task(
           faker.lorem.words(2),
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
           faker.date.future().toISOString(),
-          TaskStatus.IN_PROGRESS,
+          TaskStatus.IN_PROGRESS
         ),
         new Task(
           faker.lorem.words(2),
           faker.lorem.sentence(),
           faker.date.past().toISOString(),
           faker.date.future().toISOString(),
-          TaskStatus.IN_PROGRESS,
+          TaskStatus.IN_PROGRESS
         ),
       ];
 
-      // Mock la méthode 'find' de TypeORM
+      // Mock the method 'find' of TypeORM
       mockTypeOrm().onMock(Task).toReturn(tasks, "find");
 
       const result = await taskQueries.getAllTasks();
@@ -44,7 +44,7 @@ describe("Task Queries", () => {
     });
 
     it("should return an empty array if no tasks exist", async () => {
-      // Simulation d'une bdd vide
+      // Simulation of an empty database
       mockTypeOrm().onMock(Task).toReturn([], "find");
 
       const result = await taskQueries.getAllTasks();
@@ -62,11 +62,11 @@ describe("Task Queries", () => {
         "Some description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.IN_PROGRESS,
+        TaskStatus.IN_PROGRESS
       );
       existingTask.id = 42;
 
-      // Mock 'findOne' et renvoi la tache
+      // Mock 'findOne' and return the existing task
       mockTypeOrm().onMock(Task).toReturn(existingTask, "findOne");
 
       const result = await taskQueries.getTask(42);
@@ -77,7 +77,7 @@ describe("Task Queries", () => {
     });
 
     it("should return null if task not found", async () => {
-      // findOne renvoie null ou undefined
+      // findOne returns null or undefined
       mockTypeOrm().onMock(Task).toReturn(null, "findOne");
 
       const result = await taskQueries.getTask(9999);

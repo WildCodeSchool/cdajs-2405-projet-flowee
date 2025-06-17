@@ -4,60 +4,90 @@ import { Deliverable } from "../../entities/Deliverable";
 import { DeliverableStatus } from "../../enums/DeliverableStatus";
 import { DeliverableMutations } from "../../graphql-resolvers/DeliverableMutations";
 import type { MyContext } from "../../types/MyContext";
+import type { CreateDeliverableInput } from "../../inputs/CreateDeliverableInput";
+import { Role } from "../../enums/Role";
+import { AccountStatus } from "../../enums/AccountStatus";
+import { Project } from "../../entities/Project";
+import { ProjectStatus } from "../../enums/ProjectStatus";
 
 describe("deliverable Mutations", () => {
   let deliverableMutations: DeliverableMutations;
-  let deliverable: Deliverable;
+  let validDeliverableInput: CreateDeliverableInput;
+
+  const mockUuid = () => faker.string.uuid();
 
   beforeEach(() => {
     deliverableMutations = new DeliverableMutations();
 
-    deliverable = new Deliverable(
-      faker.company.buzzAdjective(), // name
-      faker.lorem.sentence(), // perimeter
-      faker.date
-        .future()
-        .toISOString(), // date de livraison
-      DeliverableStatus.IN_PROGRESS, // exemple de status
-      faker.date
-        .past()
-        .toISOString(), // createAt
-      faker.number.int({ min: 1, max: 5 }), // ReviewTimes
-    );
+    validDeliverableInput = {
+      name: faker.commerce.productName(),
+      perimeter: faker.lorem.sentence(),
+      deliveryDate: faker.date.future().toISOString(),
+      status: DeliverableStatus.NOT_STARTED,
+      createdAt: faker.date.past().toISOString(),
+      reviewTimes: faker.number.int({ min: 1, max: 5 }),
+      projectId: faker.number.int({ min: 1, max: 100 }),
+    };
   });
 
   describe("createDeliverable", () => {
-    it("should create a new deliverable", async () => {
-      mockTypeOrm().onMock(Deliverable).toReturn(deliverable, "save");
+    it("should create a deliverable with valid data", async () => {
+      const userId = mockUuid();
 
-      const input = {
-        name: deliverable.name,
-        perimeter: deliverable.perimeter,
-        deliveryDate: deliverable.endDate,
-        status: deliverable.status,
-        createdAt: deliverable.createdAt,
-        reviewTimes: deliverable.reviewTimes,
-        projectId: faker.number.int(),
+      const mockProject = {
+        id: 1,
+        projectName: "Project Alpha",
+        companyUserId: userId,
+        description: "A sample project for testing",
+        startDate: "2025-01-01",
+        endDate: "2025-12-31",
+        status: ProjectStatus.IN_PROGRESS,
+        client: {
+          id: 1,
+          clientName: "Client A",
+          status: AccountStatus.ACTIVE,
+        },
       };
 
-      const mockCtx = {
+      const mockDeliverable = {
+        name: validDeliverableInput.name,
+        perimeter: validDeliverableInput.perimeter,
+        endDate: validDeliverableInput.deliveryDate,
+        status: DeliverableStatus.NOT_STARTED,
+        createdAt: validDeliverableInput.createdAt,
+        reviewTimes: validDeliverableInput.reviewTimes,
+        project: mockProject,
+      };
+
+      const mockCtx: MyContext = {
         user: {
-          role: "ADMIN",
+          id: userId,
+          email: "admin@example.com",
+          role: Role.ADMIN,
+          password: "hashed",
+          status: AccountStatus.ACTIVE,
         },
       } as MyContext;
 
-      const createdDeliverable = await deliverableMutations.createDeliverable(
-        input,
-        mockCtx,
+      const mock = mockTypeOrm();
+      mock.onMock(Project).toReturn(mockProject, "findOne");
+      mock.onMock(Deliverable).toReturn({ ...mockDeliverable, id: 10 }, "save");
+
+      const result = await deliverableMutations.createDeliverable(
+        {
+          ...validDeliverableInput,
+          projectId: mockProject.id,
+        },
+        mockCtx
       );
 
-      expect(createdDeliverable).toMatchObject({
-        name: input.name,
-        perimeter: input.perimeter,
-        deliveryDate: input.deliveryDate,
-        status: input.status,
-        createdAt: input.createdAt,
-        reviewTimes: input.reviewTimes,
+      expect(result).toMatchObject({
+        name: mockDeliverable.name,
+        perimeter: mockDeliverable.perimeter,
+        endDate: mockDeliverable.endDate,
+        status: mockDeliverable.status,
+        createdAt: mockDeliverable.createdAt,
+        reviewTimes: mockDeliverable.reviewTimes,
       });
     });
   });
@@ -70,7 +100,7 @@ describe("deliverable Mutations", () => {
         "2025-12-01",
         DeliverableStatus.NOT_STARTED,
         "2025-01-01",
-        1,
+        1
       );
       existingDeliverable.id = 123;
 
@@ -91,7 +121,7 @@ describe("deliverable Mutations", () => {
 
       const result = await deliverableMutations.updateDeliverable(
         existingDeliverable.id,
-        updatedDeliverable,
+        updatedDeliverable
       );
 
       expect(result).toMatchObject({
@@ -102,6 +132,39 @@ describe("deliverable Mutations", () => {
         status: updatedDeliverable.status,
         reviewTime: updatedDeliverable.reviewTime,
       });
+    });
+  });
+
+  describe("deleteDeliverable", () => {
+    it("should delete an existing deliverable", async () => {
+      const existingDeliverable = new Deliverable(
+        "Deliverable to delete",
+        "Perimeter to delete",
+        faker.date.future().toISOString(),
+        DeliverableStatus.NOT_STARTED,
+        "5"
+      );
+      existingDeliverable.id = 45;
+
+      const mock = mockTypeOrm();
+      mock
+        .onMock(Deliverable)
+        .toReturn({ id: existingDeliverable.id }, "findOne");
+      mock.onMock(Deliverable).toReturn(undefined, "delete");
+
+      const result = await deliverableMutations.deleteDeliverable(45);
+
+      expect(result).toBe(true);
+    });
+
+    it("should throw an error if deliverable does not exist", async () => {
+      const deliverableId = 789;
+
+      const mock = mockTypeOrm();
+      mock.onMock(Deliverable).toReturn(null, "findOne");
+      await expect(
+        deliverableMutations.deleteDeliverable(deliverableId)
+      ).rejects.toThrow("Failed to delete deliverable");
     });
   });
 });

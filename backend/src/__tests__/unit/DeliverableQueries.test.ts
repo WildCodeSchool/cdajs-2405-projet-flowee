@@ -15,19 +15,15 @@ describe("Deliverable Queries", () => {
 
   describe("getAllDeliverables", () => {
     it("should return an array of deliverables", async () => {
-      // Préparation du tableau simulé
+      // Prepare fake deliverables
       const deliverables: Deliverable[] = [
         new Deliverable(
           faker.lorem.word(), // name
           faker.lorem.sentence(), // perimeter
-          faker.date
-            .future()
-            .toISOString(), // deliveryDate
+          faker.date.future().toISOString(), // deliveryDate
           DeliverableStatus.IN_PROGRESS, // status
-          faker.date
-            .past()
-            .toISOString(), // createdAt
-          faker.number.int({ min: 0, max: 3 }), // reviews
+          faker.date.past().toISOString(), // createdAt
+          faker.number.int({ min: 0, max: 3 }) // reviews
         ),
         new Deliverable(
           faker.lorem.word(),
@@ -35,11 +31,11 @@ describe("Deliverable Queries", () => {
           faker.date.future().toISOString(),
           DeliverableStatus.APPROVED,
           faker.date.past().toISOString(),
-          faker.number.int({ min: 0, max: 3 }),
+          faker.number.int({ min: 0, max: 3 })
         ),
       ];
 
-      // Mock la méthode 'find'
+      // Mock  the find method
       mockTypeOrm().onMock(Deliverable).toReturn(deliverables, "find");
 
       const result = await deliverableQueries.getAllDeliverables();
@@ -50,7 +46,7 @@ describe("Deliverable Queries", () => {
     });
 
     it("should return an empty array if no deliverables exist", async () => {
-      // Simule la BDD vide
+      // Simulation of an empty database
       mockTypeOrm().onMock(Deliverable).toReturn([], "find");
 
       const result = await deliverableQueries.getAllDeliverables();
@@ -63,14 +59,14 @@ describe("Deliverable Queries", () => {
 
   describe("getDeliverable", () => {
     it("should return a deliverable if found", async () => {
-      // Création du deliverable
+      // Creation of deliverable
       const existingDeliverable = new Deliverable(
         faker.lorem.word(),
         faker.lorem.sentence(),
         faker.date.future().toISOString(),
         DeliverableStatus.IN_PROGRESS,
         faker.date.past().toISOString(),
-        faker.number.int({ min: 0, max: 3 }),
+        faker.number.int({ min: 0, max: 3 })
       );
       existingDeliverable.id = 42;
 
@@ -86,7 +82,7 @@ describe("Deliverable Queries", () => {
     });
 
     it("should return null if deliverable not found", async () => {
-      // Mock 'findOne' pour qu'il renvoie null
+      // Mock 'findOne' to return null
       mockTypeOrm().onMock(Deliverable).toReturn(null, "findOne");
 
       const result = await deliverableQueries.getDeliverable(9999);

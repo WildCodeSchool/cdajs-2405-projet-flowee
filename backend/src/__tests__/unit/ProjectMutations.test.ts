@@ -16,7 +16,7 @@ describe("Project creation", () => {
   let projectMutations: ProjectMutations;
   let validInput: CreateProjectInput;
 
-  // Petite fonction utilitaire pour avoir des UUIDs propres
+  // Method to generate a mock UUID
   const mockUuid = () => faker.string.uuid();
 
   beforeEach(() => {
@@ -110,7 +110,7 @@ describe("Project creation", () => {
 
       const createdProject: Project = await projectMutations.createProject(
         validInput,
-        mockCtx,
+        mockCtx
       );
 
       expect(createdProject).toBeDefined();
