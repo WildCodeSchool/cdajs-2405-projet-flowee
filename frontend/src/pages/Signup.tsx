@@ -73,13 +73,6 @@ export default function Signup() {
           </Link>
         </div>
       </div>
-      <div className="w-full max-w-72 flex flex-row gap-4 items-center bg-orangeBg p-4 border rounded-md border-darkorange">
-        <LogoEntrepriseIcon className="h-12 w-12 border border-gray-300 rounded-md p-2" />
-        <div className="">
-          <p className="font-bold">Oops, I am not a client</p>
-          <p className="underline text-sm">Click here to Sign Up</p>
-        </div>
-      </div>
     </div>
   );
 }
