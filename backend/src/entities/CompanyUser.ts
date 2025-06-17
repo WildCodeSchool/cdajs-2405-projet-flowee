@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -9,9 +9,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Project } from "./Project";
 import { Account } from "./Account";
 import { Company } from "./Company";
+import { Project } from "./Project";
 
 @ObjectType()
 @Entity("company user")

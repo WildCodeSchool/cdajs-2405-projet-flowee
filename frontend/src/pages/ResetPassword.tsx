@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { useResetPasswordMutation } from "@generated/graphql-types";
-import { toast } from "react-toastify";
-import AuthIllustration from "@components/atoms/illustrations/AuthIllus";
 import LogoIcon from "@components/atoms/Icons/Logo";
 import LogoMarkIcon from "@components/atoms/Icons/LogoMark";
 import { Input } from "@components/atoms/Input";
+import AuthIllustration from "@components/atoms/illustrations/AuthIllus";
+import { useResetPasswordMutation } from "@generated/graphql-types";
+import { useState } from "react";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();

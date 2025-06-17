@@ -1,8 +1,8 @@
 import { Input } from "@components/atoms/Input";
 import { Textarea } from "@components/atoms/TextArea";
 import { DeliverableStatus, TaskStatus } from "@generated/graphql-types";
-import { useState } from "react";
 import type { ModalCreateItemProps } from "@interfaces/CreateItemProps";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function AddItem({

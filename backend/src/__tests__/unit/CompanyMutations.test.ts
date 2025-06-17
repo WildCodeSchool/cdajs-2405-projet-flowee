@@ -20,7 +20,7 @@ describe("Company Mutations", () => {
     company = new Company(
       faker.company.name(),
       faker.location.streetAddress(),
-      faker.phone.number()
+      faker.phone.number(),
     );
   });
 
@@ -31,7 +31,7 @@ describe("Company Mutations", () => {
       const createdCompany: Company = await companyMutations.createCompany(
         company.name,
         company.address,
-        company.contactInfo
+        company.contactInfo,
       );
 
       expect(createdCompany).toMatchObject({
@@ -47,7 +47,7 @@ describe("Company Mutations", () => {
       const mockCompany = new Company(
         faker.company.name(),
         faker.location.streetAddress(),
-        faker.phone.number()
+        faker.phone.number(),
       );
       mockCompany.id = 1;
 
@@ -60,7 +60,7 @@ describe("Company Mutations", () => {
         mockCompany.id,
         "New Company Name",
         "New Address",
-        "New Contact Info"
+        "New Contact Info",
       );
 
       // Verifies that the company was updated correctly
@@ -82,8 +82,8 @@ describe("Company Mutations", () => {
           999,
           "New Name",
           "New Address",
-          "New Contact Info"
-        )
+          "New Contact Info",
+        ),
       ).rejects.toThrow("Company with ID 999 not found");
     });
   });

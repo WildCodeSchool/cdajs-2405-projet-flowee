@@ -1,8 +1,8 @@
+import { Tag } from "@components/atoms/Tag";
 import {
   useGetDeliverableByIdQuery,
   useGetTaskByIdQuery,
 } from "@generated/graphql-types";
-import { Tag } from "@components/atoms/Tag";
 
 interface ItemDetailsProps {
   id: number;

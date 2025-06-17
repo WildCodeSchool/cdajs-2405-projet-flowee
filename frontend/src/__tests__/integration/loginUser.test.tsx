@@ -5,8 +5,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import {
-  beforeAll,
   afterAll,
+  beforeAll,
   beforeEach,
   describe,
   expect,

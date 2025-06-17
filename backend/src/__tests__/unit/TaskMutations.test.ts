@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { Deliverable } from "../../entities/Deliverable";
 import { Task } from "../../entities/Task";
+import { DeliverableStatus } from "../../enums/DeliverableStatus";
 import { TaskStatus } from "../../enums/TaskStatus";
 import { TaskMutations } from "../../graphql-resolvers/TaskMutations";
 import type { CreateTaskInput } from "../../inputs/CreateTaskInput";
-import { DeliverableStatus } from "../../enums/DeliverableStatus";
-import { Deliverable } from "../../entities/Deliverable";
 
 describe("Task Mutations", () => {
   let taskMutations: TaskMutations;
@@ -74,7 +74,7 @@ describe("Task Mutations", () => {
       };
 
       await expect(taskMutations.createTask(input)).rejects.toThrow(
-        "Name is required"
+        "Name is required",
       );
     });
   });
@@ -88,7 +88,7 @@ describe("Task Mutations", () => {
         "Old Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.BLOCKED
+        TaskStatus.BLOCKED,
       );
       existingTask.id = 123;
 
@@ -97,7 +97,7 @@ describe("Task Mutations", () => {
         "New Description",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.IN_PROGRESS
+        TaskStatus.IN_PROGRESS,
       );
 
       const mock = mockTypeOrm();
@@ -107,7 +107,7 @@ describe("Task Mutations", () => {
 
       const result = await taskMutations.updateTask(
         existingTask.id,
-        updatedTask
+        updatedTask,
       );
       expect(result).toMatchObject({
         id: existingTask.id,
@@ -127,7 +127,7 @@ describe("Task Mutations", () => {
         "Description to delete",
         faker.date.past().toISOString(),
         faker.date.future().toISOString(),
-        TaskStatus.NOT_STARTED
+        TaskStatus.NOT_STARTED,
       );
       existingTask.id = 45;
 
@@ -146,7 +146,7 @@ describe("Task Mutations", () => {
       const mock = mockTypeOrm();
       mock.onMock(Task).toReturn(null, "findOne");
       await expect(taskMutations.deleteTask(taskId)).rejects.toThrow(
-        "Task with ID 789 not found"
+        "Task with ID 789 not found",
       );
     });
   });

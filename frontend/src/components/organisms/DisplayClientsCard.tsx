@@ -1,4 +1,5 @@
 import ErrorBanner from "@components/molecules/ErrorBanner";
+import type { SortOrder } from "@components/molecules/Filters";
 import SuccessBanner from "@components/molecules/SuccesBanner";
 import type { ClientStatus } from "@generated/graphql-types";
 import {
@@ -9,7 +10,6 @@ import {
 import type { ClientUI } from "@interfaces/client.types";
 import { useEffect, useState } from "react";
 import CardsClient from "./CardsClient";
-import type { SortOrder } from "@components/molecules/Filters";
 
 interface DisplayClientsProps {
   searchFilter: string;

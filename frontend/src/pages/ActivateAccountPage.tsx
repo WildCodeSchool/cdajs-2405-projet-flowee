@@ -1,6 +1,6 @@
+import { useActivateAccountAndReturnTokenMutation } from "@generated/graphql-types";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useActivateAccountAndReturnTokenMutation } from "@generated/graphql-types";
 
 export function ActivateAccountPage() {
   const [searchParams] = useSearchParams();

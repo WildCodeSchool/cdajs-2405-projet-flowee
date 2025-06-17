@@ -1,5 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { mockTypeOrm } from "../../__tests_mockTypeorm-config";
+import { dataSource } from "../../dataSource/dataSource";
+import { Account } from "../../entities/Account";
+import { Client } from "../../entities/Client";
+import { CompanyUser } from "../../entities/CompanyUser";
 import type { Project } from "../../entities/Project";
 import { AccountStatus } from "../../enums/AccountStatus";
 import { ProjectStatus } from "../../enums/ProjectStatus";
@@ -7,10 +11,6 @@ import { Role } from "../../enums/Role";
 import { ProjectMutations } from "../../graphql-resolvers/ProjectMutations";
 import type { CreateProjectInput } from "../../inputs/CreateProjectInput";
 import type { MyContext } from "../../types/MyContext";
-import { CompanyUser } from "../../entities/CompanyUser";
-import { Account } from "../../entities/Account";
-import { Client } from "../../entities/Client";
-import { dataSource } from "../../dataSource/dataSource";
 
 describe("Project creation", () => {
   let projectMutations: ProjectMutations;
@@ -110,7 +110,7 @@ describe("Project creation", () => {
 
       const createdProject: Project = await projectMutations.createProject(
         validInput,
-        mockCtx
+        mockCtx,
       );
 
       expect(createdProject).toBeDefined();

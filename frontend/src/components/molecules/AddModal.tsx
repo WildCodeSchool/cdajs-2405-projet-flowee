@@ -1,6 +1,6 @@
-import AddItem from "@pages/AddItem";
 import type { FormData } from "@interfaces/FormData";
 import type { DeliverableOption, ProjectOption } from "@interfaces/Options";
+import AddItem from "@pages/AddItem";
 
 type AddModalProps = {
   mode: "deliverable" | "task";

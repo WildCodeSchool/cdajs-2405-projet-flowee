@@ -20,10 +20,14 @@ describe("Deliverable Queries", () => {
         new Deliverable(
           faker.lorem.word(), // name
           faker.lorem.sentence(), // perimeter
-          faker.date.future().toISOString(), // deliveryDate
+          faker.date
+            .future()
+            .toISOString(), // deliveryDate
           DeliverableStatus.IN_PROGRESS, // status
-          faker.date.past().toISOString(), // createdAt
-          faker.number.int({ min: 0, max: 3 }) // reviews
+          faker.date
+            .past()
+            .toISOString(), // createdAt
+          faker.number.int({ min: 0, max: 3 }), // reviews
         ),
         new Deliverable(
           faker.lorem.word(),
@@ -31,7 +35,7 @@ describe("Deliverable Queries", () => {
           faker.date.future().toISOString(),
           DeliverableStatus.APPROVED,
           faker.date.past().toISOString(),
-          faker.number.int({ min: 0, max: 3 })
+          faker.number.int({ min: 0, max: 3 }),
         ),
       ];
 
@@ -66,7 +70,7 @@ describe("Deliverable Queries", () => {
         faker.date.future().toISOString(),
         DeliverableStatus.IN_PROGRESS,
         faker.date.past().toISOString(),
-        faker.number.int({ min: 0, max: 3 })
+        faker.number.int({ min: 0, max: 3 }),
       );
       existingDeliverable.id = 42;
 

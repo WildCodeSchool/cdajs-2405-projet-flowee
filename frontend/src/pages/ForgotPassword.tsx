@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useRequestPasswordResetMutation } from "@generated/graphql-types";
-import { useForm } from "react-hook-form";
 import { Input } from "@atoms/Input";
+import { useRequestPasswordResetMutation } from "@generated/graphql-types";
 import ErrorBanner from "@molecules/ErrorBanner";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface FormData {
   email: string;

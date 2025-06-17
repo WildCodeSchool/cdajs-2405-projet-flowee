@@ -1,8 +1,8 @@
-import { Query, Resolver, Arg, Ctx } from "type-graphql";
-import { Account } from "../entities/Account";
+import { Arg, Ctx, Query, Resolver } from "type-graphql";
 import { dataSource } from "../dataSource/dataSource";
-import type { MyContext } from "../types/MyContext";
+import { Account } from "../entities/Account";
 import { getFullAccountFromContext } from "../middlewares/auth";
+import type { MyContext } from "../types/MyContext";
 
 @Resolver(Account)
 export class AccountQueries {

@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import type { CardVariant } from "./Cards";
-import { Card } from "./Cards";
-import DisplayCards from "./DisplayCards";
 import Button from "@atoms/Button";
 import { useGetProjectsByUserQuery } from "@generated/graphql-types";
 import type { Deliverable, Project, Task } from "@generated/graphql-types";
+import { useEffect, useState } from "react";
+import type { CardVariant } from "./Cards";
+import { Card } from "./Cards";
+import DisplayCards from "./DisplayCards";
 
 import { useRoleTheme } from "@context/roleThemeContext";
 import ArrowIcon from "@icons/Arrow";
-import { NavLink } from "react-router-dom";
 import ItemDetails from "@pages/ItemDetails";
 import { slugify } from "@utils/project";
+import { NavLink } from "react-router-dom";
 export interface SectionProps {
   title: string;
   variant: CardVariant;

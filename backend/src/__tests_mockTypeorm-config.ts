@@ -1,6 +1,6 @@
 import { MockTypeORM } from "mock-typeorm";
-import { dataSource } from "./dataSource/dataSource";
 import type { EntityManager } from "typeorm";
+import { dataSource } from "./dataSource/dataSource";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 if (!(global as any).mockTypeOrm) {

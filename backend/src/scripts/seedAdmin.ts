@@ -1,11 +1,11 @@
 import "reflect-metadata";
-import { dataSource } from "../dataSource/dataSource";
-import { Company } from "../entities/Company";
-import { Account } from "../entities/Account";
-import { CompanyUser } from "../entities/CompanyUser";
-import { Role } from "../enums/Role";
-import { AccountStatus } from "../enums/AccountStatus";
 import * as argon2 from "argon2";
+import { dataSource } from "../dataSource/dataSource";
+import { Account } from "../entities/Account";
+import { Company } from "../entities/Company";
+import { CompanyUser } from "../entities/CompanyUser";
+import { AccountStatus } from "../enums/AccountStatus";
+import { Role } from "../enums/Role";
 
 async function seed() {
   await dataSource.initialize();
