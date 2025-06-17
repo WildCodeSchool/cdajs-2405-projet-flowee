@@ -114,10 +114,10 @@ export class DeliverableMutations {
         });
       }
 
-      // j'enleve les taches liées au livrable
+      //remove all tasks associated with the deliverable
       await dataSource.manager.delete(Task, { deliverable: { id } });
 
-      // je supprime le livrable
+      // Delete the deliverable
       await dataSource.manager.remove(deliverable);
       console.info(`Deliverable with ID ${id} deleted`);
 

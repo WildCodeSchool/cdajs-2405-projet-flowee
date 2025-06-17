@@ -78,7 +78,9 @@ export async function sendPasswordChangeNotification(
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">Confirmation de changement de mot de passe</h2>
           <p>Bonjour ${name},</p>
-          <p>Nous vous confirmons que votre mot de passe a été modifié avec succès le ${new Date().toLocaleString("fr-FR")}.</p>
+          <p>Nous vous confirmons que votre mot de passe a été modifié avec succès le ${new Date().toLocaleString(
+            "fr-FR",
+          )}.</p>
           <p>Si vous n'êtes pas à l'origine de ce changement, veuillez contacter immédiatement notre support.</p>
           <hr style="border: 1px solid #eee; margin: 20px 0;">
           <p style="color: #666; font-size: 12px;">

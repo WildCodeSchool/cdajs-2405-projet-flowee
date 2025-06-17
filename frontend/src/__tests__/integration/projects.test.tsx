@@ -28,6 +28,7 @@ afterAll(() => {
 });
 
 // Mock du contexte d'authentification
+
 vi.mock("@context/authContext", () => ({
   useAuth: vi.fn(),
 }));

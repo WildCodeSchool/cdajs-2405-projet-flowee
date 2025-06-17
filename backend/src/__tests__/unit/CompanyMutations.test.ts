@@ -55,7 +55,7 @@ describe("Company Mutations", () => {
 
       mockTypeOrm().onMock(Company).toReturn(mockCompany, "save");
 
-      // Appeler la mutation updateCompany
+      // Call the updateCompany mutation
       const updatedCompany = await companyMutations.updateCompany(
         mockCompany.id,
         "New Company Name",
@@ -63,7 +63,7 @@ describe("Company Mutations", () => {
         "New Contact Info",
       );
 
-      // Vérifier que les modifications ont été prises en compte
+      // Verifies that the company was updated correctly
       expect(updatedCompany).toMatchObject({
         id: mockCompany.id,
         name: "New Company Name",
@@ -73,10 +73,10 @@ describe("Company Mutations", () => {
     });
 
     it("should return an error if the company does not exist", async () => {
-      // Moquer `findOne()` pour retourner `undefined`
+      // Mock`findOne()` to return `undefined`
       mockTypeOrm().onMock(Company).toReturn(undefined, "findOne");
 
-      // Vérifier que la mutation renvoie une erreur
+      // Verifies that the updateCompany mutation throws an error
       await expect(
         companyMutations.updateCompany(
           999,

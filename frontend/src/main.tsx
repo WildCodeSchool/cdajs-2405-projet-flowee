@@ -10,7 +10,6 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { type ContextSetter, setContext } from "@apollo/client/link/context";
-import NewAccount from "@components/organisms/NewAccount";
 import { ActivateAccountPage } from "@pages/ActivateAccountPage";
 import { ActivationErrorPage } from "@pages/ActivationTokenErrorPage";
 import LegalNotice from "@pages/LegalNotice";
@@ -21,15 +20,19 @@ import ProjectDetails from "@pages/projectDetails/ProjectDetails";
 import { AuthProvider } from "./context/authContext";
 import { RoleThemeProvider } from "./context/roleThemeContext";
 import { RequireAdmin } from "./layout/RequireAdmin";
-import Clients from "./pages/Clients";
-import CreateProject from "./pages/CreateProject";
-import Dashboard from "./pages/Dashboard";
-import Error404visitor from "./pages/Error404";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Projects from "./pages/Projects";
-import Settings from "./pages/Settings";
-import Signup from "./pages/Signup";
+
+import Clients from "@pages/Clients";
+import CreateProject from "@pages/CreateProject";
+import Dashboard from "@pages/Dashboard";
+import Error404visitor from "@pages/Error404";
+import ForgotPassword from "@pages/ForgotPassword";
+import Home from "@pages/Home";
+import InitPage from "@pages/InitPage";
+import Login from "@pages/Login";
+import Projects from "@pages/Projects";
+import ResetPassword from "@pages/ResetPassword";
+import Settings from "@pages/Settings";
+import Signup from "@pages/Signup";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -100,6 +103,11 @@ const router = createBrowserRouter([
         path: "/set-password",
         element: <SetPasswordPage />,
       },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      {
+        path: "reset-password/",
+        element: <ResetPassword />,
+      },
       {
         path: "/activation-error",
         element: <ActivationErrorPage />,
@@ -130,8 +138,8 @@ const router = createBrowserRouter([
         element: <PrivacyPolicy />,
       },
       {
-        path: "/newaccount",
-        element: <NewAccount user={"admin"} color={"bg-theme-base"} />,
+        path: "/init",
+        element: <InitPage />,
       },
       {
         path: "*",

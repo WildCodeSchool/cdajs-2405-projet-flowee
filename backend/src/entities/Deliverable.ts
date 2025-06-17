@@ -23,7 +23,6 @@ export class Deliverable extends BaseEntity {
   @Field()
   name: string;
 
-  //J'ai mis perimeter au lieu de description pour que ça soit plus parlant
   @Column({ nullable: true })
   @Field({ nullable: true })
   perimeter?: string;

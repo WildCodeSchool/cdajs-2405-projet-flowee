@@ -16,7 +16,11 @@ export class TaskMutations {
   ): Promise<Task> {
     const { name, description, startDate, endDate, status, deliverableId } =
       newTaskInput;
-
+    if (!name || name.trim() === "") {
+      throw new GraphQLError("Name is required", {
+        extensions: { code: "TASK_VALIDATION_ERROR" },
+      });
+    }
     try {
       const deliverable = await dataSource.manager.findOneByOrFail(
         Deliverable,

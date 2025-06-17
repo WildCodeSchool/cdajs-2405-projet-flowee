@@ -22,6 +22,7 @@ import { CompanyMutations } from "./graphql-resolvers/CompanyMutations";
 import { CompanyQueries } from "./graphql-resolvers/CompanyQueries";
 import { DeliverableMutations } from "./graphql-resolvers/DeliverableMutations";
 import { DeliverableQueries } from "./graphql-resolvers/DeliverableQueries";
+import { Initmutation } from "./graphql-resolvers/InitMutation";
 import { ProjectMutations } from "./graphql-resolvers/ProjectMutations";
 import { ProjectQueries } from "./graphql-resolvers/ProjectQueries";
 import { TaskMutations } from "./graphql-resolvers/TaskMutations";
@@ -101,6 +102,7 @@ async function startServerApollo() {
         AccountQueries,
         AuthMutation,
         TrackerStatsQueries,
+        Initmutation,
       ],
       authChecker,
     });
