@@ -77,8 +77,8 @@ export default function LoginForm() {
         </button>
         <p className=" text-center md:text-start  w-full text-sm">
           You don't have an account?{" "}
-          <NavLink className="underline font-medium" to="/signup">
-            Sign up{" "}
+          <NavLink className="px-2 underline font-medium" to="/init">
+            Sign up
           </NavLink>
         </p>
       </section>

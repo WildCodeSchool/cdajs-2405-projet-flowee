@@ -1,35 +1,46 @@
-
-
-
-
-
 # ===========================================
+
 # PostgreSQL Database
+
 # ===========================================
 
 # PostgreSQL superadmin user (used only for init and Adminer)
+
 DB_SUPERUSER=
 DB_SUPERUSER_PASSWORD=
+
 # Application user (created by the init_db_user script)
+
 DB_USER=
 DB_PASSWORD=
+
 # Database name
+
 DB_NAME=
 
-# Host and port 
+# Host and port
+
 DB_HOST=
 DB_PORT=5432
 
+# ===========================================
+
+# Backend
 
 # ===========================================
-#  Backend
-# ===========================================
+
 GATEWAY_PORT=8010
 GATEWAY_PORT_STAGING=8004
 VITE_GRAPHQL_URI=/graphql
 
 # ===========================================
-# other variables needed for the app 
+
+# other variables needed for the app
+
 # ===========================================
+
 JWT_SECRET=
 BREVO_API_KEY=
+
+INIT_SECRET=
+E2E_BASE_URL=
