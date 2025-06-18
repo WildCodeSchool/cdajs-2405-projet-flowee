@@ -1,139 +1,37 @@
-import { useInitAdminMutation } from "@generated/graphql-types";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-
-type InitForm = {
-  secret: string;
-  companyName: string;
-  companyAddress: string;
-  contactInfo: string;
-  email: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-};
+import LogoIcon from "@components/atoms/Icons/Logo";
+import LogoMarkIcon from "@components/atoms/Icons/LogoMark";
+import AuthIllustration from "@components/atoms/illustrations/AuthIllus";
+import SignUpForm from "@components/organisms/SignUpForm";
+import { NavLink } from "react-router-dom";
 
 export default function InitPage() {
-  const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<InitForm>();
-
-  const [initAdmin, { loading }] = useInitAdminMutation();
-
-  const onSubmit = async (data: InitForm) => {
-    try {
-      await initAdmin({ variables: { data } });
-      toast.success("Admin initialized successfully");
-      navigate("/login");
-    } catch (err) {
-      toast.error("Unable to perform this operation");
-      console.error(err);
-    }
-  };
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 shadow-md rounded-md w-full max-w-lg space-y-4"
-      >
-        <h1 className="text-3xl font-bold text-center mb-4">
-          Welcome to our Flowee App
-        </h1>
+    <div className="flex flex-row w-full sm:h-screen">
+      <aside className=" hidden sm:block sm:bg-orangeLight sm:w-[55%] sm:p-10">
+        <NavLink to="/">
+          <LogoIcon className=" w-40" />
+        </NavLink>
+        <AuthIllustration className="w-[80%] mx-auto" />
+      </aside>
+      <section className=" flex flex-auto flex-col bg-white gap-2  sm:justify-center sm:px-8 lg:px-28 justify-end">
+        <div className="flex flex-col gap-3 text-center">
+          <aside className="flex flex-col sm:flex-row items-center gap-2 pt-6">
+            <LogoMarkIcon className=" w-12 sm:w-8 " />
+            <h1 className=" text-2xl sm:text-3xl font-bold ">SIGN UP</h1>
+          </aside>
 
-        <fieldset className="space-y-2">
-          <legend className="font-semibold">Company</legend>
-          <input
-            {...register("companyName", { required: true })}
-            placeholder="Company Name"
-            className="w-full border p-2 rounded"
-          />
-          {errors.companyName && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-
-          <input
-            {...register("companyAddress", { required: true })}
-            placeholder="Company Address"
-            className="w-full border p-2 rounded"
-          />
-          {errors.companyAddress && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-
-          <input
-            {...register("contactInfo", { required: true })}
-            placeholder="Contact Info"
-            className="w-full border p-2 rounded"
-          />
-          {errors.contactInfo && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-        </fieldset>
-
-        <fieldset className="space-y-2">
-          <legend className="font-semibold">Admin User</legend>
-          <input
-            {...register("firstname", { required: true })}
-            placeholder="Firstname"
-            className="w-full border p-2 rounded"
-          />
-          {errors.firstname && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-
-          <input
-            {...register("lastname", { required: true })}
-            placeholder="Lastname"
-            className="w-full border p-2 rounded"
-          />
-          {errors.lastname && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-
-          <input
-            {...register("email", { required: true })}
-            type="email"
-            placeholder="Email"
-            className="w-full border p-2 rounded"
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-
-          <input
-            {...register("password", { required: true })}
-            type="password"
-            placeholder="Password"
-            className="w-full border p-2 rounded"
-          />
-          {errors.password && (
-            <span className="text-red-500 text-sm">Required</span>
-          )}
-        </fieldset>
-
-        <input
-          {...register("secret", { required: true })}
-          type="password"
-          placeholder="Secret Key"
-          className="w-full border p-2 rounded"
-        />
-        {errors.secret && (
-          <span className="text-red-500 text-sm">Required</span>
-        )}
-
-        <button
-          type="submit"
-          // disabled={loading}
-          className="w-full bg-theme-base text-white py-2 rounded hover:bg-gray-800 "
-        >
-          {loading ? "Creating..." : "Initialize Admin"} Initialize Admin
-        </button>
-      </form>
+          <h2 className="hidden sm:flex sm:text-lg sm:text-left ">
+            Welcome to Flowee!
+          </h2>
+        </div>
+        <div className=" mt-4 relative z-0 sm:w-full">
+          <div className=" sm:hidden  h-28 bg-[#E9BB8E] rounded-t-[43px]" />
+          <div className=" sm:hidden h-28 bg-[#8597D0] rounded-t-[43px] -mt-8 z-10 relative" />
+          <div className="bg-white rounded-t-[43px] -mt-8 z-20 relative py-8 p-8 sm:py-6 sm:px-0">
+            <SignUpForm />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
