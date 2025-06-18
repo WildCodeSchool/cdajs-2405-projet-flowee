@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "test": "vitest --reporter verbose",
     "test:watch": "vitest --watch",
-    "generate": "graphql-codegen -w"
+    "generate": "graphql-codegen -w",
+    "test:e2e": "playwright test tests/e2e"
   },
   "dependencies": {
     "@apollo/client": "^3.12.0",
@@ -34,6 +35,7 @@
     "@graphql-codegen/typescript-operations": "^4.6.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@parcel/watcher": "^2.5.1",
+    "@playwright/test": "^1.53.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
@@ -50,6 +52,7 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.5"
   },
   "overrides": {
