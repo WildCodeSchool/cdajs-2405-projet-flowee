@@ -24,7 +24,7 @@ export default function InitPage() {
             Welcome to Flowee!
           </h2>
         </div>
-        <div className=" mt-6 relative z-0 sm:w-full">
+        <div className=" mt-4 relative z-0 sm:w-full">
           <div className=" sm:hidden  h-28 bg-[#E9BB8E] rounded-t-[43px]" />
           <div className=" sm:hidden h-28 bg-[#8597D0] rounded-t-[43px] -mt-8 z-10 relative" />
           <div className="bg-white rounded-t-[43px] -mt-8 z-20 relative py-8 p-8 sm:py-6 sm:px-0">
