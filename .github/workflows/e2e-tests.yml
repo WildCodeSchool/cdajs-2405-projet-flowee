@@ -1,9 +1,9 @@
 name: Playwright E2E Tests on Staging
 
 on:
-  workflow_dispatch: # Peut être déclenché manuellement
+  workflow_dispatch: 
   workflow_run:
-    workflows: ["Deploy Staging Frontend"] # Nom exact de ton autre .yml
+    workflows: ["Deploy Staging Frontend"] 
     types:
       - completed
 
@@ -24,12 +24,15 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm ci
 
       - name: Install Playwright
+        working-directory: ./frontend
         run: npx playwright install --with-deps
 
       - name: Run Playwright E2E tests
+        working-directory: ./frontend
         run: |
           E2E_BASE_URL=https://staging.052024-jaune-3.wns.wilders.dev npm run test:e2e
 
@@ -38,4 +41,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report
+          path: frontend/playwright-report
