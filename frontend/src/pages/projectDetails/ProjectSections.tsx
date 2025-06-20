@@ -1,6 +1,7 @@
 import { AddButton } from "@components/atoms/AddButton";
 import { DeliverablesByStatus } from "@components/organisms/DeliverablesByStatus";
 import { TasksByDeliverable } from "@components/organisms/TasksByDeliverable";
+import { useAuth } from "@context/authContext";
 import type {
   Deliverable,
   DeliverableStatus,
@@ -30,6 +31,7 @@ export default function ProjectSections({
   openEdit,
   openDelete,
 }: ProjectSectionsProps) {
+  const { authUserData } = useAuth();
   return (
     <section className="flex flex-col md:flex-row gap-4 w-full">
       <section className="flex flex-col gap-4 w-full">
@@ -60,37 +62,38 @@ export default function ProjectSections({
           />
         )}
       </section>
+      {authUserData.role === "ADMIN" && (
+        <section className="flex flex-col gap-4 w-full">
+          <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold">
+            <h2>Tasks</h2>
+            <AddButton onClick={openAdd} />
+          </aside>
 
-      <section className="flex flex-col gap-4 w-full">
-        <aside className="flex justify-between items-center bg-theme-veryLight p-2 rounded-sm font-bold">
-          <h2>Tasks</h2>
-          <AddButton onClick={openAdd} />
-        </aside>
-        {}
-        <section className="mb-4">
-          <TasksByDeliverable
-            deliverables={deliverables}
-            onDelete={(id, name) => openDelete({ entity: "task", id, name })}
-            onUpdate={(task) => {
-              const deliverable = deliverables.find((del) =>
-                del.tasks?.some((t) => t.id === task.id),
-              );
-              if (!deliverable) return;
+          <section className="mb-4">
+            <TasksByDeliverable
+              deliverables={deliverables}
+              onDelete={(id, name) => openDelete({ entity: "task", id, name })}
+              onUpdate={(task) => {
+                const deliverable = deliverables.find((del) =>
+                  del.tasks?.some((t) => t.id === task.id)
+                );
+                if (!deliverable) return;
 
-              openEdit({
-                type: "task",
-                id: Number(task.id),
-                name: task.name,
-                description: task.description ?? "",
-                deadline: task.endDate ?? "",
-                deliverableId: Number(deliverable.id),
-                deliverableName: deliverable.name,
-                status: task.status as TaskStatus,
-              });
-            }}
-          />
+                openEdit({
+                  type: "task",
+                  id: Number(task.id),
+                  name: task.name,
+                  description: task.description ?? "",
+                  deadline: task.endDate ?? "",
+                  deliverableId: Number(deliverable.id),
+                  deliverableName: deliverable.name,
+                  status: task.status as TaskStatus,
+                });
+              }}
+            />
+          </section>
         </section>
-      </section>
+      )}
     </section>
   );
 }
