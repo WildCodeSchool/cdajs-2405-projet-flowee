@@ -3,6 +3,7 @@ import { ILike } from "typeorm";
 import { dataSource } from "../dataSource/dataSource";
 import { Project } from "../entities/Project";
 import type { MyContext } from "../types/MyContext";
+import { GraphQLError } from "graphql";
 
 @Resolver(Project)
 export class ProjectQueries {
@@ -13,7 +14,10 @@ export class ProjectQueries {
   }
 
   @Query(() => Project, { nullable: true })
-  async getProjectById(@Arg("id") id: number): Promise<Project | null> {
+  async getProjectById(
+    @Arg("id") id: number,
+    @Ctx() ctx: MyContext
+  ): Promise<Project | null> {
     const project: Project | null = await dataSource.manager.findOne(Project, {
       where: { id },
       relations: [
@@ -27,12 +31,21 @@ export class ProjectQueries {
     if (!project?.client) {
       throw new Error("Client not found for this project");
     }
+
+    if (
+      ctx.user?.role === "CLIENT" &&
+      project.client?.account?.id !== ctx.user.id
+    ) {
+      throw new GraphQLError("Forbidden", {
+        extensions: { code: "FORBIDDEN" },
+      });
+    }
     return project;
   }
 
   @Query(() => [Project], { nullable: true })
   async getProjectsByName(
-    @Arg("name") name: string,
+    @Arg("name") name: string
   ): Promise<Project[] | null> {
     const projects = await dataSource.manager.find(Project, {
       where: { projectName: ILike(`%${name}%`) },
