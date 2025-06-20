@@ -33,6 +33,7 @@ import Projects from "@pages/Projects";
 import ResetPassword from "@pages/ResetPassword";
 import Settings from "@pages/Settings";
 import Signup from "@pages/Signup";
+import UnauthorizedAccess from "@pages/UnauthorizedAcess";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI ?? "http://localhost:4000/graphql",
@@ -141,6 +142,7 @@ const router = createBrowserRouter([
         path: "/init",
         element: <InitPage />,
       },
+      { path: "/unauthorized-access", element: <UnauthorizedAccess /> },
       {
         path: "*",
         element: <Error404visitor />,
@@ -161,7 +163,7 @@ if (rootElement) {
           </RoleThemeProvider>
         </AuthProvider>
       </ApolloProvider>
-    </StrictMode>,
+    </StrictMode>
   );
 } else {
   console.error("Root element not found");
