@@ -33,6 +33,15 @@ const ProjectDetails = () => {
 
     onError: (error) => {
       console.error("Error fetching project details:", error);
+      if (
+        error.graphQLErrors.some(
+          (err) =>
+            err.extensions?.code === "FORBIDDEN" ||
+            err.extensions?.code === "NOT_FOUND"
+        )
+      ) {
+        navigate("/unauthorized-access", { replace: true });
+      }
     },
   });
   const [updateProjectMutation] = useUpdateProjectMutation();
@@ -123,8 +132,14 @@ const ProjectDetails = () => {
       editModal.closeModal();
       deleteModal.closeModal();
       projectModal.closeModal();
-    },
+    }
   );
+
+  if (!data?.getProjectById) {
+    // Cas où le projet est vide (protection défensive)
+    navigate("/unauthorized-access", { replace: true });
+    return null;
+  }
 
   const project = data?.getProjectById;
 

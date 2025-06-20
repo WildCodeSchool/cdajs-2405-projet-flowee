@@ -152,9 +152,9 @@ export default function Projects() {
                 <NavLink
                   to={
                     "projectName" in project
-                      ? `/projects/${slugify(project.projectName?.toLowerCase())}-${
-                          project.id
-                        }`
+                      ? `/projects/${slugify(
+                          project.projectName?.toLowerCase()
+                        )}-${project.id}`
                       : "/error"
                   }
                   className="flex items-center justify-center w-12 h-12 md:w-8 md:h-8 bg-theme-btnBG rounded-full hover:bg-orangelight "
