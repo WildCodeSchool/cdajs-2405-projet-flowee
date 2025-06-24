@@ -13,7 +13,8 @@ export function ActivateAccountPage() {
 
     const handleActivation = async () => {
       if (!token) {
-        navigate("/activation-error?reason=missing", { replace: true }); // with replace: true to avoid going back to this page
+        navigate("/activation-error?reason=missing", { replace: true });
+        // with replace: true to avoid going back to this page
         return;
       }
 

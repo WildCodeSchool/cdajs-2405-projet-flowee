@@ -34,7 +34,7 @@ async function init_db_user() {
   try {
     await client.connect();
 
-    // 1. Création de l'utilisateur si non existant
+    // User creation if not existing
     await client.query(`
       DO $$
       BEGIN
@@ -48,7 +48,7 @@ async function init_db_user() {
     `);
     console.log(`User "${DB_USER}" checked/created.`);
 
-    // 2. Création de la base si non existante
+    // Creat databse if not existing
     await client.query(`
       DO $$
       BEGIN
@@ -67,8 +67,8 @@ async function init_db_user() {
       `GRANT ALL PRIVILEGES ON DATABASE "${DB_NAME}" TO "${DB_USER}";`,
     );
     console.log("✅ Privileges granted on database.");
-    // 4. Droits sur le schéma public
-    // Pour accorder les droits sur le schéma public, il faut se connecter à la bonne base
+    // Access to schema public
+
     const dbClient = new Client({
       host: DB_HOST,
       port: Number.parseInt(DB_PORT ?? "5432", 10),

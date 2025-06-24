@@ -1,4 +1,3 @@
-import { IsNotEmpty } from "class-validator";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
@@ -23,12 +22,10 @@ export class Project extends BaseEntity {
 
   @Column({ nullable: true })
   @Field()
-  @IsNotEmpty({ message: "Project Name is required" })
   projectName: string;
 
   @Column()
   @Field()
-  @IsNotEmpty({ message: "company user ID is required" })
   companyUserId: number;
 
   @Column({ nullable: true })
