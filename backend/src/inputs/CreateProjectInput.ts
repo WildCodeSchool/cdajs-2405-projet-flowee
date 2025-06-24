@@ -4,16 +4,16 @@ import { Field, InputType } from "type-graphql";
 @InputType()
 export class CreateProjectInput {
   @Field()
-  @IsNotEmpty({ message: "Le nom du projet est requis." })
+  @IsNotEmpty({ message: "Project Name is required" })
   projectName?: string;
 
   @Field()
-  @IsEmail({}, { message: "Format d'email invalide." })
-  @IsNotEmpty({ message: "L'email du client est requis." })
+  @IsEmail({}, { message: "Invalid format" })
+  @IsNotEmpty({ message: "Client email is required" })
   clientEmail?: string;
 
   @Field()
-  @IsNotEmpty({ message: "Le nom du client est requis." })
+  @IsNotEmpty({ message: "Client Name is required" })
   clientName?: string;
 
   @Field({ nullable: true })

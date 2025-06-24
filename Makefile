@@ -71,8 +71,6 @@ run-staging:
 run-prod:
 	sh ./run-prod.sh	
 
-
-
 # Stop containers
 .PHONY: stop
 stop:
@@ -168,15 +166,15 @@ check-backend:
 # ===============================
 # Premier lancement dev
 # ===============================
-.PHONY: first-launch
-first-launch: env run
+# .PHONY: first-launch
+# first-launch: env run
 
 
 # ===============================
 # Test
 # ===============================
-.PHONY: test
-test:
+.PHONY: test-app
+test-app:
 	docker exec -it flowee-backend sh -c "echo 'Contenu de /app:' && ls -al /app && \
 	echo '\nContenu de /app/src:' && ls -al /app/src || echo '/app/src non trouvé'"
 

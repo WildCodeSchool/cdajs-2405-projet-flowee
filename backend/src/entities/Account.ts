@@ -1,4 +1,3 @@
-import { IsEmail } from "class-validator";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
@@ -21,7 +20,6 @@ export class Account extends BaseEntity {
 
   @Column()
   @Field()
-  @IsEmail({}, { message: "L'email n'est pas valide" })
   email: string;
 
   @Column() //no @Field  here to avoid being exposed in queries and mutations. Still available in backend

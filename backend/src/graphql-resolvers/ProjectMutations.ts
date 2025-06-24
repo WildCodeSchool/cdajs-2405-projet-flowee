@@ -70,7 +70,7 @@ export class ProjectMutations {
           relations: ["account"],
         });
 
-        // Cas 1 : le client existe mais l'email ne correspond à aucun compte
+        // Case 1 : client exists but email not referring to any account
         if (!account && client) {
           console.warn(
             `[SECURITY] Un client avec ce nom (${clientName}) existe, mais l'email fourni (${clientEmail}) ne correspond à aucun compte.`,
@@ -81,7 +81,7 @@ export class ProjectMutations {
           );
         }
 
-        // Cas 2 : le compte existe mais pas le nom de client
+        // Case 2 : Account exists but not client name
         if (account && !client) {
           console.warn(
             `[SECURITY] Un compte existe déjà avec cet email (${clientEmail}), mais le nom de client (${clientName}) ne correspond pas.`,
@@ -92,7 +92,7 @@ export class ProjectMutations {
           );
         }
 
-        // Cas 3 : les deux existent mais ne sont pas liés
+        // Case 3 : Both client and account exists but does not match
         if (account && client && client.account?.id !== account.id) {
           console.warn(
             `[SECURITY] Incohérence : account (${clientEmail}) non lié à client (${clientName})`,
@@ -103,7 +103,7 @@ export class ProjectMutations {
           );
         }
 
-        // Cas 4 : les deux existent, sont liés, mais au moins un statut n'est pas ACTIVE
+        // Case 4 : Both client and account exists, are linked ,but at least one status is not ACTIVE
         if (
           account &&
           client &&
@@ -120,7 +120,7 @@ export class ProjectMutations {
           );
         }
 
-        // Cas 5 : les deux existent, sont liés, statuts OK -> on crée le projet (pas d'email d'activation)
+        // Case 5 : Both client and account exists, are linked statuts OK -> we create the project (no activation email)
         if (
           account &&
           client &&
@@ -139,7 +139,7 @@ export class ProjectMutations {
           });
           return { newproject, account, clientName, token: "" };
         }
-        // Cas 6 : ni client ni compte => on crée les deux, envoi mail d'activation
+        // Cas 6 : nor client or account => we create both  and send activation email
         if (!account && !client) {
           const newAccount = manager.create(Account, {
             email: clientEmail,
@@ -166,7 +166,7 @@ export class ProjectMutations {
             companyUserId,
           });
 
-          // Générer token d’activation
+          // Generate activation token
           const { token, expiresAt } = generateActivationToken(24);
           newAccount.activationToken = token;
           newAccount.tokenExpiresAt = expiresAt;
@@ -205,7 +205,7 @@ export class ProjectMutations {
       });
     }
 
-    // Envoi du mail après transaction if new account created
+    // Email sent after transaction if new account created
     try {
       if (result.token) {
         await sendActivationEmail(

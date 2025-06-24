@@ -24,9 +24,9 @@ export class Initmutation {
       firstname,
       lastname,
     } = data;
-    // if (process.env.NODE_ENV !== "production") {
-    //   throw new Error("Only available in production");
-    // }
+    if (process.env.NODE_ENV !== "production") {
+      throw new Error("Only available in production");
+    }
 
     const secretkey = process.env.INIT_SECRET;
     console.info("ENV INIT_SECRET:", process.env.INIT_SECRET);
